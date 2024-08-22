@@ -2,14 +2,6 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Button from "./Button";
-import { useState } from "react";
-import Modal from "./Modal";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addAVenueBooking,
-  removeVenueBooking,
-} from "../features/cart/venueBookingSlice";
-import { clearCartFromReduxState } from "../features/cart/cartSlice";
 
 const ButtonsDiv = styled.div`
   width: 100%;
@@ -40,20 +32,7 @@ const CheckTextDiv = styled.div`
   }
 `;
 
-function CheckBeforeConfirm({ orderObj }) {
-  const [tempOrder, setTempOrder] = useState();
-  const storeCart = useSelector((store) => store.cart);
-  const storeVenue = useSelector((store) => store.venue);
-
-  console.log(storeCart, storeVenue);
-  // console.log(store);
-  const dispatch = useDispatch();
-  function handleConfirmClick() {
-    // dispatch(clearCartFromReduxState());
-    // dispatch(removeVenueBooking());
-    // dispatch(addAVenueBooking(orderObj));
-    console.log(orderObj);
-  }
+function CheckBeforeConfirm({ orderObj, handleConfirmClick }) {
   return (
     <CheckContainer>
       <CheckTextDiv>

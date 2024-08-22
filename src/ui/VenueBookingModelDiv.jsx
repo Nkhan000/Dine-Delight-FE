@@ -5,12 +5,16 @@ import GradientHighlight from "./GradientHighlight";
 import Button from "./Button";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { addAVenueBooking } from "../features/cart/venueBookingSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addAVenueBooking,
+  removeVenueBooking,
+} from "../features/cart/venueBookingSlice";
 import Modal from "./Modal";
 import CheckBeforeConfirm from "./CheckBeforeConfirm";
+import { clearCartFromReduxState } from "../features/cart/cartSlice";
 
-const ModalDiv = styled.form`
+const ModalDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -142,9 +146,9 @@ function VenueBookingModelDiv({
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [numOfDays, setNumOfDays] = useState(null);
-  const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
 
+  // function to calculate difference in date
   const calculateDate = useCallback(() => {
     if (!startDate || !endDate) return;
     const start = new Date(startDate);
@@ -166,6 +170,13 @@ function VenueBookingModelDiv({
     setEndDate(e.target.value);
   }
 
+  // to check whether the cart is empty or has some ongoing orders
+  const storeCart = useSelector((store) => store.cart);
+  const storeVenue = useSelector((store) => store.venue);
+
+  const isCartEmpty =
+    storeCart.cart.length === 0 && Object.keys(storeVenue.venue).length === 0;
+
   // Use useEffect to calculate difference whenever dates change
   useEffect(() => {
     calculateDate();
@@ -184,12 +195,20 @@ function VenueBookingModelDiv({
     pricePerDay,
     total: pricePerDay * numOfDays,
   };
-  function onSubmit(data) {
-    // console.log(orderObj);
-    // dispatch(addAVenueBooking(venueObj));
+
+  // if cart has some ongoing orders than alert the user with overwrite warning else add the order to the cart
+  function handleConfirmClick() {
+    if (isCartEmpty) {
+      dispatch(addAVenueBooking(orderObj));
+    } else {
+      dispatch(clearCartFromReduxState());
+      dispatch(removeVenueBooking());
+      dispatch(addAVenueBooking(orderObj));
+    }
+    console.log(orderObj);
   }
   return (
-    <ModalDiv onSubmit={handleSubmit(onSubmit)}>
+    <ModalDiv>
       <GradientHighlight>
         <ModalHead>Continue Booking</ModalHead>
       </GradientHighlight>
@@ -259,16 +278,29 @@ function VenueBookingModelDiv({
           </GrandTotalDiv>
 
           <ButtonsDiv>
-            <Modal>
-              <Modal.Open name="test">
-                <Button size="medium" variation="primary">
-                  Confirm Booking
-                </Button>
-              </Modal.Open>
-              <Modal.ModalWindow>
-                <CheckBeforeConfirm orderObj={orderObj} />
-              </Modal.ModalWindow>
-            </Modal>
+            {isCartEmpty ? (
+              <Button
+                size="medium"
+                variation="primary"
+                onClick={handleConfirmClick}
+              >
+                Confirm Booking
+              </Button>
+            ) : (
+              <Modal>
+                <Modal.Open name="test">
+                  <Button size="medium" variation="primary">
+                    Confirm Booking
+                  </Button>
+                </Modal.Open>
+                <Modal.ModalWindow>
+                  <CheckBeforeConfirm
+                    orderObj={orderObj}
+                    handleClick={handleConfirmClick}
+                  />
+                </Modal.ModalWindow>
+              </Modal>
+            )}
             <Button size="medium" variation="secondary">
               Cancel
             </Button>
