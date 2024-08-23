@@ -113,14 +113,15 @@ function BannerNotification({ children }) {
   const close = () => setBannerOpen(false);
   const open = () => setBannerOpen(true);
 
-  // setTime(5000);
-
   useEffect(() => {
-    // const timeout = 10000;
-    setTimeout(() => {
-      close();
-    }, time);
-  });
+    if (bannerOpen) {
+      const timer = setTimeout(() => {
+        close();
+      }, time);
+
+      return () => clearTimeout(timer); // Clear timeout if component unmounts or state changes
+    }
+  }, [bannerOpen, time]); // Depend on bannerOpen and time
 
   return (
     <BannerContext.Provider
@@ -133,7 +134,6 @@ function BannerNotification({ children }) {
         bannerText,
         bannerType,
         setBannerType,
-        // setItemsToItemObj,
         itemObj,
         close,
         open,
@@ -146,8 +146,8 @@ function BannerNotification({ children }) {
 
 function Open({ children }) {
   const { open, setTime } = useContext(BannerContext);
+  console.log("banner opened");
   function handleClick() {
-    close();
     setTime(5000);
     open();
   }

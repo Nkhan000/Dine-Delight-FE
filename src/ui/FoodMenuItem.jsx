@@ -216,14 +216,27 @@ function FoodMenuItem({
 }) {
   const { name, image, type, prices, _id } = data;
   const [itemQuantity, setItemQuantity] = useState(1);
-  const { setItemObj, setBannerText, setBannerType } =
+  const { data: userObj, isLoading, error } = useGetUser();
+  const { setItemObj, setBannerText, setBannerType, open } =
     useContext(BannerContext);
   const [selectedOption, setSelectedOption] = useState(
     prices && Object.keys(prices)?.[0]
   );
   const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
-  const { data: user, isLoading, error } = useGetUser();
+
+  const user = !isLoading && userObj.user;
+  // const [numberOfRemainingOrders, setNumberOfRemainingOrders] = useState(
+  //   user.onGoingDeliveriesId.length
+  // );
+
+  // to check whether the cart is empty or has some ongoing orders
+  // const storeCart = useSelector((store) => store.cart);
+  const storeVenue = useSelector((store) => store.venue);
+
+  const isVenueCartEmpty = Object.keys(storeVenue.venue).length === 0;
+
+  // console.log(numberOfRemainingOrders);
 
   function handleIncreaseQuantity(e) {
     e.preventDefault();
@@ -240,6 +253,15 @@ function FoodMenuItem({
       setBannerType("error-warning");
       return;
     }
+    console.log(user.onGoingDeliveriesId);
+    if (user.onGoingDeliveriesId.length === 3) {
+      console.log("User already have maximum numbers of on Going Orders");
+      setBannerText("User already have maximum numbers of on Going Orders");
+      setBannerType("error-warning");
+      open(); // ensuring banner opens
+      return;
+    }
+
     const updatedData = { ...data, _id, prices };
     const orderObj = {
       cuisineName,
@@ -351,7 +373,7 @@ function FoodMenuItem({
               </Button>
             </BannerNotification.Open>
 
-            <BannerNotification.Banner></BannerNotification.Banner>
+            <BannerNotification.Banner />
           </ButtonsDiv>
           <ButtonsDiv>
             <Button
