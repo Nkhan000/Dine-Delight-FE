@@ -19,6 +19,8 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import Notification from "./ui/NotificationWindow";
 import Checkout from "./pages/Checkout";
 import BannerNotification from "./ui/BannerNotification";
+import { AllowOrderContext } from "./utils/contexts";
+import { AllowOrderProvider } from "./ui/AllowOrderContext";
 {
   /* <GlobalStyles /> */
 }
@@ -34,48 +36,50 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <GlobalStyles />
       <BrowserRouter>
-        <BannerNotification>
-          <Notification>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route index element={<Navigate replace to="home" />} />
-                <Route path="/home" element={<Landing />} />
+        <AllowOrderProvider>
+          <BannerNotification>
+            <Notification>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route index element={<Navigate replace to="home" />} />
+                  <Route path="/home" element={<Landing />} />
+
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route path="reservations" element={<Order />} />
+                  <Route path="order" element={<Order />} />
+                  <Route path="cuisine" element={<HORPage />} />
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <Checkout />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Route>
 
                 <Route
-                  path="/dashboard"
+                  path="/login?"
                   element={
                     <ProtectedRoute>
-                      <Dashboard />
+                      {/* <HORPage /> */}
+                      <Login />
                     </ProtectedRoute>
                   }
                 />
-
-                <Route path="reservations" element={<Order />} />
-                <Route path="order" element={<Order />} />
-                <Route path="cuisine" element={<HORPage />} />
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <Checkout />
-                    </ProtectedRoute>
-                  }
-                />
-              </Route>
-
-              <Route
-                path="/login?"
-                element={
-                  <ProtectedRoute>
-                    {/* <HORPage /> */}
-                    <Login />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Notification>
-        </BannerNotification>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Notification>
+          </BannerNotification>
+        </AllowOrderProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

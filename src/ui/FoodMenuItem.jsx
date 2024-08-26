@@ -3,17 +3,18 @@
 import styled from "styled-components";
 import StyledTag from "./StyledTag";
 import Button from "./Button";
-import ButtonGroup from "./ButtonGroup";
 import StyledOptions from "./StyledOptions";
-import Notification from "./NotificationWindow";
 import { useContext, useEffect, useState } from "react";
-import { BannerContext, NotificationContext } from "../utils/contexts";
+import {
+  AllowOrderContext,
+  BannerContext,
+  NotificationContext,
+} from "../utils/contexts";
 import { Link } from "react-router-dom";
 // import { CartContext } from "../context/cartContext";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/cart/cartSlice";
-import { useCusineSingle } from "../features/cuisines/useCuisines";
 import BannerNotification from "./BannerNotification";
 import { useGetUser } from "../features/authentication/useGetUser";
 // BannerContext
@@ -217,26 +218,24 @@ function FoodMenuItem({
   const { name, image, type, prices, _id } = data;
   const [itemQuantity, setItemQuantity] = useState(1);
   const { data: userObj, isLoading, error } = useGetUser();
-  const { setItemObj, setBannerText, setBannerType, open } =
+  const { setBannerItemObj, setBannerText, setBannerType, open } =
     useContext(BannerContext);
+
+  const { tempRemainingOrders, setTempRemainingOrders } =
+    useContext(AllowOrderContext);
   const [selectedOption, setSelectedOption] = useState(
     prices && Object.keys(prices)?.[0]
   );
   const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
 
-  const user = !isLoading && userObj.user;
-  // const [numberOfRemainingOrders, setNumberOfRemainingOrders] = useState(
-  //   user.onGoingDeliveriesId.length
-  // );
-
-  // to check whether the cart is empty or has some ongoing orders
-  // const storeCart = useSelector((store) => store.cart);
+  const user = !isLoading && userObj?.user;
+  const onGoingDeliveries = user?.onGoingDeliveriesId;
   const storeVenue = useSelector((store) => store.venue);
-
+  const storeCart = useSelector((store) => store.cart);
   const isVenueCartEmpty = Object.keys(storeVenue.venue).length === 0;
 
-  // console.log(numberOfRemainingOrders);
+  const onGoingOrdersCuisines = storeCart.cart.map((item) => item.cuisineName);
 
   function handleIncreaseQuantity(e) {
     e.preventDefault();
@@ -247,18 +246,24 @@ function FoodMenuItem({
     setItemQuantity((s) => (s === 1 ? s : s - 1));
   }
 
+  useEffect(() => {
+    setTempRemainingOrders(3 - onGoingDeliveries.length);
+  }, [onGoingDeliveries, setTempRemainingOrders]);
+
   function onSubmit(data) {
     if (!user) {
       setBannerText("Please login to place an order");
       setBannerType("error-warning");
+      open();
       return;
     }
-    console.log(user.onGoingDeliveriesId);
-    if (user.onGoingDeliveriesId.length === 3) {
-      console.log("User already have maximum numbers of on Going Orders");
-      setBannerText("User already have maximum numbers of on Going Orders");
+
+    if (onGoingDeliveries.length === 3) {
+      setBannerText(
+        "User already has the maximum number of ongoing orders. Wait until one finishes."
+      );
       setBannerType("error-warning");
-      open(); // ensuring banner opens
+      open();
       return;
     }
 
@@ -272,11 +277,34 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
-    // For Banner notification
-    setItemObj(updatedData);
-    setBannerType("addItemToCart");
 
-    dispatch(addItem(orderObj));
+    if (onGoingOrdersCuisines.includes(cuisineName)) {
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
+      open();
+      console.log(tempRemainingOrders);
+
+      dispatch(addItem(orderObj));
+      return;
+    }
+    if (tempRemainingOrders > 0 || tempRemainingOrders <= 3) {
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
+      open();
+
+      dispatch(addItem(orderObj));
+      console.log(tempRemainingOrders);
+      setTempRemainingOrders((s) => s - 1);
+    }
+    // else {
+    //   setBannerText(
+    //     "User has the maximum number of items in the cart. Clear the cart before continuing."
+    //   );
+    //   setBannerType("error-warning");
+    //   console.log(tempRemainingOrders, "working");
+
+    //   open();
+    // }
   }
 
   // IMPORTANT FOR INPUT VALUES WHEN STATES are CHANGED
@@ -362,22 +390,13 @@ function FoodMenuItem({
 
         <ButtonsContainer>
           <ButtonsDiv>
-            <BannerNotification.Open>
-              <Button
-                type="submit"
-                size="medium"
-                variation="primary"
-                hover="no"
-              >
-                Add to cart
-              </Button>
-            </BannerNotification.Open>
-
-            <BannerNotification.Banner />
+            <Button type="submit" size="medium" variation="primary" hover="no">
+              Add to cart
+            </Button>
+            <BannerNotification.Banner></BannerNotification.Banner>
           </ButtonsDiv>
           <ButtonsDiv>
             <Button
-              type="submit"
               as={Link}
               to="/checkout"
               size="medium"

@@ -11,62 +11,55 @@ const Container = styled.div`
   width: 100%;
   /* height: 4rem; */
   background-color: var(--color-orange-100);
-  transition: top 0.3s ease-in-out;
+  transition: top 0.5s ease-in-out;
+  border-inline: 5px solid var(--color-grey-100);
   padding: 1rem 0.5rem;
   z-index: 20;
+  position: fixed;
+  top: -50%;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 
-  ${(props) =>
-    props.show == true
-      ? css`
-          position: fixed;
-          top: 0;
-        `
-      : css`
-          position: fixed;
-          top: -50%;
-        `}
-  ${(props) =>
-    props.show == true && props.bannerType == "error-warning"
-      ? css`
-          top: 3%;
-          left: 35%;
-          width: fit-content;
-          padding: 2rem;
-          border-radius: 1.5rem;
-        `
-      : css`
-          top: -10%;
-          left: 35%;
-          width: fit-content;
-          padding: 2rem;
-          border-radius: 1.5rem;
-        `}
-  ${(props) =>
-    props.show == true && props.bannerType == "addItemToCart"
-      ? css`
-          top: 0%;
-          left: 0%;
-          width: 100%;
-          padding: 1rem;
-          border-radius: 0;
-        `
-      : css`
-          top: -10%;
-          width: 100%;
-          left: 0%;
-          padding: 1rem;
-          border-radius: 0;
-        `}
+  ${(props) => {
+    if (props.show && props.bannerType === "addItemToCart") {
+      return css`
+        position: fixed;
+        top: 0%;
+        left: 0%;
+        opacity: 1;
+      `;
+    }
+
+    if (props.show && props.bannerType === "error-warning") {
+      return css`
+        position: fixed;
+        top: 2%;
+        left: 25%;
+        width: max-content;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        opacity: 1;
+      `;
+    }
+
+    // Default hidden state for both cases
+    return css`
+      position: fixed;
+      top: -50%;
+      opacity: 0;
+    `;
+  }}
+
   display: grid;
   grid-template-columns: 95% 1fr;
   justify-content: center;
 `;
 const TextContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
-  gap: 1.5rem;
+  width: max-content;
+  /* gap: 5rem; */
 `;
 
 const BannerText = styled.span`
@@ -78,7 +71,11 @@ const BannerTextStrong = styled.span`
   color: var(--color-grey-100);
   font-weight: 600;
   font-size: 1.5rem;
-  border-bottom: 2px solid var(--color-grey-100);
+  ${(props) =>
+    props.hasUnderline == true &&
+    css`
+      border-bottom: 2px solid var(--color-grey-100);
+    `}
 `;
 
 const BannerTextSm = styled.span`
@@ -86,6 +83,7 @@ const BannerTextSm = styled.span`
   font-size: 1.5rem;
 `;
 const BannerLink = styled(Link)`
+  display: inline-block;
   color: var(--color-grey-100);
   font-weight: 300;
   font-size: 1.5rem;
@@ -106,7 +104,7 @@ const ButtonContainer = styled.div`
 
 function BannerNotification({ children }) {
   const [bannerOpen, setBannerOpen] = useState(false);
-  const [itemObj, setItemObj] = useState({});
+  const [bannerItemObj, setBannerItemObj] = useState({});
   const [bannerText, setBannerText] = useState("");
   const [bannerType, setBannerType] = useState("addingToCart");
   const [time, setTime] = useState(10000);
@@ -127,14 +125,14 @@ function BannerNotification({ children }) {
     <BannerContext.Provider
       value={{
         bannerOpen,
-        setItemObj,
+        bannerText,
+        bannerType,
+        bannerItemObj,
+        setBannerItemObj,
         setBannerOpen,
         setTime,
         setBannerText,
-        bannerText,
-        bannerType,
         setBannerType,
-        itemObj,
         close,
         open,
       }}
@@ -144,69 +142,48 @@ function BannerNotification({ children }) {
   );
 }
 
-function Open({ children }) {
-  const { open, setTime } = useContext(BannerContext);
-  console.log("banner opened");
-  function handleClick() {
-    setTime(5000);
-    open();
-  }
-  return <div onClick={handleClick}>{children}</div>;
-}
-
 function Banner() {
-  const { bannerOpen, close, itemObj, bannerText, bannerType } =
+  const { bannerOpen, close, bannerItemObj, bannerText, bannerType } =
     useContext(BannerContext);
-  const { name, price, quantity } = itemObj;
+  const { name, price, quantity } = bannerItemObj;
+  if (bannerOpen) {
+    return createPortal(
+      <Container bannerType={bannerType} show={bannerOpen}>
+        {bannerType == "addItemToCart" && (
+          <TextContainer>
+            <div>
+              <BannerTextStrong hasUnderline={true}>
+                {quantity}
+              </BannerTextStrong>
+              <BannerTextStrong hasUnderline={true}>
+                &nbsp;x&nbsp;
+              </BannerTextStrong>
+              <BannerTextStrong>{name}</BannerTextStrong>{" "}
+              <BannerTextSm>for </BannerTextSm>
+              <BannerTextStrong hasUnderline={true}>
+                ${price}{" "}
+              </BannerTextStrong>{" "}
+              <BannerTextSm>has been added to the cart</BannerTextSm>
+            </div>
+            <BannerLink to={"/checkout"}>(Proceed to checkout)</BannerLink>
+          </TextContainer>
+        )}
+        {bannerType == "error-warning" && (
+          <TextContainer>
+            <BannerTextStrong>{bannerText}</BannerTextStrong>
+          </TextContainer>
+        )}
 
-  return createPortal(
-    <Container bannerType={bannerType} show={bannerOpen}>
-      {bannerType == "addItemToCart" && (
-        <TextContainer>
-          <div>
-            <BannerTextStrong>{quantity}</BannerTextStrong>
-            <BannerTextStrong>&nbsp;x&nbsp;</BannerTextStrong>
-            <BannerTextStrong>{name}</BannerTextStrong>{" "}
-            <BannerTextSm>for </BannerTextSm>
-            <BannerTextStrong>${price} </BannerTextStrong>{" "}
-            <BannerTextSm>has been added to the cart</BannerTextSm>
-          </div>
-          <BannerLink to={"/checkout"}>(Proceed to checkout)</BannerLink>
-        </TextContainer>
-      )}
-      {bannerType == "error-warning" && (
-        <TextContainer>
-          <BannerTextSm>{bannerText}</BannerTextSm>
-          <BannerLink to={"/login"}>(Click here to login)</BannerLink>
-        </TextContainer>
-      )}
-      <ButtonContainer>
-        <Button size="small" variation="secondary" hover="no" onClick={close}>
-          X
-        </Button>
-      </ButtonContainer>
-    </Container>,
-    document.body
-  );
+        <ButtonContainer>
+          <Button size="small" variation="secondary" hover="no" onClick={close}>
+            X
+          </Button>
+        </ButtonContainer>
+      </Container>,
+      document.body
+    );
+  }
 }
-BannerNotification.Open = Open;
+// BannerNotification.Open = Open;
 BannerNotification.Banner = Banner;
 export default BannerNotification;
-
-// <Container show={bannerOpen}>
-//         <TextContainer>
-//           <div>
-//             <BannerTextStrong>{itemQuanity}</BannerTextStrong>
-//             <BannerTextStrong>&nbsp;x&nbsp;</BannerTextStrong>
-//             <BannerTextStrong>{itemName}</BannerTextStrong>{" "}
-//             <BannerTextSm>has been added to the cart</BannerTextSm>
-//           </div>
-//           <BannerLink to={"/checkout"}>(Proceed to checkout)</BannerLink>
-//         </TextContainer>
-
-//         <ButtonContainer>
-//           <Button size="small" variation="secondary" hover="no">
-//             X
-//           </Button>
-//         </ButtonContainer>
-//       </Container>

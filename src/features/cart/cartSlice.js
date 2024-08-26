@@ -52,7 +52,7 @@ export default function cartReducer(state = initialState, action) {
         updatedCart = [...state.cart, action.payload];
       }
 
-      //FOr calucalating total and cart total
+      //For calucalating total and cart total
       const data = getTotalAndCartTotal(updatedCart);
 
       return {
