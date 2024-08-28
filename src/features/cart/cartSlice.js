@@ -2,6 +2,7 @@
 const initialState = {
   cart: [],
   cartTotal: 0,
+  // remainingOrders: 3,
 };
 
 function getTotalAndCartTotal(cart) {
@@ -23,6 +24,14 @@ function getTotalAndCartTotal(cart) {
 }
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
+    // case "cart/updateRemainingOrders": {
+    //   const remainingOrders = action.payload.remainingOrders;
+    //   return {
+    //     ...state,
+    //     remainingOrders: 3 - remainingOrders,
+    //   };
+    // }
+
     case "cart/addItem": {
       let updatedCart = [];
       if (state.cart.length > 0) {
@@ -213,3 +222,7 @@ export function updateItemSize(itemObj) {
 export function clearCartFromReduxState() {
   return { type: "cart/clearAll" };
 }
+
+// export function updateRemainingOrders(itemObj) {
+//   return { type: "cart/updateRemainingOrders", payload: itemObj };
+// }

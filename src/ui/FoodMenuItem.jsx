@@ -221,8 +221,10 @@ function FoodMenuItem({
   const { setBannerItemObj, setBannerText, setBannerType, open } =
     useContext(BannerContext);
 
-  const { tempRemainingOrders, setTempRemainingOrders } =
-    useContext(AllowOrderContext);
+  // const { tempRemainingOrders, setTempRemainingOrders } =
+  //   useContext(AllowOrderContext);
+  const [tempRemainingOrders, setTempRemainingOrders] = useState(0);
+  localStorage.setItem("remaining-orders", tempRemainingOrders);
   const [selectedOption, setSelectedOption] = useState(
     prices && Object.keys(prices)?.[0]
   );
@@ -246,9 +248,13 @@ function FoodMenuItem({
     setItemQuantity((s) => (s === 1 ? s : s - 1));
   }
 
-  useEffect(() => {
-    setTempRemainingOrders(3 - onGoingDeliveries.length);
-  }, [onGoingDeliveries, setTempRemainingOrders]);
+  // useEffect(() => {
+  //   setTempRemainingOrders((s) => (s = 3 - onGoingDeliveries.length));
+  // }, [onGoingDeliveries, setTempRemainingOrders, tempRemainingOrders]);
+
+  // console.log(localStorage.getItem("remaining-orders"));
+
+  console.log(storeCart.remainingOrders);
 
   function onSubmit(data) {
     if (!user) {
@@ -268,6 +274,7 @@ function FoodMenuItem({
     }
 
     const updatedData = { ...data, _id, prices };
+    setTempRemainingOrders((s) => (s = 3 - onGoingDeliveries.length));
     const orderObj = {
       cuisineName,
       cuisineId,
@@ -278,24 +285,24 @@ function FoodMenuItem({
       orderItems: [updatedData],
     };
 
-    if (onGoingOrdersCuisines.includes(cuisineName)) {
-      setBannerItemObj(updatedData);
-      setBannerType("addItemToCart");
-      open();
-      console.log(tempRemainingOrders);
+    // if (onGoingOrdersCuisines.includes(cuisineName)) {
+    //   setBannerItemObj(updatedData);
+    //   setBannerType("addItemToCart");
+    //   open();
+    //   console.log(tempRemainingOrders);
 
-      dispatch(addItem(orderObj));
-      return;
-    }
-    if (tempRemainingOrders > 0 || tempRemainingOrders <= 3) {
-      setBannerItemObj(updatedData);
-      setBannerType("addItemToCart");
-      open();
+    //   dispatch(addItem(orderObj));
+    //   return;
+    // }
+    // if (tempRemainingOrders > 0 || tempRemainingOrders <= 3) {
+    //   setBannerItemObj(updatedData);
+    //   setBannerType("addItemToCart");
+    //   open();
 
-      dispatch(addItem(orderObj));
-      console.log(tempRemainingOrders);
-      setTempRemainingOrders((s) => s - 1);
-    }
+    //   dispatch(addItem(orderObj));
+    //   console.log(tempRemainingOrders);
+    //   setTempRemainingOrders((s) => s - 1);
+    // }
     // else {
     //   setBannerText(
     //     "User has the maximum number of items in the cart. Clear the cart before continuing."
