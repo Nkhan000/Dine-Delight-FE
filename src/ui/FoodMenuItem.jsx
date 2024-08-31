@@ -180,8 +180,6 @@ function FoodMenuItem({
     }
   }, [remainingOrders, isLoadingUser, dispatch, storeRemainingOrders]);
 
-  // console.log("test", storeRemainingOrders);
-
   function handleIncreaseQuantity(e) {
     e.preventDefault();
     setItemQuantity((s) => (s === 12 ? s : s + 1));
@@ -197,7 +195,7 @@ function FoodMenuItem({
       open();
       return;
     }
-    // const parsedCart = JSON.parse(storeCart.cart);
+
     const updatedData = { ...data, _id, prices };
     const orderObj = {
       cuisineName,
@@ -208,46 +206,36 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
-    // console.log(parsedCart);
-    console.log(storeCart);
-    // if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
-    //   setBannerItemObj(updatedData);
-    //   setBannerType("addItemToCart");
-    //   open();
-    //   dispatch(addItem(orderObj));
-    //   console.log(
-    //     parsedCart.cart.some((item) => item.cuisineName === cuisineName)
-    //   );
-    // } else {
-    //   setBannerItemObj(updatedData);
-    //   setBannerType("addItemToCart");
-    //   open();
-    //   dispatch(addItem(orderObj));
-    //   console.log(parsedCart);
-    //   const newRemainingOrder = storeRemainingOrders - 1;
-    //   dispatch(
-    //     decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
-    //   );
-    // }
-    // if (storeRemainingOrders === 0) {
-    //   setBannerText(
-    //     "User already has the maximum number of ongoing orders. Wait until one finishes."
-    //   );
-    //   setBannerType("error-warning");
-    //   open();
-    // }
-
-    // if (storeCart.cart.map((item) => item.cuisineName).includes(cuisineName)) {
-    //   console.log(
-    //     storeCart.cart.map((item) => item.cuisineName).includes(cuisineName)
-    //   );
-    //   console.log(orderObj);
-    // } else {
-    //   const newRemainingOrder = storeRemainingOrders - 1;
-    //   dispatch(
-    //     decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
-    //   );
-    // }
+    if (
+      storeRemainingOrders === 0 &&
+      storeCart.cart.some((item) => item.cuisineName !== cuisineName)
+    ) {
+      setBannerText(
+        "User already has the maximum number of ongoing orders. Wait until one finishes."
+      );
+      setBannerType("error-warning");
+      open();
+    } else {
+      if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
+        setBannerItemObj(updatedData);
+        setBannerType("addItemToCart");
+        open();
+        dispatch(addItem(orderObj));
+        console.log(
+          storeCart.cart.some((item) => item.cuisineName === cuisineName)
+        );
+      } else {
+        setBannerItemObj(updatedData);
+        setBannerType("addItemToCart");
+        open();
+        dispatch(addItem(orderObj));
+        console.log(storeCart);
+        const newRemainingOrder = storeRemainingOrders - 1;
+        dispatch(
+          decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
+        );
+      }
+    }
   }
 
   // IMPORTANT FOR INPUT VALUES WHEN STATES are CHANGED

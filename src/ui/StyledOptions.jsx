@@ -58,7 +58,8 @@ function StyledOptions({
       return;
     }
     setSelectedOption(e.target.value);
-    dispatch(dispatchFn({ cuisineId, itemId, newSize: e.target.value }));
+    if (dispatchFn)
+      dispatch(dispatchFn({ cuisineId, itemId, newSize: e.target.value }));
   }
   return (
     <OptionsDiv>
