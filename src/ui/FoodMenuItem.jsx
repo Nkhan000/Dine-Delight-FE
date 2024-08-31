@@ -5,11 +5,7 @@ import StyledTag from "./StyledTag";
 import Button from "./Button";
 import StyledOptions from "./StyledOptions";
 import { useContext, useEffect, useState } from "react";
-import {
-  AllowOrderContext,
-  BannerContext,
-  NotificationContext,
-} from "../utils/contexts";
+import { BannerContext, NotificationContext } from "../utils/contexts";
 import { Link } from "react-router-dom";
 // import { CartContext } from "../context/cartContext";
 import { useForm } from "react-hook-form";
@@ -17,20 +13,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/cart/cartSlice";
 import BannerNotification from "./BannerNotification";
 import { useGetUser } from "../features/authentication/useGetUser";
-// BannerContext
+import {
+  decreaseRemOrderOnAddNewOrder,
+  setInitialRemOrders,
+} from "../features/cart/remainingOrderSlice";
 
-// const Container = styled.div`
-//   background-color: var(--color-grey-900);
-//   display: grid;
-//   grid-template-columns: min-content 1fr;
-//   align-items: center;
-//   height: min-content;
-//   width: 100%;
-//   border-radius: 1rem;
-//   border-top-left-radius: 10rem;
-//   border-bottom-left-radius: 10rem;
-//   overflow: hidden;
-// `;
 const Container = styled.form`
   /* display: flex; */
   display: grid;
@@ -56,7 +43,6 @@ const Container = styled.form`
 `;
 
 const ImageDiv = styled.div`
-  /* width: 12rem; */
   height: 100%;
   overflow: hidden;
   position: relative;
@@ -128,7 +114,6 @@ const ButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  /* align-self: flex-end; */
   justify-content: space-between;
 `;
 
@@ -143,7 +128,6 @@ const QuantityInputValueShow = styled.span`
   height: 3rem;
   width: 3rem;
   color: var(--color-grey-200);
-  /* border: 1px solid; */
   padding: 0.5px;
 
   display: flex;
@@ -153,57 +137,6 @@ const QuantityInputValueShow = styled.span`
 
 const QuantityInput = styled.input`
   display: none;
-`;
-
-const StyledRadioDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 1rem 0rem;
-`;
-
-const RadioLabel = styled.label`
-  font-size: 1.4rem;
-  font-weight: 600;
-`;
-
-const StyledCircle = styled.div`
-  display: inline-block;
-  height: 1.6rem;
-  width: 1.6rem;
-  border-radius: 50%;
-  border: 2px solid var(--color-orange-50);
-  position: relative;
-
-  &::after {
-    position: absolute;
-    content: "";
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 0.8rem;
-    width: 0.8rem;
-    border-radius: 50%;
-    background-color: var(--color-orange-50);
-    display: none;
-  }
-`;
-
-const RadioDiv = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  & input {
-    display: none;
-  }
-  & input:checked + div::after {
-    display: block;
-  }
-
-  & input:checked ~ label {
-    color: var(--color-grey-300);
-  }
 `;
 
 function FoodMenuItem({
@@ -217,27 +150,37 @@ function FoodMenuItem({
 }) {
   const { name, image, type, prices, _id } = data;
   const [itemQuantity, setItemQuantity] = useState(1);
-  const { data: userObj, isLoading, error } = useGetUser();
+  const {
+    data: userObj,
+    isLoading: isLoadingUser,
+    error,
+    remainingOrders,
+  } = useGetUser();
+
   const { setBannerItemObj, setBannerText, setBannerType, open } =
     useContext(BannerContext);
 
-  // const { tempRemainingOrders, setTempRemainingOrders } =
-  //   useContext(AllowOrderContext);
-  const [tempRemainingOrders, setTempRemainingOrders] = useState(0);
-  localStorage.setItem("remaining-orders", tempRemainingOrders);
   const [selectedOption, setSelectedOption] = useState(
     prices && Object.keys(prices)?.[0]
   );
   const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
 
-  const user = !isLoading && userObj?.user;
-  const onGoingDeliveries = user?.onGoingDeliveriesId;
-  const storeVenue = useSelector((store) => store.venue);
+  const user = !isLoadingUser && userObj?.user;
   const storeCart = useSelector((store) => store.cart);
-  const isVenueCartEmpty = Object.keys(storeVenue.venue).length === 0;
+  const storeRemainingOrders = useSelector(
+    (store) => store.remainingOrders
+  ).remainingOrders;
 
-  const onGoingOrdersCuisines = storeCart.cart.map((item) => item.cuisineName);
+  useEffect(() => {
+    if (!isLoadingUser && remainingOrders) {
+      if (storeRemainingOrders === null || storeRemainingOrders === undefined) {
+        dispatch(setInitialRemOrders({ remainingOrders }));
+      }
+    }
+  }, [remainingOrders, isLoadingUser, dispatch, storeRemainingOrders]);
+
+  // console.log("test", storeRemainingOrders);
 
   function handleIncreaseQuantity(e) {
     e.preventDefault();
@@ -247,15 +190,6 @@ function FoodMenuItem({
     e.preventDefault();
     setItemQuantity((s) => (s === 1 ? s : s - 1));
   }
-
-  // useEffect(() => {
-  //   setTempRemainingOrders((s) => (s = 3 - onGoingDeliveries.length));
-  // }, [onGoingDeliveries, setTempRemainingOrders, tempRemainingOrders]);
-
-  // console.log(localStorage.getItem("remaining-orders"));
-
-  console.log(storeCart.remainingOrders);
-
   function onSubmit(data) {
     if (!user) {
       setBannerText("Please login to place an order");
@@ -263,18 +197,8 @@ function FoodMenuItem({
       open();
       return;
     }
-
-    if (onGoingDeliveries.length === 3) {
-      setBannerText(
-        "User already has the maximum number of ongoing orders. Wait until one finishes."
-      );
-      setBannerType("error-warning");
-      open();
-      return;
-    }
-
+    // const parsedCart = JSON.parse(storeCart.cart);
     const updatedData = { ...data, _id, prices };
-    setTempRemainingOrders((s) => (s = 3 - onGoingDeliveries.length));
     const orderObj = {
       cuisineName,
       cuisineId,
@@ -284,33 +208,45 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
-
-    // if (onGoingOrdersCuisines.includes(cuisineName)) {
+    // console.log(parsedCart);
+    console.log(storeCart);
+    // if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
     //   setBannerItemObj(updatedData);
     //   setBannerType("addItemToCart");
     //   open();
-    //   console.log(tempRemainingOrders);
-
     //   dispatch(addItem(orderObj));
-    //   return;
-    // }
-    // if (tempRemainingOrders > 0 || tempRemainingOrders <= 3) {
+    //   console.log(
+    //     parsedCart.cart.some((item) => item.cuisineName === cuisineName)
+    //   );
+    // } else {
     //   setBannerItemObj(updatedData);
     //   setBannerType("addItemToCart");
     //   open();
-
     //   dispatch(addItem(orderObj));
-    //   console.log(tempRemainingOrders);
-    //   setTempRemainingOrders((s) => s - 1);
+    //   console.log(parsedCart);
+    //   const newRemainingOrder = storeRemainingOrders - 1;
+    //   dispatch(
+    //     decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
+    //   );
     // }
-    // else {
+    // if (storeRemainingOrders === 0) {
     //   setBannerText(
-    //     "User has the maximum number of items in the cart. Clear the cart before continuing."
+    //     "User already has the maximum number of ongoing orders. Wait until one finishes."
     //   );
     //   setBannerType("error-warning");
-    //   console.log(tempRemainingOrders, "working");
-
     //   open();
+    // }
+
+    // if (storeCart.cart.map((item) => item.cuisineName).includes(cuisineName)) {
+    //   console.log(
+    //     storeCart.cart.map((item) => item.cuisineName).includes(cuisineName)
+    //   );
+    //   console.log(orderObj);
+    // } else {
+    //   const newRemainingOrder = storeRemainingOrders - 1;
+    //   dispatch(
+    //     decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
+    //   );
     // }
   }
 

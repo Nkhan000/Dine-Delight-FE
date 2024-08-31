@@ -19,7 +19,7 @@ export function useCreateDelivery() {
       navigate("/dashboard?userPanel=ongoingOrders");
     },
     onError: (err) => {
-      console.log("Something went while creating a new Order", err);
+      console.log("Something went wrong while creating a new Order", err);
     },
   });
 
