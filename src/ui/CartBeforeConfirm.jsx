@@ -14,6 +14,7 @@ import cartReducer, {
 import { useDispatch, useSelector } from "react-redux";
 import { Form, useNavigate } from "react-router-dom";
 import { useGetUser } from "../features/authentication/useGetUser";
+import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
 
 const Container = styled.div`
   display: flex;
@@ -186,8 +187,15 @@ const CancelButtonDiv = styled.div`
 function CartBeforeConfirm({ size }) {
   // let cuisineId;
   const dispatch = useDispatch();
-  const { data: user, isLoading } = useGetUser();
+  const {
+    data: user,
+    isLoading: isLoadingUser,
+    remainingOrders,
+    error,
+  } = useGetUser();
+
   const order = useSelector((store) => store.cart);
+  const storeRemainingOrders = useSelector((store) => store.remainingOrders);
   const { cart, cartTotal } = order;
   const [newItemQuantity, setNewItemQuantity] = useState(
     cart.map((order) => order?.orderItems.map((item) => item.quantity))
@@ -279,6 +287,14 @@ function CartBeforeConfirm({ size }) {
     handleUpdateQuantity(cuisineId, itemId, newQuantity, newSize);
   }
 
+  function handleDeleteCuisine() {
+    dispatch(removeSingleCuisine({ cuisineId: order.cuisineId }));
+    const newRemainingOrders = storeRemainingOrders + 1;
+    dispatch(
+      decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrders })
+    );
+  }
+
   return (
     <Container>
       {cart.length == 0 ? (
@@ -291,11 +307,7 @@ function CartBeforeConfirm({ size }) {
                 <Button
                   size="small"
                   variation="secondary"
-                  onClick={() =>
-                    dispatch(
-                      removeSingleCuisine({ cuisineId: order.cuisineId })
-                    )
-                  }
+                  onClick={handleDeleteCuisine}
                 >
                   Cancel Order
                 </Button>

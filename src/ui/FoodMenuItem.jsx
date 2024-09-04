@@ -167,18 +167,17 @@ function FoodMenuItem({
   const dispatch = useDispatch();
 
   const user = !isLoadingUser && userObj?.user;
-  const storeCart = useSelector((store) => store.cart);
-  const storeRemainingOrders = useSelector(
-    (store) => store.remainingOrders
-  ).remainingOrders;
+  const { hasUserPremium, remainingBatchOrder } = user;
+
+  const reduxStore = useSelector((store) => store);
+  const { cart: storeCart, remainingOrders: storeRemainingOrders } = reduxStore;
+  console.log(remainingBatchOrder);
 
   useEffect(() => {
-    if (!isLoadingUser && remainingOrders) {
-      if (storeRemainingOrders === null || storeRemainingOrders === undefined) {
-        dispatch(setInitialRemOrders({ remainingOrders }));
-      }
-    }
-  }, [remainingOrders, isLoadingUser, dispatch, storeRemainingOrders]);
+    dispatch(
+      decreaseRemOrderOnAddNewOrder({ remainingOrders: remainingBatchOrder })
+    );
+  }, []);
 
   function handleIncreaseQuantity(e) {
     e.preventDefault();
@@ -206,36 +205,56 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
-    if (
-      storeRemainingOrders === 0 &&
-      storeCart.cart.some((item) => item.cuisineName !== cuisineName)
-    ) {
-      setBannerText(
-        "User already has the maximum number of ongoing orders. Wait until one finishes."
-      );
-      setBannerType("error-warning");
+
+    // Check if user hasPremium and has remaining batch orders left
+    if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
+      dispatch(addItem(orderObj));
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
       open();
-    } else {
-      if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
+      return;
+    }
+    if (storeCart.cart.length === 0) {
+      dispatch(addItem(orderObj));
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
+      open();
+      return;
+    }
+    if (!hasUserPremium) {
+      if (storeCart.cart.length === 1 && remainingOrders === 0) {
+        setBannerText(
+          "Zero batch orders left. Adding more than one cuisine is a premium feature."
+        );
+        setBannerType("error-warning");
+        open();
+      } else if (storeCart.cart.length === 3 && remainingOrders === 1) {
+        setBannerText(
+          "Maximum numbers of cuisines added. Complete previous order to continue."
+        );
+        setBannerType("error-warning");
+        open();
+      } else if (storeCart.cart.length < 3 && remainingOrders === 1) {
+        const isTheThirdOrder = storeCart.cart.length + 1 === 3;
+        if (isTheThirdOrder) {
+          dispatch(decreaseRemOrderOnAddNewOrder({ remainingOrders: 0 }));
+        }
+        dispatch(addItem(orderObj));
         setBannerItemObj(updatedData);
         setBannerType("addItemToCart");
         open();
-        dispatch(addItem(orderObj));
-        console.log(
-          storeCart.cart.some((item) => item.cuisineName === cuisineName)
-        );
-      } else {
-        setBannerItemObj(updatedData);
-        setBannerType("addItemToCart");
-        open();
-        dispatch(addItem(orderObj));
-        console.log(storeCart);
-        const newRemainingOrder = storeRemainingOrders - 1;
-        dispatch(
-          decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrder })
-        );
       }
     }
+
+    // if noPremium and has no batch orders left and trying to add more than one cuisines to the cart -> send error
+
+    // if has noPremium has batch orders left (meaning only 1 batchOrder is left) then
+
+    // 1. Allow upto three cuisines to be added to cart and decrease remainingOrders to 0
+
+    // 2. see if there are already 3 cuisines in the cart -> send error saying maximum numbers of cusines has been added
+
+    // 3. Allow adding from the cusine which are already present in the cart
   }
 
   // IMPORTANT FOR INPUT VALUES WHEN STATES are CHANGED

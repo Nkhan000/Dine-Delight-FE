@@ -20,12 +20,10 @@ export function useGetUser() {
 
   useEffect(() => {
     if (data) {
-      const userOrders = data.user?.onGoingDeliveriesId.length;
-      setRemainingOrders(3 - userOrders);
+      const userOrders = data.user?.remainingBatchOrder;
+      setRemainingOrders(userOrders);
     }
   }, [data]);
-
-  // console.log(remainingOrders);
 
   return { data, isLoading, error, remainingOrders, setRemainingOrders };
 }
