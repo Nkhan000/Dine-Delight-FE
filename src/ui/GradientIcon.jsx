@@ -11,14 +11,14 @@ const StyledDivIcon = styled.div`
   position: relative;
 
   ${(props) =>
-    props.iconHeight &&
+    props.iconheight &&
     css`
-      height: ${props.iconHeight}${"rem"};
-      width: ${props.iconHeight}${"rem"};
+      height: ${props.iconheight}${"rem"};
+      width: ${props.iconheight}${"rem"};
 
       & svg {
-        height: ${props.iconHeight - 0.4}${"rem"};
-        width: ${props.iconHeight - 0.4}${"rem"};
+        height: ${props.iconheight - 0.4}${"rem"};
+        width: ${props.iconheight - 0.4}${"rem"};
       }
     `}
 
@@ -34,9 +34,9 @@ const StyledDivIcon = styled.div`
   }
 `;
 
-function GradientIcon({ iconHeight, children }) {
+function GradientIcon({ iconheight, children }) {
   return (
-    <StyledDivIcon iconHeight={iconHeight}>
+    <StyledDivIcon iconheight={iconheight}>
       <svg>
         <linearGradient
           id="orange-gradient"

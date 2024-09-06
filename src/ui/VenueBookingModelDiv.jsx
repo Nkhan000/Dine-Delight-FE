@@ -13,6 +13,7 @@ import {
 import Modal from "./Modal";
 import CheckBeforeConfirm from "./CheckBeforeConfirm";
 import { clearCartFromReduxState } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
 
 const ModalDiv = styled.div`
   display: flex;
@@ -195,6 +196,7 @@ function VenueBookingModelDiv({
     pricePerDay,
     total: pricePerDay * numOfDays,
   };
+  const navigate = useNavigate();
 
   // if cart has some ongoing orders than alert the user with overwrite warning else add the order to the cart
   function handleConfirmClick() {
@@ -205,6 +207,7 @@ function VenueBookingModelDiv({
       dispatch(removeVenueBooking());
       dispatch(addAVenueBooking(orderObj));
     }
+    navigate("/checkout");
     console.log(orderObj);
   }
   return (
@@ -295,7 +298,7 @@ function VenueBookingModelDiv({
                 </Modal.Open>
                 <Modal.ModalWindow>
                   <CheckBeforeConfirm
-                    orderObj={orderObj}
+                    type="venue"
                     handleClick={handleConfirmClick}
                   />
                 </Modal.ModalWindow>

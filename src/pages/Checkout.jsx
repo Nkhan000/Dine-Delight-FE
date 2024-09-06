@@ -191,7 +191,6 @@ function Checkout() {
   function handleConfirmOrder() {
     const orderObj = {
       orders: { cart: order.cart, cartTotal: order.cartTotal },
-      userId: user?._id,
     };
     console.log(orderObj);
     newOrder(orderObj);
@@ -207,7 +206,7 @@ function Checkout() {
           <GradientHighlight>
             <span>Checkout</span>
           </GradientHighlight>
-          <GradientIcon iconHeight={5}>
+          <GradientIcon iconheight={5}>
             <HiShoppingCart />
           </GradientIcon>
         </HeadTextDiv>
@@ -252,7 +251,7 @@ function Checkout() {
                     placeholder="Redeem Offer Code"
                   />
                   <button>
-                    <GradientIcon iconHeight={3.5}>
+                    <GradientIcon iconheight={3.5}>
                       <span>
                         <HiTicket />
                       </span>

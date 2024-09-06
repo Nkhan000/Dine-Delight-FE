@@ -6,17 +6,20 @@ import Button from "./Button";
 import StyledOptions from "./StyledOptions";
 import { useContext, useEffect, useState } from "react";
 import { BannerContext, NotificationContext } from "../utils/contexts";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 // import { CartContext } from "../context/cartContext";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../features/cart/cartSlice";
+import { addItem, clearCartFromReduxState } from "../features/cart/cartSlice";
 import BannerNotification from "./BannerNotification";
 import { useGetUser } from "../features/authentication/useGetUser";
+import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
+import Modal from "./Modal";
+import CheckBeforeConfirm from "./CheckBeforeConfirm";
 import {
-  decreaseRemOrderOnAddNewOrder,
-  setInitialRemOrders,
-} from "../features/cart/remainingOrderSlice";
+  addAVenueBooking,
+  removeVenueBooking,
+} from "../features/cart/venueBookingSlice";
 
 const Container = styled.form`
   /* display: flex; */
@@ -154,7 +157,7 @@ function FoodMenuItem({
     data: userObj,
     isLoading: isLoadingUser,
     error,
-    remainingOrders,
+    // remainingOrders,
   } = useGetUser();
 
   const { setBannerItemObj, setBannerText, setBannerType, open } =
@@ -163,21 +166,45 @@ function FoodMenuItem({
   const [selectedOption, setSelectedOption] = useState(
     prices && Object.keys(prices)?.[0]
   );
+
   const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
 
   const user = !isLoadingUser && userObj?.user;
-  const { hasUserPremium, remainingBatchOrder } = user;
+  const { hasUserPremium, remainingBatchOrders } = user;
 
   const reduxStore = useSelector((store) => store);
-  const { cart: storeCart, remainingOrders: storeRemainingOrders } = reduxStore;
-  console.log(remainingBatchOrder);
+  // console.log(remainingBatchOrders);
 
   useEffect(() => {
     dispatch(
-      decreaseRemOrderOnAddNewOrder({ remainingOrders: remainingBatchOrder })
+      decreaseRemOrderOnAddNewOrder({ remainingOrders: remainingBatchOrders })
     );
-  }, []);
+  }, [remainingBatchOrders, dispatch]);
+  const {
+    cart: storeCartObj,
+    remainingOrders: storeRemainingOrders,
+    venue: storeVenueObj,
+  } = reduxStore;
+  const storeCart = storeCartObj.cart;
+  const storeVenue = storeVenueObj.venue;
+
+  const remainingOrders = storeRemainingOrders.remainingOrders;
+  const [overWriteWarning, setOverWriteWarning] = useState(false);
+  const [currentCuisine, setCurrentCusine] = useState(cuisineName);
+  const location = useLocation();
+
+  useEffect(() => {
+    setOverWriteWarning(
+      !hasUserPremium &&
+        remainingOrders === 0 &&
+        (storeCart.length === 1 || Object.keys(storeVenue).length >= 1)
+    );
+  }, [location, remainingOrders, storeCart, storeVenue, hasUserPremium]);
+
+  useEffect(() => {
+    setCurrentCusine(cuisineName);
+  }, [location, cuisineName]);
 
   function handleIncreaseQuantity(e) {
     e.preventDefault();
@@ -187,6 +214,7 @@ function FoodMenuItem({
     e.preventDefault();
     setItemQuantity((s) => (s === 1 ? s : s - 1));
   }
+  let orderObj;
   function onSubmit(data) {
     if (!user) {
       setBannerText("Please login to place an order");
@@ -196,7 +224,7 @@ function FoodMenuItem({
     }
 
     const updatedData = { ...data, _id, prices };
-    const orderObj = {
+    orderObj = {
       cuisineName,
       cuisineId,
       cuisineImage,
@@ -205,40 +233,41 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
+    console.log(orderObj);
+    if (storeCart.some((item) => item.cuisineName === cuisineName)) {
+      dispatch(addItem(orderObj));
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
+      open();
+      return;
+    }
+    if (!overWriteWarning && storeCart.length === 0) {
+      dispatch(addItem(orderObj));
+      setBannerItemObj(updatedData);
+      setBannerType("addItemToCart");
+      open();
+      return;
+    }
 
-    // Check if user hasPremium and has remaining batch orders left
-    if (storeCart.cart.some((item) => item.cuisineName === cuisineName)) {
-      dispatch(addItem(orderObj));
-      setBannerItemObj(updatedData);
-      setBannerType("addItemToCart");
-      open();
-      return;
-    }
-    if (storeCart.cart.length === 0) {
-      dispatch(addItem(orderObj));
-      setBannerItemObj(updatedData);
-      setBannerType("addItemToCart");
-      open();
-      return;
-    }
     if (!hasUserPremium) {
-      if (storeCart.cart.length === 1 && remainingOrders === 0) {
-        setBannerText(
-          "Zero batch orders left. Adding more than one cuisine is a premium feature."
-        );
-        setBannerType("error-warning");
-        open();
-      } else if (storeCart.cart.length === 3 && remainingOrders === 1) {
+      // overwrite previous order warning should be given in this condition
+      // if (
+      //   // (storeCart.length === 1 || Object.keys(storeVenue).length >= 1) &&
+      //   storeCart.length === 1 &&
+      //   remainingOrders === 0
+      // ) {
+      //   setOverWriteWarning(true);
+      //   setBannerText("Maximum numbers of cuisines added..");
+      //   setBannerType("error-warning");
+      //   open();
+      // } else
+      if (storeCart.length === 3 && remainingOrders === 1) {
         setBannerText(
           "Maximum numbers of cuisines added. Complete previous order to continue."
         );
         setBannerType("error-warning");
         open();
-      } else if (storeCart.cart.length < 3 && remainingOrders === 1) {
-        const isTheThirdOrder = storeCart.cart.length + 1 === 3;
-        if (isTheThirdOrder) {
-          dispatch(decreaseRemOrderOnAddNewOrder({ remainingOrders: 0 }));
-        }
+      } else if (storeCart.length < 3 && remainingOrders === 1) {
         dispatch(addItem(orderObj));
         setBannerItemObj(updatedData);
         setBannerType("addItemToCart");
@@ -255,6 +284,13 @@ function FoodMenuItem({
     // 2. see if there are already 3 cuisines in the cart -> send error saying maximum numbers of cusines has been added
 
     // 3. Allow adding from the cusine which are already present in the cart
+  }
+  function handleClickCart() {
+    dispatch(clearCartFromReduxState());
+    dispatch(removeVenueBooking());
+    dispatch(addItem(orderObj));
+
+    // navigate("/checkout");
   }
 
   // IMPORTANT FOR INPUT VALUES WHEN STATES are CHANGED
@@ -340,10 +376,72 @@ function FoodMenuItem({
 
         <ButtonsContainer>
           <ButtonsDiv>
-            <Button type="submit" size="medium" variation="primary" hover="no">
+            {console.log(
+              overWriteWarning,
+              currentCuisine !== storeCart[0]?.cuisineName,
+              currentCuisine,
+              storeCart[0]?.cuisineName,
+              Object.keys(storeVenue).length > 1
+            )}
+            {(overWriteWarning &&
+              currentCuisine !== storeCart[0]?.cuisineName) ||
+            Object.keys(storeVenue).length > 1 ? (
+              <Modal>
+                <Modal.Open name="test">
+                  <Button type="submit" size="medium" variation="primary">
+                    Add to cart
+                  </Button>
+                </Modal.Open>
+                <Modal.ModalWindow>
+                  <CheckBeforeConfirm
+                    type="cart"
+                    handleClickCart={handleClickCart}
+                  />
+                </Modal.ModalWindow>
+              </Modal>
+            ) : (
+              <>
+                <Button
+                  type="submit"
+                  size="medium"
+                  variation="primary"
+                  hover="no"
+                >
+                  Add to cart
+                </Button>
+                <BannerNotification.Banner></BannerNotification.Banner>
+              </>
+            )}
+
+            {/* {overWriteWarning ? (
+              <Modal>
+                <Modal.Open name="test">
+                  <Button size="medium" variation="primary">
+                    Add to cart
+                  </Button>
+                </Modal.Open>
+                <Modal.ModalWindow>
+                  <CheckBeforeConfirm />
+                </Modal.ModalWindow>
+              </Modal>
+            ) : (
+              <>
+                <Button
+                  type="submit"
+                  size="medium"
+                  variation="primary"
+                  hover="no"
+                >
+                  Add to cart
+                </Button>
+                <BannerNotification.Banner></BannerNotification.Banner>
+              </>
+            )} */}
+
+            {/* <Button type="submit" size="medium" variation="primary" hover="no">
               Add to cart
             </Button>
-            <BannerNotification.Banner></BannerNotification.Banner>
+            <BannerNotification.Banner></BannerNotification.Banner> */}
           </ButtonsDiv>
           <ButtonsDiv>
             <Button

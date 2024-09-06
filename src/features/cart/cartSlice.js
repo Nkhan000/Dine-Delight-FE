@@ -16,7 +16,7 @@ function getTotalAndCartTotal(cart) {
       total: orderTotal,
     };
   });
-  console.log(updatedCart);
+  // console.log(updatedCart);
 
   const cartTotal = updatedCart.reduce((acc, order) => acc + order.total, 0);
 
@@ -24,14 +24,6 @@ function getTotalAndCartTotal(cart) {
 }
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
-    // case "cart/updateRemainingOrders": {
-    //   const remainingOrders = action.payload.remainingOrders;
-    //   return {
-    //     ...state,
-    //     remainingOrders: 3 - remainingOrders,
-    //   };
-    // }
-
     case "cart/addItem": {
       let updatedCart = [];
       if (state.cart.length > 0) {

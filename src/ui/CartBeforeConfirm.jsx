@@ -187,16 +187,12 @@ const CancelButtonDiv = styled.div`
 function CartBeforeConfirm({ size }) {
   // let cuisineId;
   const dispatch = useDispatch();
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    remainingOrders,
-    error,
-  } = useGetUser();
 
-  const order = useSelector((store) => store.cart);
-  const storeRemainingOrders = useSelector((store) => store.remainingOrders);
-  const { cart, cartTotal } = order;
+  const storeCart = useSelector((store) => store.cart);
+  const storeVenue = useSelector((store) => store.venue);
+  // const storeRemainingOrders = useSelector((store) => store.remainingOrders);
+  const { cart } = storeCart;
+  const { venue } = storeVenue;
   const [newItemQuantity, setNewItemQuantity] = useState(
     cart.map((order) => order?.orderItems.map((item) => item.quantity))
   );
@@ -287,12 +283,9 @@ function CartBeforeConfirm({ size }) {
     handleUpdateQuantity(cuisineId, itemId, newQuantity, newSize);
   }
 
-  function handleDeleteCuisine() {
-    dispatch(removeSingleCuisine({ cuisineId: order.cuisineId }));
-    const newRemainingOrders = storeRemainingOrders + 1;
-    dispatch(
-      decreaseRemOrderOnAddNewOrder({ remainingOrders: newRemainingOrders })
-    );
+  function handleDeleteCuisine(order) {
+    const cuisineIdToRemove = order.cuisineId;
+    dispatch(removeSingleCuisine({ cuisineId: cuisineIdToRemove }));
   }
 
   return (
@@ -307,7 +300,7 @@ function CartBeforeConfirm({ size }) {
                 <Button
                   size="small"
                   variation="secondary"
-                  onClick={handleDeleteCuisine}
+                  onClick={() => handleDeleteCuisine(order)}
                 >
                   Cancel Order
                 </Button>

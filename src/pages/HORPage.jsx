@@ -203,7 +203,7 @@ function HORPage() {
           {searchParams.get("serviceType") === "venue-booking" && (
             <VenueMenu
               searchParams={searchParams}
-              bookingsMenu={cuisineData.bookingsMenu}
+              venueMenu={cuisineData.venueMenu}
               cuisineImage={logoImage}
               cuisineName={name}
               cuisineAddress={address}

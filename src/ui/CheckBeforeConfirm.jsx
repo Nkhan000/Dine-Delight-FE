@@ -32,7 +32,12 @@ const CheckTextDiv = styled.div`
   }
 `;
 
-function CheckBeforeConfirm({ orderObj, handleConfirmClick }) {
+function CheckBeforeConfirm({
+  type,
+  handleClick,
+  handleClickCart,
+  handleClickVenue,
+}) {
   return (
     <CheckContainer>
       <CheckTextDiv>
@@ -45,7 +50,7 @@ function CheckBeforeConfirm({ orderObj, handleConfirmClick }) {
         <Button
           size="medium"
           variation="primary"
-          onClick={handleConfirmClick}
+          onClick={type === "cart" ? handleClickCart : handleClickVenue}
           className="no-outside-click"
         >
           Continue order

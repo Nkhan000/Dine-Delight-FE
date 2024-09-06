@@ -184,8 +184,8 @@ function OngoingDelivery({ deliveryData, isLoading, size }) {
     <Container>
       <>
         <CuisineDiv>
-          {orders.map((order) => (
-            <SingleCusineContainer key={order.cuisineId}>
+          {orders.map((order, oId) => (
+            <SingleCusineContainer key={`${order.cuisineId}${oId}`}>
               <StatusContainer>
                 <StyledTag type={order.status}>{order.status}</StyledTag>
               </StatusContainer>

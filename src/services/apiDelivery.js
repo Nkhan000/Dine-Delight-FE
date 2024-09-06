@@ -4,9 +4,12 @@ import axios from "axios";
 export async function apiCreateDelivery(orderObj) {
   const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/delivery/new`;
   try {
-    const request = await axios.post(requestUrl, orderObj);
+    const request = await axios.post(requestUrl, orderObj, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
+    });
+    console.log(await request.response);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
   }
 }
 

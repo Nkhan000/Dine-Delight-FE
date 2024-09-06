@@ -1,11 +1,15 @@
+/* eslint-disable no-unused-vars */
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
   apiCreateDelivery,
   apiGetADeliveryData,
 } from "../../services/apiDelivery";
+import { useDispatch } from "react-redux";
+import { clearCartFromReduxState } from "../cart/cartSlice";
 
 export function useCreateDelivery() {
+  const dispatch = useDispatch();
   // FETCHING DATA
   const navigate = useNavigate();
   const {
@@ -15,7 +19,8 @@ export function useCreateDelivery() {
   } = useMutation({
     mutationFn: (data) => apiCreateDelivery(data),
     onSuccess: () => {
-      localStorage.removeItem("persist:root");
+      // localStorage.removeItem("persist:root");
+      dispatch(clearCartFromReduxState());
       navigate("/dashboard?userPanel=ongoingOrders");
     },
     onError: (err) => {

@@ -46,7 +46,7 @@ import VenueMenuItem from "./VenueMenuItem";
 // ];
 
 function VenueMenu({
-  bookingsMenu,
+  venueMenu,
   searchParams,
   cuisineAddress,
   cuisineImage,
@@ -55,10 +55,11 @@ function VenueMenu({
   const skipValue = 4;
   const currentPageNumber = searchParams.get("page");
 
-  const bookingItems = bookingsMenu?.bookingItems || [];
-  const cuisineId = bookingsMenu?.cuisineId;
+  const bookingItems = venueMenu?.bookingItems || [];
+  const cuisineId = venueMenu?.cuisineId;
   const isBookingMenuAvailable = bookingItems.length === 0;
 
+  console.log("bookings item", venueMenu);
   const numberOfPages = Math.ceil(bookingItems.length / skipValue);
   return (
     <ItemsMenu
