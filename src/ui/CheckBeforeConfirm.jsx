@@ -32,12 +32,7 @@ const CheckTextDiv = styled.div`
   }
 `;
 
-function CheckBeforeConfirm({
-  type,
-  handleClick,
-  handleClickCart,
-  handleClickVenue,
-}) {
+function CheckBeforeConfirm({ type, handleClickCart, handleClickVenue }) {
   return (
     <CheckContainer>
       <CheckTextDiv>

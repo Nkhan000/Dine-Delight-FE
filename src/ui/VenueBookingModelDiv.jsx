@@ -299,7 +299,7 @@ function VenueBookingModelDiv({
                 <Modal.ModalWindow>
                   <CheckBeforeConfirm
                     type="venue"
-                    handleClick={handleConfirmClick}
+                    handleClickVenue={handleConfirmClick}
                   />
                 </Modal.ModalWindow>
               </Modal>

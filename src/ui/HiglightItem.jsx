@@ -50,7 +50,7 @@ function HiglightItem({ data }) {
   const { heading, text, id, icon } = data;
   return (
     <Container>
-      <GradientIcon iconHeight={5}>
+      <GradientIcon iconheight={5}>
         {icon === "money" && <HiCurrencyDollar />}
         {icon === "map" && <FaMap />}
         {icon === "delivery" && <FaTruckMoving />}
