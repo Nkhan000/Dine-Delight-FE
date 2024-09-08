@@ -137,6 +137,7 @@ const ButtonsDiv = styled.div`
 function VenueBookingModelDiv({
   name,
   images,
+  venueId,
   aprPartySize,
   pricePerDay,
   cuisineName,
@@ -189,12 +190,13 @@ function VenueBookingModelDiv({
     cuisineId,
     cuisineImage,
     name,
+    venueId,
     aprPartySize,
     startDate,
     endDate,
     numOfDays,
     pricePerDay,
-    total: pricePerDay * numOfDays,
+    totalPrice: pricePerDay * numOfDays * 0.13 + pricePerDay * numOfDays,
   };
   const navigate = useNavigate();
 

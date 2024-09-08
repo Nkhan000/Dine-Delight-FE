@@ -195,6 +195,7 @@ function VenueMenuItem({
                 <Modal.ModalWindow bg={"dark"}>
                   <VenueBookingModelDiv
                     name={name}
+                    venueId={_id}
                     aprPartySize={aprPartySize}
                     images={images}
                     pricePerDay={pricePerDay}

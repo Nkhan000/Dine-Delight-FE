@@ -8,10 +8,13 @@ import Heading from "../ui/Heading";
 import CartBeforeConfirm from "../ui/CartBeforeConfirm";
 import Button from "../ui/Button";
 import { getCuisineSingle } from "../services/apiCuisines";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetUser } from "../features/authentication/useGetUser";
 import { useCreateDelivery } from "../features/delivery/useDelivery";
 import { useNavigate } from "react-router-dom";
+import { useCreateANewBooking } from "../features/cuisines/useVenue";
+import { clearCartFromReduxState } from "../features/cart/cartSlice";
+import { removeVenueBooking } from "../features/cart/venueBookingSlice";
 
 const Container = styled.div`
   height: 60rem;
@@ -188,14 +191,23 @@ function Checkout() {
   const { cart, cartTotal } = storeCart;
   const { venue } = storeVenue;
   const totalDeliveryCharge = cart.map((item) => item.deliveryPrice);
+  const dispatch = useDispatch();
 
   const { isLoading: isCreatingNewOrder, newOrder } = useCreateDelivery();
+  const { createANewVenueBooking } = useCreateANewBooking();
   function handleConfirmOrder() {
-    const orderObj = {
-      orders: { cart: storeCart.cart, cartTotal: storeCart.cartTotal },
-    };
-    console.log(orderObj);
-    newOrder(orderObj);
+    if (cart.length > 0) {
+      const orderObj = {
+        orders: { cart: storeCart.cart, cartTotal: storeCart.cartTotal },
+      };
+      console.log(orderObj);
+      newOrder(orderObj);
+    } else if (Object.keys(venue).length > 1) {
+      createANewVenueBooking(venue);
+      // console.log(venue);
+    }
+    dispatch(clearCartFromReduxState());
+    dispatch(removeVenueBooking());
   }
   if (!isLoading && !user) {
     navigate("/login");

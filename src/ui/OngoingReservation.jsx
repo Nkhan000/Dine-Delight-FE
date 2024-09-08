@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "./Heading";
 import GradientHighlight from "./GradientHighlight";
@@ -81,7 +83,16 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 
-function OngoingReservation() {
+function OngoingReservation({ type = "reservation", data }) {
+  const { bookedOnDate, cuisineName } = data;
+
+  const newDate = new Date(bookedOnDate);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const formattedDate = new Intl.DateTimeFormat("en-US", options).format(
+    newDate
+  );
+  console.log(formattedDate);
+  console.log(data);
   return (
     <>
       <HeadContainer>
@@ -104,25 +115,32 @@ function OngoingReservation() {
         <ReservationDetailTextDiv>
           <GradientHighlight>
             <StyleGradientdSpan>
-              You have a table reservation on
+              {type === "reservation"
+                ? "You have a table reservation on"
+                : "You have a Venue Booking on"}
             </StyleGradientdSpan>
           </GradientHighlight>
           <Heading as="h4" color="light">
-            2024/03/05 (7:30 p.m)
+            {`${formattedDate}`}
+
+            {/* 2024/03/05 (7:30 p.m) */}
           </Heading>
         </ReservationDetailTextDiv>
 
         <ReservationDetails>
           <GradientHighlight>
-            <StyleGradientdSpan>Reservation Details :</StyleGradientdSpan>
+            <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
           </GradientHighlight>
 
           <DetailTextDiv>
-            <DetailText>ID : SDF564sa4sa5d4a9s8d43</DetailText>
-            <DetailText>Name : Nazir Khan</DetailText>
-            <DetailText>Paid : Yes</DetailText>
-            <DetailText>O.T.P : 4578</DetailText>
-            <DetailText>Party sizer : 5-6 people (expected)</DetailText>
+            <DetailText>ID : {data._id}</DetailText>
+            <DetailText>Booked For : Nazir Khan</DetailText>
+            <DetailText>Venue Name : Party Hall</DetailText>
+            <DetailText>Paid : {`${data.hasPaid}`}</DetailText>
+            <DetailText>O.T.P : {`${data.otpCode}`}</DetailText>
+            <DetailText>
+              Party size: {data.aprPartySize} people (expected)
+            </DetailText>
           </DetailTextDiv>
         </ReservationDetails>
       </ReservationDetailDiv>

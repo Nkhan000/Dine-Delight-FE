@@ -171,7 +171,11 @@ function FoodMenuItem({
   const dispatch = useDispatch();
 
   const user = !isLoadingUser && userObj?.user;
-  const { hasUserPremium, remainingBatchOrders } = user;
+  let hasUserPremium, remainingBatchOrders;
+  if (user) {
+    hasUserPremium = user.hasUserPremium;
+    remainingBatchOrders = user.remainingBatchOrders;
+  }
 
   const reduxStore = useSelector((store) => store);
   // console.log(remainingBatchOrders);

@@ -9,6 +9,7 @@ import OngoingReservation from "./OngoingReservation";
 import { useSearchParams } from "react-router-dom";
 import OngoingDelivery from "./OngoingDelivery";
 import { useGetADelivery } from "../features/delivery/useDelivery";
+import { useGetABookedVenueData } from "../features/cuisines/useVenue";
 
 // USER PROFILE DIV
 const UserProfileContainer = styled.div`
@@ -229,6 +230,9 @@ const ButtonDiv = styled.div`
 
 function DashboardUserProfile({ user, searchParams, setSearchParams }) {
   const { deliveryData, isLoading } = useGetADelivery(user._id);
+  const { bookedVenue, isLoading: isLoadingBookedVenue } =
+    useGetABookedVenueData();
+  console.log(bookedVenue);
   console.log(deliveryData);
 
   // const UrlParams = new URLSearchParams();
@@ -376,7 +380,7 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
                     Reservation
                   </Heading>
                 </OngoingOrderHead>
-                <OngoingReservation />
+                {/* <OngoingReservation /> */}
               </OngoingOrderDiv>
               <OngoingOrderDiv>
                 <OngoingOrderHead type="venue">
@@ -384,9 +388,14 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
                     Venue
                   </Heading>
                 </OngoingOrderHead>
-                <NoOrderDiv>
+                <OngoingReservation
+                  type="venue"
+                  data={bookedVenue.bookedVenue}
+                />
+
+                {/* <NoOrderDiv>
                   <span>No items to show</span>
-                </NoOrderDiv>
+                </NoOrderDiv> */}
               </OngoingOrderDiv>
             </OngoingOrderContainer>
           </UserProfileContainerLower>
