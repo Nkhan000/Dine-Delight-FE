@@ -83,7 +83,7 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 
-function OngoingReservation({ type = "reservation", data }) {
+function OngoingVenueBooking({ type = "reservation", data }) {
   const {
     bookedOnDate,
     cuisineName,
@@ -164,4 +164,4 @@ function OngoingReservation({ type = "reservation", data }) {
   );
 }
 
-export default OngoingReservation;
+export default OngoingVenueBooking;

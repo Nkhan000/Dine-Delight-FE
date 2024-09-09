@@ -189,10 +189,11 @@ const ProfileImg = styled.img`
 
 function Header() {
   const { data, isLoading, error } = useGetUser();
-  // const [isSticky, setIsSticky] = useState(false);
-  const user = data?.user;
-  console.log(user);
-  // if (!isLoading) user = JSON.parse(data);
+
+  let user;
+  if (!isLoading) {
+    user = data.user;
+  }
 
   return (
     <StyledHeader>

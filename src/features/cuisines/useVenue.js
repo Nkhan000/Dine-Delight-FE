@@ -27,10 +27,10 @@ export function useGetABookedVenueData() {
   const queryClient = useQueryClient();
   const { data: bookedVenue, isLoading } = useQuery({
     queryKey: ["bookedVenue"],
-    queryFn: apiGetABookedVenueData,
+    queryFn: () => apiGetABookedVenueData(),
   });
   // everytime a new data is fetched this will reinvalidate or update it to the new data in the cache
-  queryClient.invalidateQueries("bookedVenue");
+  // queryClient.invalidateQueries("bookedVenue");
 
   return { bookedVenue, isLoading };
 }
