@@ -83,26 +83,7 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 
-function OngoingReservation({ type = "reservation", data }) {
-  const {
-    bookedOnDate,
-    cuisineName,
-    name,
-    otpCode,
-    aprPartySize,
-    hasPaid,
-    _id,
-  } = data;
-
-  if (!data) {
-    return <DetailText>Nothing to show</DetailText>;
-  }
-
-  const newDate = new Date(bookedOnDate);
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formatedDate = new Intl.DateTimeFormat("en-US", options).format(
-    newDate
-  );
+function OngoingReservation() {
   return (
     <>
       <HeadContainer>
@@ -125,15 +106,12 @@ function OngoingReservation({ type = "reservation", data }) {
         <ReservationDetailTextDiv>
           <GradientHighlight>
             <StyleGradientdSpan>
-              {type === "reservation"
-                ? "You have a table reservation on"
-                : "You have a Venue Booking on"}
+              You have a table reservation on
             </StyleGradientdSpan>
           </GradientHighlight>
           <Heading as="h4" color="light">
-            {`${formatedDate}`}
-
-            {/* 2024/03/05 (7:30 p.m) */}
+            {/* {`${formatedDate}`} */}
+            2024/03/05 (7:30 p.m)
           </Heading>
         </ReservationDetailTextDiv>
 
@@ -143,14 +121,12 @@ function OngoingReservation({ type = "reservation", data }) {
           </GradientHighlight>
 
           <DetailTextDiv>
-            <DetailText>ID : {_id}</DetailText>
+            <DetailText>ID : {}</DetailText>
             <DetailText>Booked For : Nazir Khan</DetailText>
-            <DetailText>Venue Name : {name}</DetailText>
-            <DetailText>Paid : {`${hasPaid}`}</DetailText>
-            <DetailText>O.T.P : {`${otpCode}`}</DetailText>
-            <DetailText>
-              Party size: {aprPartySize} people (expected)
-            </DetailText>
+            <DetailText>Venue Name : </DetailText>
+            <DetailText>Paid : </DetailText>
+            <DetailText>O.T.P : </DetailText>
+            <DetailText>Party size: 60 people (expected)</DetailText>
           </DetailTextDiv>
         </ReservationDetails>
       </ReservationDetailDiv>

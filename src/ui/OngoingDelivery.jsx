@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-router-dom";
 import Spinner from "./Spinner";
 import StyledTag from "./StyledTag";
+import { useGetADelivery } from "../features/delivery/useDelivery";
 
 const Container = styled.div`
   display: flex;
@@ -168,23 +169,22 @@ const StatusContainer = styled.div`
   margin-top: 1rem;
 `;
 
-function OngoingDelivery({ deliveryData, isLoading, size }) {
+function OngoingDelivery({ size }) {
+  const { deliveryData, isLoading } = useGetADelivery();
+
   if (isLoading) return <Spinner />;
-  // !isLoading && console.log(deliveryData.delivery);
-  if (deliveryData.delivery == null)
+  if (deliveryData == null)
     return (
       <Container>
         <ItemRemarks>You do not have any ongoing orders😊</ItemRemarks>
       </Container>
     );
-  const orders = deliveryData.delivery;
-  console.log(orders);
 
   return (
     <Container>
       <>
         <CuisineDiv>
-          {orders.map((order, oId) => (
+          {deliveryData.map((order, oId) => (
             <SingleCusineContainer key={`${order.cuisineId}${oId}`}>
               <StatusContainer>
                 <StyledTag type={order.status}>{order.status}</StyledTag>

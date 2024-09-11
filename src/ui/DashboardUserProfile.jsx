@@ -221,10 +221,9 @@ const ButtonDiv = styled.div`
 `;
 
 function DashboardUserProfile({ user, searchParams, setSearchParams }) {
-  const { deliveryData } = useGetADelivery(user._id);
-  const { bookedVenue, isLoading } = useGetABookedVenueData();
+  // const { bookedVenue, isLoading } = useGetABookedVenueData();
 
-  console.log(bookedVenue);
+  // console.log(bookedVenue);
   // console.log(deliveryData);
 
   // const UrlParams = new URLSearchParams();
@@ -361,8 +360,8 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
                   </Heading>
                 </OngoingOrderHead>
                 <OngoingDelivery
-                  deliveryData={!isLoading && deliveryData.data}
-                  isLoading={isLoading}
+                // deliveryData={!isLoading && deliveryData.data}
+                // isLoading={isLoading}
                 />
               </OngoingOrderDiv>
 
@@ -382,7 +381,7 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
                 </OngoingOrderHead>
                 <OngoingVenueBooking
                   type="venue"
-                  data={!isLoading && bookedVenue.bookedVenue}
+                  // data={!isLoading && bookedVenue.bookedVenue}
                 />
 
                 {/* <NoOrderDiv>

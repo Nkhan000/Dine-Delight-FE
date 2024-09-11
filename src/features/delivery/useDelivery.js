@@ -31,10 +31,11 @@ export function useCreateDelivery() {
   return { isLoading, newOrder, error };
 }
 
-export function useGetADelivery(userId) {
+export function useGetADelivery() {
+  // const token = localStorage.getItem("jwt");
   const { data: deliveryData, isLoading } = useQuery({
-    queryKey: ["onGoingDelivery", userId],
-    queryFn: () => apiGetADeliveryData(userId),
+    queryKey: ["onGoingDelivery"],
+    queryFn: () => apiGetADeliveryData(),
   });
   return { deliveryData, isLoading };
 }

@@ -24,7 +24,7 @@ export function useCreateANewBooking() {
 }
 
 export function useGetABookedVenueData() {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const { data: bookedVenue, isLoading } = useQuery({
     queryKey: ["bookedVenue"],
     queryFn: () => apiGetABookedVenueData(),

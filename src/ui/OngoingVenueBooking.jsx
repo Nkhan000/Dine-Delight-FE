@@ -3,6 +3,9 @@
 import styled from "styled-components";
 import Heading from "./Heading";
 import GradientHighlight from "./GradientHighlight";
+import { useGetABookedVenueData } from "../features/cuisines/useVenue";
+import StyledTag from "./StyledTag";
+import Spinner from "./Spinner";
 
 const HeadContainer = styled.div`
   padding: 2rem 2.5rem;
@@ -82,19 +85,31 @@ const ReservationNoteDiv = styled.div`
     font-style: italic;
   }
 `;
+const StatusContainer = styled.div`
+  align-self: flex-end;
+  margin-top: 1rem;
+`;
 
-function OngoingVenueBooking({ type = "reservation", data }) {
+function OngoingVenueBooking() {
+  const { bookedVenue, isLoading } = useGetABookedVenueData();
+  if (isLoading) {
+    return <Spinner />;
+  }
+  console.log(bookedVenue);
   const {
     bookedOnDate,
-    cuisineName,
+    cuisineId,
+    userId,
     name,
     otpCode,
     aprPartySize,
     hasPaid,
+    status,
     _id,
-  } = data;
+    totalPrice,
+  } = bookedVenue;
 
-  if (!data) {
+  if (!bookedOnDate) {
     return <DetailText>Nothing to show</DetailText>;
   }
 
@@ -106,6 +121,9 @@ function OngoingVenueBooking({ type = "reservation", data }) {
   return (
     <>
       <HeadContainer>
+        <StatusContainer>
+          <StyledTag type={status}>{status}</StyledTag>
+        </StatusContainer>
         <OngoingOrderCusineDiv>
           <OngoingOrderCusineLogoDiv>
             <LogoImg src="./img/hotel-001.jpg" />
@@ -124,11 +142,7 @@ function OngoingVenueBooking({ type = "reservation", data }) {
       <ReservationDetailDiv>
         <ReservationDetailTextDiv>
           <GradientHighlight>
-            <StyleGradientdSpan>
-              {type === "reservation"
-                ? "You have a table reservation on"
-                : "You have a Venue Booking on"}
-            </StyleGradientdSpan>
+            <StyleGradientdSpan>You have a Venue Booking on</StyleGradientdSpan>
           </GradientHighlight>
           <Heading as="h4" color="light">
             {`${formatedDate}`}
@@ -144,9 +158,11 @@ function OngoingVenueBooking({ type = "reservation", data }) {
 
           <DetailTextDiv>
             <DetailText>ID : {_id}</DetailText>
-            <DetailText>Booked For : Nazir Khan</DetailText>
-            <DetailText>Venue Name : {name}</DetailText>
+            <DetailText>Booked For : {userId.name.toUpperCase()}</DetailText>
+            <DetailText>Venue Name : {name.toUpperCase()}</DetailText>
+            <DetailText>Cuisine Name: {cuisineId.name}</DetailText>
             <DetailText>Paid : {`${hasPaid}`}</DetailText>
+            <DetailText>Price : {`${totalPrice}`}</DetailText>
             <DetailText>O.T.P : {`${otpCode}`}</DetailText>
             <DetailText>
               Party size: {aprPartySize} people (expected)

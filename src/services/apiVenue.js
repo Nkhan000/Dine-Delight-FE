@@ -20,7 +20,8 @@ export async function apiGetABookedVenueData() {
     const response = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
     });
-    return await response.data;
+    console.log(await response.bookedVenue);
+    return await response.data.bookedVenue;
   } catch (err) {
     console.log(err);
   }

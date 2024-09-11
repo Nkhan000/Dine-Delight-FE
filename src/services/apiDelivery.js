@@ -13,11 +13,15 @@ export async function apiCreateDelivery(orderObj) {
   }
 }
 
-export async function apiGetADeliveryData(userId) {
-  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/delivery/get-one/${userId}`;
+export async function apiGetADeliveryData() {
+  const token = localStorage.getItem("jwt");
+  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/delivery/get-one`;
   try {
-    const response = await axios(requestUrl);
-    return response.data;
+    const response = await axios(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return await response.data.data.delivery;
+    // return response.data;
   } catch (err) {
     console.log(err);
   }
