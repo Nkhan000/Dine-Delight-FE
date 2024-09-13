@@ -50,8 +50,9 @@ const variations = {
     color: var(--color-brand-50);
     background-color: var(--color-orange-50);
     transition: all 0.3s;
-    display: flex;
-    align-items: center;
+    /* display: flex;
+    align-items: center; */
+
     border: 1px solid var(--color-orange-50);
 
     &:hover {
@@ -67,6 +68,7 @@ const variations = {
     position: relative;
     display: flex;
     align-items: center;
+    /* text-align: center; */
     justify-content: center;
     gap: 0.8rem;
     transition-property: transform, border, color;

@@ -33,6 +33,7 @@ const OptionsDiv = styled.div`
 
     & option {
       color: var(--color-grey-900);
+      background-color: var(--color-grey-50);
     }
   }
 `;
@@ -63,7 +64,7 @@ function StyledOptions({
   }
   return (
     <OptionsDiv>
-      <label>{sortby}:</label>
+      {sortby === "" ? <label></label> : <label>{sortby}</label>}
       <select value={selectedOption} onChange={handleChange}>
         {options?.map((opt, index) => (
           <option key={index}>{opt}</option>

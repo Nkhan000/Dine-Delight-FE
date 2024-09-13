@@ -254,17 +254,6 @@ function FoodMenuItem({
     }
 
     if (!hasUserPremium) {
-      // overwrite previous order warning should be given in this condition
-      // if (
-      //   // (storeCart.length === 1 || Object.keys(storeVenue).length >= 1) &&
-      //   storeCart.length === 1 &&
-      //   remainingOrders === 0
-      // ) {
-      //   setOverWriteWarning(true);
-      //   setBannerText("Maximum numbers of cuisines added..");
-      //   setBannerType("error-warning");
-      //   open();
-      // } else
       if (storeCart.length === 3 && remainingOrders === 1) {
         setBannerText(
           "Maximum numbers of cuisines added. Complete previous order to continue."
