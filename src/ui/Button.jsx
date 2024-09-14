@@ -50,8 +50,9 @@ const variations = {
     color: var(--color-brand-50);
     background-color: var(--color-orange-50);
     transition: all 0.3s;
-    /* display: flex;
-    align-items: center; */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 
     border: 1px solid var(--color-orange-50);
 

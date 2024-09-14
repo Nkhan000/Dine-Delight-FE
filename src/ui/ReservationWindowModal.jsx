@@ -4,7 +4,7 @@ import Heading from "./Heading";
 import GradientHighlight from "./GradientHighlight";
 import Button from "./Button";
 import { useEffect, useState } from "react";
-import { useCountDownTimer } from "./useCountDownTimer";
+import { useCountDownTimer } from "../hooks/useCountDownTimer";
 import ReservationWindowVerificationCode from "./ReservationWindowVerificationCode";
 // import { useTimer } from "./Timer";
 

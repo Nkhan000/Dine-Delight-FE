@@ -9,6 +9,7 @@ import { useGetUser } from "../features/authentication/useGetUser";
 import Modal from "./Modal";
 import VenueBookingModelDiv from "./VenueBookingModelDiv";
 import { useForm } from "react-hook-form";
+import BannerNotification from "./BannerNotification";
 
 const Container = styled.div`
   /* display: flex; */
@@ -134,7 +135,7 @@ function VenueMenuItem({
   const { name, images, aprPartySize, pricePerDay, _id } = data;
   const { setItemObj, setBannerText, setType } = useContext(BannerContext);
 
-  const { data: user, isLoading, error } = useGetUser();
+  const { user, isLoading, error } = useGetUser();
   const { register, handleSubmit, setValue } = useForm();
 
   function onSubmit(data) {
@@ -207,14 +208,17 @@ function VenueMenuItem({
                 </Modal.ModalWindow>
               </Modal>
             ) : (
-              <Button
-                size="medium"
-                variation="primary"
-                hover="no"
-                onClick={handleClickWhenNoUser}
-              >
-                Available For Booking
-              </Button>
+              <>
+                <Button
+                  size="medium"
+                  variation="primary"
+                  hover="no"
+                  onClick={handleClickWhenNoUser}
+                >
+                  Available For Booking
+                </Button>
+                <BannerNotification.Banner />
+              </>
             )}
           </ButtonsDiv>
           <ButtonsDiv>

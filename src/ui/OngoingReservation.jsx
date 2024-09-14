@@ -20,12 +20,7 @@ const HeadTextContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-// const LogoImgDiv = styled.div`
-//   height: 4rem;
-//   width: 4rem;
-//   overflow: hidden;
-//   border-radius: 5rem;
-// `;
+
 const OngoingOrderCusineDiv = styled.div`
   padding-bottom: 0;
   display: flex;

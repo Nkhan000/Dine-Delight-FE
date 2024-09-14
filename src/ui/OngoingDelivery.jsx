@@ -2,17 +2,6 @@
 /* eslint-disable no-unused-vars */
 import styled, { css } from "styled-components";
 import Heading from "./Heading";
-import Button from "./Button";
-import StyledOptions from "./StyledOptions";
-import { useContext, useEffect, useReducer, useState } from "react";
-import cartReducer, {
-  removeItem,
-  removeSingleCuisine,
-  updateItemSize,
-  updateNewQuantity,
-} from "../features/cart/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Form } from "react-router-dom";
 import Spinner from "./Spinner";
 import StyledTag from "./StyledTag";
 import { useGetADelivery } from "../features/delivery/useDelivery";
@@ -21,8 +10,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-
-  /* background-color: red; */
 `;
 
 const LogoImg = styled.img`
@@ -60,22 +47,10 @@ const OngoingOrderItemList = styled.ul`
     border-bottom: 1px solid;
     width: 100%;
     padding-bottom: 0.5rem;
-    /* display: flex; */
-    /* justify-content: space-between; */
-    /* /* 
-    */
     display: grid;
     grid-template-columns: 80% 1fr 1fr;
     align-items: center;
-    /* display: flex !important;
-    padding-bottom: 0.5rem; */
   }
-`;
-
-const ItemPriceContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 `;
 
 const ItemName = styled.span`
@@ -85,18 +60,7 @@ const ItemName = styled.span`
   width: max-content;
   display: block;
 `;
-const ItemPrice = styled.span`
-  font-weight: 600;
-  color: var(--color-grey-300);
-  font-size: 1.7rem;
 
-  ${(props) =>
-    props.size == "small" &&
-    css`
-      /* font-weight: 300; */
-      font-size: 1.4rem;
-    `}
-`;
 const ItemDate = styled.span`
   font-size: 1.1rem;
   font-style: italic;
@@ -134,8 +98,6 @@ const QuantityDiv = styled.div`
   display: grid;
   grid-template-columns: 90% 1fr 1fr;
   gap: 1rem;
-  /* justify-content: space-between; */
-  /* align-items: center; */
 `;
 
 const SubTotalDiv = styled.div`
@@ -149,13 +111,6 @@ const CuisineDiv = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  /* gap: 1rem; */
-`;
-
-const CancelButtonDiv = styled.div`
-  position: absolute;
-  top: 10%;
-  right: 5%;
 `;
 
 const SingleCusineContainer = styled.div`
@@ -218,7 +173,6 @@ function OngoingDelivery({ size }) {
               </OngoingOrderItemList>
               <SubTotalDiv>
                 <ItemTextTotal size={size}>Delivery : $11</ItemTextTotal>
-                {/* <ItemTextTotal size={size}>Delivery : $11</ItemTextTotal> */}
                 <ItemTextTotal size={size}>
                   Total : ${order.total}
                 </ItemTextTotal>

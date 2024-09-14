@@ -154,7 +154,7 @@ function FoodMenuItem({
   const { name, image, type, prices, _id } = data;
   const [itemQuantity, setItemQuantity] = useState(1);
   const {
-    data: userObj,
+    user,
     isLoading: isLoadingUser,
     error,
     // remainingOrders,
@@ -170,7 +170,7 @@ function FoodMenuItem({
   const { register, handleSubmit, setValue } = useForm();
   const dispatch = useDispatch();
 
-  const user = !isLoadingUser && userObj?.user;
+  // const user = !isLoadingUser && userObj?.user;
   let hasUserPremium, remainingBatchOrders;
   if (user) {
     hasUserPremium = user.hasUserPremium;

@@ -1,9 +1,16 @@
+/* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Button from "./Button";
 import { useEffect, useState } from "react";
-import { useCountDownTimer } from "./useCountDownTimer";
+import { useCountDownTimer } from "../hooks/useCountDownTimer";
 import GradientHighlight from "./GradientHighlight";
 import Spinner from "./Spinner";
+import { Link } from "react-router-dom";
+import {
+  useSendVerificationCodeForReservation,
+  useVerifyCodeForReservation,
+} from "../features/cuisines/useReservation";
+import SpinnerMini from "./SpinnerMini";
 const VerficationContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -116,17 +123,22 @@ function ReservationWindowVerificationCode() {
   const INITIAL_WAITING_SECOND = 0;
 
   const [isCodeSentAgain, setIsCodeSentAgain] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const { timer, startTimer, stopTimer, isRunning } = useCountDownTimer(
     INITIAL_WAITING_MINUTES,
     INITIAL_WAITING_SECOND,
     1
   );
+  const { sendVerificationCode, isLoading: sendingVerifcationCode } =
+    useSendVerificationCodeForReservation();
+
+  const { verifyReservationCode, isLoading: isVerifying } =
+    useVerifyCodeForReservation();
   // Control when the "Send Code Again" logic resets
   useEffect(() => {
-    if (isCodeSentAgain) {
+    if (isCodeSentAgain && !sendingVerifcationCode) {
       startTimer();
+
       // stop the timer after given minutes (1000 * 60 * 5 => 5 minutes)
       let timeOutId = setTimeout(() => {
         stopTimer();
@@ -135,13 +147,13 @@ function ReservationWindowVerificationCode() {
 
       return () => clearTimeout(timeOutId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCodeSentAgain, startTimer, stopTimer]);
 
   useEffect(() => {
     let timeOutId;
     if (isVerifying) {
       timeOutId = setTimeout(() => {
-        setIsVerifying(false);
         setIsVerified(true);
       }, 5000);
     }
@@ -150,29 +162,33 @@ function ReservationWindowVerificationCode() {
   }, [isVerifying]);
 
   function handleVerifying() {
-    setIsVerifying(true);
+    verifyReservationCode();
   }
 
   function handleCodeSentAgain() {
     setIsCodeSentAgain(true);
+    sendVerificationCode();
     console.log("set to true");
   }
 
-  if (isVerifying) {
-    return <Spinner />;
-  }
-  if (isVerified) {
-    return (
-      <VerifiedContainer>
-        <GradientHighlight>
-          <VerifiedText>VERIFIED</VerifiedText>
-        </GradientHighlight>
-        <VerifiedTextSm>
-          You will be now Redirected to Checkout Page
-        </VerifiedTextSm>
-      </VerifiedContainer>
-    );
-  }
+  // if (isVerifying) {
+  //   return <Spinner />;
+  // }
+  // if (isVerified) {
+  //   return (
+  //     <VerifiedContainer>
+  //       <GradientHighlight>
+  //         <VerifiedText>VERIFIED</VerifiedText>
+  //       </GradientHighlight>
+  //       <VerifiedTextSm>
+  //         Click on this link to get to the checkout page.{" "}
+  //         <GradientHighlight>
+  //           <Link to="/checkout">Checkout</Link>
+  //         </GradientHighlight>
+  //       </VerifiedTextSm>
+  //     </VerifiedContainer>
+  //   );
+  // }
 
   return (
     <VerficationContainer>
@@ -188,14 +204,18 @@ function ReservationWindowVerificationCode() {
           </VerificationText>
 
           <VerificationInputDiv>
-            <input type="text" placeholder="enter the verification code" />
+            <label htmlFor="otpcode"></label>
+            <input
+              type="text"
+              name="otpcode"
+              placeholder="enter the verification code"
+            />
           </VerificationInputDiv>
 
           <ResendTextDiv>
             <p>Verification is only valid upto 10 minutes after it is sent.</p>
             {isCodeSentAgain && isRunning ? (
-              // <p>{`${timer.minutes} : ${timer.seconds} ${time}`}</p>
-              <p>{`0${timer.minutes} : ${timer.seconds}`}</p>
+              <p>{`Wait for 0${timer.minutes} : ${timer.seconds} to resend verification code`}</p>
             ) : (
               <ResendTextLink onClick={handleCodeSentAgain}>
                 Did not get a code? Resent the code.
@@ -205,7 +225,7 @@ function ReservationWindowVerificationCode() {
         </VerificationTextDiv>
         <VerificationButtonDiv>
           <Button onClick={handleVerifying} variation="primary" size="medium">
-            Continue
+            Verify
           </Button>
           <Button variation="secondary" size="medium">
             Cancel

@@ -24,6 +24,12 @@ export function useGetUser() {
       setRemainingOrders(userOrders);
     }
   }, [data]);
-
-  return { data, isLoading, error, remainingOrders, setRemainingOrders };
+  const user = data?.user;
+  return {
+    user,
+    isLoading,
+    error,
+    remainingOrders,
+    setRemainingOrders,
+  };
 }

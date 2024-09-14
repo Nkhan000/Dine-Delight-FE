@@ -188,12 +188,12 @@ const ProfileImg = styled.img`
 `;
 
 function Header() {
-  const { data, isLoading, error } = useGetUser();
+  const { user, isLoading, error } = useGetUser();
 
-  let user;
-  if (!isLoading) {
-    user = data.user;
-  }
+  // let user;
+  // if (!isLoading) {
+  //   user = data?.user;
+  // }
 
   return (
     <StyledHeader>

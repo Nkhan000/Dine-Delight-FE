@@ -86,7 +86,15 @@ function Modal({ children }) {
 
 function Open({ children, open: opensWindowName }) {
   const { open } = useContext(ModalContext);
-  return cloneElement(children, { onClick: () => open(opensWindowName) });
+  const existingClick = children.props.onClick;
+  function handleClick() {
+    open(opensWindowName);
+
+    if (existingClick) {
+      existingClick();
+    }
+  }
+  return cloneElement(children, { onClick: handleClick });
 }
 
 function ModalWindow({ children, name, bg }) {

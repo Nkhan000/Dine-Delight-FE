@@ -5,9 +5,13 @@ import StyledOptions from "./StyledOptions";
 import GradientHighlight from "./GradientHighlight";
 import StyledRadioBtn from "./StyledRadioBtn";
 import Button from "./Button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "./Modal";
 import ReservationWindowModal from "./ReservationWindowModal";
+import { useSendVerificationCodeForReservation } from "../features/cuisines/useReservation";
+import { useGetUser } from "../features/authentication/useGetUser";
+import { BannerContext } from "../utils/contexts";
+import BannerNotification from "./BannerNotification";
 
 const Container = styled.div`
   /* padding: 2.4rem 4rem;
@@ -218,16 +222,27 @@ function ReservationMenu() {
   const [tableType, setTableType] = useState(tableTypeOption[0]);
   const [addPriority, setAddPriority] = useState(false);
   const [grandTotal, setGrandTotal] = useState(0);
+  const { user, isLoading, error } = useGetUser();
+
+  const { setBannerItemObj, setBannerText, setBannerType, open } =
+    useContext(BannerContext);
+
+  // let user;
+  // if (!isLoading) {
+  //   user = data?.user;
+  // }
 
   let partySizeNum = parseInt(partySize.split(" ")[0], 10);
   const [total, setTotal] = useState(partySizeNum * reservationPrice);
+
+  const { sendVerificationCode, isLoading: isSendingVerificationCode } =
+    useSendVerificationCodeForReservation();
 
   function formateDate(time, date) {
     const [hours, minutes] = time.split(":");
     const updatedDate = new Date(date);
     updatedDate.setHours(hours);
     updatedDate.setMinutes(minutes);
-
     return updatedDate;
   }
 
@@ -236,13 +251,19 @@ function ReservationMenu() {
   }
 
   function handleContinueReservation() {
+    if (!user) {
+      setBannerText("Please login to create reservation");
+      setBannerType("error-warning");
+      open();
+      return;
+    }
     const reservationObj = {
       partySize: partySizeNum,
       priority: addPriority,
-      // time: availableTimeSlot,
       reservationDate,
       tableType,
     };
+    sendVerificationCode();
     console.log(reservationObj);
   }
 
@@ -331,8 +352,8 @@ function ReservationMenu() {
         </RadioBtnDiv>
       </RadioBtnsDiv>
       <ButtonDivs>
-        <Modal>
-          <Modal.Open open="reservation-window">
+        {!user ? (
+          <>
             <Button
               onClick={handleContinueReservation}
               size="large"
@@ -340,74 +361,25 @@ function ReservationMenu() {
             >
               Continue your reservation
             </Button>
-          </Modal.Open>
-          <Modal.ModalWindow name="reservation-window">
-            <ReservationWindowModal></ReservationWindowModal>
-          </Modal.ModalWindow>
-        </Modal>
+            <BannerNotification.Banner />
+          </>
+        ) : (
+          <Modal>
+            <Modal.Open open="reservation-window">
+              <Button
+                onClick={handleContinueReservation}
+                size="large"
+                variation="primary"
+              >
+                Continue your reservation
+              </Button>
+            </Modal.Open>
+            <Modal.ModalWindow name="reservation-window">
+              <ReservationWindowModal />
+            </Modal.ModalWindow>
+          </Modal>
+        )}
       </ButtonDivs>
-
-      {/* {reservationDate && availableTimeSlot && partySize && (
-        <>
-          <RemakrsInputDivContianer>
-            <RemarksInput placeholder="Enter a Remarks or Instruction for your reservation" />
-          </RemakrsInputDivContianer>
-
-          <QuantityDiv>
-            <QuantityHead>
-              <span>Quantity</span>
-              <span>Price</span>
-            </QuantityHead>
-            <QuantityDetailsDiv>
-              <span>{partySizeNum} x person</span>
-              <span>
-                {partySizeNum} X ${reservationPrice} {` = $${total}`}
-              </span>
-            </QuantityDetailsDiv>
-            <QuantityDetailsDiv>
-              <span>V.A.T (+13%)</span>
-              <span>${(total * 0.13).toFixed(2)}</span>
-            </QuantityDetailsDiv>
-            {addPriority === true && (
-              <QuantityDetailsDiv>
-                <span>Priority (+8%)</span>
-                <span>
-                  ${(partySizeNum * reservationPrice * 0.08).toFixed(2)}
-                </span>
-              </QuantityDetailsDiv>
-            )}
-            <QuantityHead>
-              <span>Grand Total </span>
-              <span>{grandTotal}</span>
-            </QuantityHead>
-          </QuantityDiv>
-
-          <ImportantInfoDiv>
-            <span>Important considerations :</span>
-            <li>
-              You will start getting reminder on your phone and application
-              before 15 mins of arrival time.
-            </li>
-            <li>
-              Your reservation held for extra 15 mins after the arrival time.
-            </li>
-            <li>
-              If canceled 1 hour before the arrival time you will get refunded
-              65% of your money.
-            </li>
-          </ImportantInfoDiv>
-
-          <ButtonDivs>
-            <Button
-              onClick={handleContinueReservation}
-              size="large"
-              variation="primary"
-            >
-              Continue your reservation
-            </Button>
-          </ButtonDivs>
-        </>
-      )} */}
     </Container>
   );
 }
