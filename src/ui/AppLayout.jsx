@@ -7,10 +7,6 @@ import { Provider } from "react-redux";
 import { store, persistor } from "../features/cart/cartOperation";
 import { PersistGate } from "redux-persist/integration/react";
 
-// import { CartProvider } from "../context/cartContext";
-// import Cart from "../pages/Cart";
-// import { useState } from "react";
-
 function PersistGateComponent() {
   return (
     <PersistGate loading={<div>LOADING...</div>} persistor={persistor}>

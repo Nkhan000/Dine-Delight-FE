@@ -73,8 +73,11 @@ function FoodMenu({
   const numberOfPages = Math.ceil(foodItems.length / skipValue);
   const currentPageNumber = searchParams.get("page");
 
-  const { data, isLoading, error } = useGetUser();
-  const onGoingDeliveries = data && data.user.onGoingDeliveriesId.length;
+  const { user, isLoading, error } = useGetUser();
+  let onGoingDeliveries;
+  if (!isLoading) {
+    onGoingDeliveries = user.onGoingDeliveriesId.length;
+  }
   // console.log(data);
   return (
     <>

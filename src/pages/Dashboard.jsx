@@ -315,9 +315,7 @@ const BusinessProfileContainer = styled.div``;
 
 function Dashboard() {
   const [userSide, setUserSide] = useState(true);
-  const { data, isLoading } = useGetUser();
-  const navigate = useNavigate();
-  const user = !isLoading && data?.user;
+  const { user, isLoading } = useGetUser();
   function handleSwitchUserToBusiness() {
     setUserSide((s) => !s);
   }
@@ -336,10 +334,6 @@ function Dashboard() {
     }
   }, [isLoading, searchParams, userSide, setSearchParams]);
 
-  if (!user) {
-    navigate("/login");
-    return;
-  }
   return (
     <Container>
       <ContainerDiv>

@@ -8,9 +8,11 @@ import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
 import {
   useSendVerificationCodeForReservation,
-  useVerifyCodeForReservation,
+  useVerifyReservationCode,
 } from "../features/cuisines/useReservation";
 import SpinnerMini from "./SpinnerMini";
+import { useForm } from "react-hook-form";
+
 const VerficationContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -29,7 +31,7 @@ const HeadTextSpan = styled.span`
   font-family: inherit;
 `;
 
-const VerificationContainer = styled.div`
+const VerificationForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -58,7 +60,10 @@ const VerificationButtonDiv = styled.div`
 
 const VerificationInputDiv = styled.div`
   width: 100%;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   & input {
     width: 100%;
     background-color: transparent;
@@ -71,6 +76,11 @@ const VerificationInputDiv = styled.div`
       outline: 2px solid var(--color-orange-50);
       color: var(--color-grey-100);
     }
+  }
+
+  p {
+    font-weight: 600;
+    color: var(--color-red-200);
   }
 `;
 
@@ -100,9 +110,6 @@ const VerifiedContainer = styled.div`
   padding: 2rem 0;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* border: 4px solid; */
   height: 100%;
   width: 100%;
 `;
@@ -119,24 +126,29 @@ const VerifiedTextSm = styled.span`
 `;
 
 function ReservationWindowVerificationCode() {
+  const { verifyReservationCode, isVerifying, isError, isSuccess } =
+    useVerifyReservationCode();
+  const { sendVerificationCode, isSendingVerificationCode } =
+    useSendVerificationCodeForReservation();
+
   const INITIAL_WAITING_MINUTES = 5;
   const INITIAL_WAITING_SECOND = 0;
 
+  const { register, handleSubmit } = useForm();
   const [isCodeSentAgain, setIsCodeSentAgain] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
   const { timer, startTimer, stopTimer, isRunning } = useCountDownTimer(
     INITIAL_WAITING_MINUTES,
     INITIAL_WAITING_SECOND,
     1
   );
-  const { sendVerificationCode, isLoading: sendingVerifcationCode } =
-    useSendVerificationCodeForReservation();
 
-  const { verifyReservationCode, isLoading: isVerifying } =
-    useVerifyCodeForReservation();
+  useEffect(() => {
+    sendVerificationCode();
+  }, []);
+
   // Control when the "Send Code Again" logic resets
   useEffect(() => {
-    if (isCodeSentAgain && !sendingVerifcationCode) {
+    if (isCodeSentAgain) {
       startTimer();
 
       // stop the timer after given minutes (1000 * 60 * 5 => 5 minutes)
@@ -150,49 +162,39 @@ function ReservationWindowVerificationCode() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCodeSentAgain, startTimer, stopTimer]);
 
-  useEffect(() => {
-    let timeOutId;
-    if (isVerifying) {
-      timeOutId = setTimeout(() => {
-        setIsVerified(true);
-      }, 5000);
-    }
-
-    return () => clearTimeout(timeOutId);
-  }, [isVerifying]);
-
-  function handleVerifying() {
-    verifyReservationCode();
-  }
-
   function handleCodeSentAgain() {
     setIsCodeSentAgain(true);
     sendVerificationCode();
     console.log("set to true");
   }
 
-  // if (isVerifying) {
-  //   return <Spinner />;
-  // }
-  // if (isVerified) {
-  //   return (
-  //     <VerifiedContainer>
-  //       <GradientHighlight>
-  //         <VerifiedText>VERIFIED</VerifiedText>
-  //       </GradientHighlight>
-  //       <VerifiedTextSm>
-  //         Click on this link to get to the checkout page.{" "}
-  //         <GradientHighlight>
-  //           <Link to="/checkout">Checkout</Link>
-  //         </GradientHighlight>
-  //       </VerifiedTextSm>
-  //     </VerifiedContainer>
-  //   );
-  // }
+  function onSubmit(data) {
+    verifyReservationCode(data);
+  }
+
+  if (isSuccess) {
+    return (
+      <VerifiedContainer>
+        <GradientHighlight>
+          <VerifiedText>VERIFIED</VerifiedText>
+        </GradientHighlight>
+        <VerifiedTextSm>
+          Click on this link to get to the checkout page.{" "}
+          <GradientHighlight>
+            <Link to="/checkout">Checkout</Link>
+          </GradientHighlight>
+        </VerifiedTextSm>
+      </VerifiedContainer>
+    );
+  }
+
+  if (isSendingVerificationCode) {
+    return <Spinner />;
+  }
 
   return (
     <VerficationContainer>
-      <VerificationContainer>
+      <VerificationForm onSubmit={handleSubmit(onSubmit)}>
         <VerificationTextDiv>
           <HeadTextDiv>
             <GradientHighlight>
@@ -204,12 +206,15 @@ function ReservationWindowVerificationCode() {
           </VerificationText>
 
           <VerificationInputDiv>
-            <label htmlFor="otpcode"></label>
+            <label htmlFor="OTPCode"></label>
             <input
-              type="text"
-              name="otpcode"
+              type="number"
+              name="OTPCode"
               placeholder="enter the verification code"
+              required
+              {...register("OTPCode")}
             />
+            {isError && <p>Invalid OTP code provided. Try Again</p>}
           </VerificationInputDiv>
 
           <ResendTextDiv>
@@ -224,14 +229,21 @@ function ReservationWindowVerificationCode() {
           </ResendTextDiv>
         </VerificationTextDiv>
         <VerificationButtonDiv>
-          <Button onClick={handleVerifying} variation="primary" size="medium">
-            Verify
-          </Button>
+          {!isVerifying ? (
+            <Button variation="primary" size="medium" type="submit">
+              Verify
+            </Button>
+          ) : (
+            <Button variation="primary" size="medium">
+              Verifying
+              <SpinnerMini />
+            </Button>
+          )}
           <Button variation="secondary" size="medium">
             Cancel
           </Button>
         </VerificationButtonDiv>
-      </VerificationContainer>
+      </VerificationForm>
     </VerficationContainer>
   );
 }

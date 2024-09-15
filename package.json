@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
-    "@tanstack/react-query": "^5.29.0",
+    "@tanstack/react-query": "^5.56.2",
     "@tanstack/react-query-devtools": "^5.29.0",
     "axios": "^1.6.8",
     "image-compressor": "^2.0.3",

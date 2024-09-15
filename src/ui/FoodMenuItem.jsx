@@ -148,7 +148,6 @@ function FoodMenuItem({
   cuisineImage,
   cuisineAddress,
   cuisineId,
-  searchParams,
   deliveryPrice,
 }) {
   const { name, image, type, prices, _id } = data;

@@ -23,18 +23,18 @@ const FullPageSpinner = styled.div`
 /* eslint-disable no-unused-vars */
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
-  const { data, isLoading, error } = useGetUser();
+  const { user, isLoading, error } = useGetUser();
 
   useEffect(() => {
     // If not loading and there's no user data, navigate to the login page
-    if (!isLoading && !data) {
+    if (!isLoading && !user) {
       navigate("/login");
     }
     // If user data is present and they are on the login page, navigate to home
-    else if (data?.user && window.location.pathname === "/login") {
+    else if (user && window.location.pathname === "/login") {
       navigate("/home");
     }
-  }, [isLoading, data, navigate]);
+  }, [isLoading, user, navigate]);
 
   // Handle the loading state separately
   if (isLoading) {

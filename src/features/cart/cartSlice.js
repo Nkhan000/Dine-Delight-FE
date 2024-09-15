@@ -25,43 +25,73 @@ function getTotalAndCartTotal(cart) {
 export default function cartReducer(state = initialState, action) {
   switch (action.type) {
     case "cart/addItem": {
-      let updatedCart = [];
-      if (state.cart.length > 0) {
-        updatedCart = state.cart.map((item) => {
-          if (item.cuisineId === action.payload.cuisineId) {
-            // if the item is already in the cart then filter it our from the existing cart and then append the updatedone
-            const updatedOrderItem = item.orderItems.filter(
-              (order) => order.name !== action.payload.orderItems[0].name
-            );
-            return {
-              ...item,
-              orderItems: [...updatedOrderItem, ...action.payload.orderItems],
-            };
-          } else {
-            return item;
-          }
-        });
-
-        // If the item was not found, add it to the cart
-        const itemExists = updatedCart.some(
-          (item) => item.cuisineId === action.payload.cuisineId
-        );
-        if (!itemExists) {
-          updatedCart = [...updatedCart, action.payload];
+      let updatedCart = state.cart.map((item) => {
+        if (item.cuisineId === action.payload.cuisineId) {
+          // Update the existing orderItems for the matched cuisineId
+          const updatedOrderItems = item.orderItems.filter(
+            (order) => order.name !== action.payload.orderItems[0].name
+          );
+          return {
+            ...item,
+            orderItems: [...updatedOrderItems, ...action.payload.orderItems],
+          };
         }
-      } else {
-        updatedCart = [...state.cart, action.payload];
+        return item;
+      });
+
+      // If the cuisine does not exist in the cart, append the new item
+      const itemExists = updatedCart.some(
+        (item) => item.cuisineId === action.payload.cuisineId
+      );
+
+      if (!itemExists) {
+        updatedCart = [...updatedCart, action.payload];
       }
 
-      //For calucalating total and cart total
-      const data = getTotalAndCartTotal(updatedCart);
+      // Calculate totals
+      const { cart, cartTotal } = getTotalAndCartTotal(updatedCart);
 
       return {
         ...state,
-        cart: data.cart,
-        cartTotal: data.cartTotal,
+        cart,
+        cartTotal,
       };
+
+      // let updatedCart = [];
+      // if (state.cart.length > 0) {
+      //   updatedCart = state.cart.map((item) => {
+      //     if (item.cuisineId === action.payload.cuisineId) {
+      //       // if the item is already in the cart then filter it our from the existing cart and then append the updatedone
+      //       const updatedOrderItem = item.orderItems.filter(
+      //         (order) => order.name !== action.payload.orderItems[0].name
+      //       );
+      //       return {
+      //         ...item,
+      //         orderItems: [...updatedOrderItem, ...action.payload.orderItems],
+      //       };
+      //     } else {
+      //       return item;
+      //     }
+      //   });
+      //   // If the item was not found, add it to the cart
+      //   const itemExists = updatedCart.some(
+      //     (item) => item.cuisineId === action.payload.cuisineId
+      //   );
+      //   if (!itemExists) {
+      //     updatedCart = [...updatedCart, action.payload];
+      //   }
+      // } else {
+      //   updatedCart = [...state.cart, action.payload];
+      // }
+      // //For calucalating total and cart total
+      // const data = getTotalAndCartTotal(updatedCart);
+      // return {
+      //   ...state,
+      //   cart: data.cart,
+      //   cartTotal: data.cartTotal,
+      // };
     }
+    // for removing a single item from order
     case "cart/removeItem": {
       const cuisineId = action.payload.cuisineId;
       const itemToRemove = action.payload.itemId;

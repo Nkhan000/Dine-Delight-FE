@@ -9,30 +9,36 @@ export async function apiSendVerificationCode() {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    console.log(response);
+    return response;
   } catch (err) {
     console.log("Error sending code for verification", err);
+    throw err;
   }
 }
 
 export async function apiVerifyReservationCode(code) {
   const requestURL = `http://127.0.0.1:3000/api/v1/reservations/verify-user`;
   const token = localStorage.getItem("jwt");
+  const otpCode = +code.OTPCode;
+  // console.log(otpCode);
 
   try {
     const response = await axios.post(
       requestURL,
       {
-        OPTCode: code,
+        OTPCode: otpCode,
       },
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    console.log(response);
+
+    if (response.status !== 200) {
+      throw new Error("Verification failed");
+    }
     return response;
   } catch (err) {
     console.log(err);
-    return err.data;
+    throw err;
   }
 }

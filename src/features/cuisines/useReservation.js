@@ -3,27 +3,39 @@ import {
   apiSendVerificationCode,
   apiVerifyReservationCode,
 } from "../../services/apiReservations";
+// import { isPending } from "@reduxjs/toolkit";
 
 export function useSendVerificationCodeForReservation() {
-  const { mutate: sendVerificationCode, isLoading } = useMutation({
+  const mutation = useMutation({
     mutationFn: apiSendVerificationCode,
     onSuccess: () => {
       console.log("Verification code was sent");
     },
   });
-  return { sendVerificationCode, isLoading };
+
+  const { mutate: sendVerificationCode, isPending: isSendingVerificationCode } =
+    mutation;
+
+  return { sendVerificationCode, isSendingVerificationCode };
 }
 
-export function useVerifyCodeForReservation() {
-  const { mutate: verifyReservationCode, isLoading } = useMutation({
+export function useVerifyReservationCode() {
+  const mutate = useMutation({
     mutationFn: (data) => apiVerifyReservationCode(data),
     onSuccess: () => {
-      console.log("verification done successfully");
+      console.log("Verified Successfully");
     },
     onError: () => {
-      console.log("error verifying verification code");
+      console.log("Error verifying the reservation code");
     },
   });
 
-  return { verifyReservationCode, isLoading };
+  const {
+    mutate: verifyReservationCode,
+    isPending: isVerifying,
+    isSuccess,
+    isError,
+  } = mutate;
+
+  return { verifyReservationCode, isVerifying, isSuccess, isError };
 }

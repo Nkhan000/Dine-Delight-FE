@@ -2,16 +2,12 @@
 import styled, { css } from "styled-components";
 import GradientHighlight from "../ui/GradientHighlight";
 import { HiShoppingCart, HiTicket } from "react-icons/hi2";
-import { GiTakeMyMoney } from "react-icons/gi";
 import GradientIcon from "../ui/GradientIcon";
 import Heading from "../ui/Heading";
 import CartBeforeConfirm from "../ui/CartBeforeConfirm";
 import Button from "../ui/Button";
-import { getCuisineSingle } from "../services/apiCuisines";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetUser } from "../features/authentication/useGetUser";
 import { useCreateDelivery } from "../features/delivery/useDelivery";
-import { useNavigate } from "react-router-dom";
 import { useCreateANewBooking } from "../features/cuisines/useVenue";
 import { clearCartFromReduxState } from "../features/cart/cartSlice";
 import { removeVenueBooking } from "../features/cart/venueBookingSlice";
@@ -34,7 +30,6 @@ const CheckoutBillingContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
 `;
 
 const HeadTextDiv = styled.div`
@@ -152,9 +147,6 @@ const BillingLeftContainer = styled.div`
 `;
 
 const GrandTotalDiv = styled.div`
-  /* position: absolute; */
-  /* top: 72.2%;
-  width: 100%; */
   background-color: var(--color-grey-900);
   padding: 1.5rem 2rem;
 
@@ -184,9 +176,6 @@ const GrandTotalTextSm = styled.span`
 function Checkout() {
   const storeCart = useSelector((store) => store.cart);
   const storeVenue = useSelector((store) => store.venue);
-  const { data, isLoading, error } = useGetUser();
-  const user = !isLoading && data;
-  const navigate = useNavigate();
 
   const { cart, cartTotal } = storeCart;
   const { venue } = storeVenue;
@@ -204,15 +193,11 @@ function Checkout() {
       newOrder(orderObj);
     } else if (Object.keys(venue).length > 1) {
       createANewVenueBooking(venue);
-      // console.log(venue);
     }
     dispatch(clearCartFromReduxState());
     dispatch(removeVenueBooking());
   }
-  if (!isLoading && !user) {
-    navigate("/login");
-    return null;
-  }
+
   return (
     <Container>
       <CheckoutDetailsContainer>

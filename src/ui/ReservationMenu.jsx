@@ -12,16 +12,15 @@ import { useSendVerificationCodeForReservation } from "../features/cuisines/useR
 import { useGetUser } from "../features/authentication/useGetUser";
 import { BannerContext } from "../utils/contexts";
 import BannerNotification from "./BannerNotification";
+import { useForm } from "react-hook-form";
+import StyledOptionsDiv from "./StyledOptionsTwo";
 
-const Container = styled.div`
-  /* padding: 2.4rem 4rem;
-  border: 2px solid var(--color-grey-900); */
+const Container = styled.form`
   border-radius: 3rem;
   display: flex;
   flex-direction: column;
   gap: 4rem;
   padding: 0 5rem;
-  /* justify-content: center; */
 `;
 
 // const OptionDivs = styled.div``;
@@ -80,8 +79,6 @@ const QuantityDiv = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  /* width: 100%; */
-  /* margin: 0 5rem; */
 `;
 
 const QuantityHead = styled.div`
@@ -216,26 +213,20 @@ function ReservationMenu() {
     "cornered Ground floor",
   ];
 
+  const { handleSubmit, setValue, register } = useForm();
   const [partySize, setPartySize] = useState(partySizeOption[0]);
   const [availableTimeSlot, setAvailableTimeSlot] = useState(availableTime[0]);
   const [reservationDate, setReservationDate] = useState();
   const [tableType, setTableType] = useState(tableTypeOption[0]);
   const [addPriority, setAddPriority] = useState(false);
-  const [grandTotal, setGrandTotal] = useState(0);
   const { user, isLoading, error } = useGetUser();
 
-  const { setBannerItemObj, setBannerText, setBannerType, open } =
-    useContext(BannerContext);
-
-  // let user;
-  // if (!isLoading) {
-  //   user = data?.user;
-  // }
+  const { setBannerText, setBannerType, open } = useContext(BannerContext);
 
   let partySizeNum = parseInt(partySize.split(" ")[0], 10);
   const [total, setTotal] = useState(partySizeNum * reservationPrice);
 
-  const { sendVerificationCode, isLoading: isSendingVerificationCode } =
+  const { sendVerificationCode, isSendingVerificationCode } =
     useSendVerificationCodeForReservation();
 
   function formateDate(time, date) {
@@ -299,35 +290,64 @@ function ReservationMenu() {
       <HeaderDiv>
         <FilterDiv>
           <OptionDiv>
-            <OptionLable>Party Size</OptionLable>
-            <StyledOptions
-              sortby=""
-              selectedOption={partySize}
-              setSelectedOption={setPartySize}
-              options={partySizeOption}
-            ></StyledOptions>
+            <OptionLable htmlFor="aprPartySize">Party Size</OptionLable>
+            <StyledOptionsDiv>
+              <select
+                name="aprPartySize"
+                required
+                onChange={(e) => {
+                  setPartySize(e.target.value);
+                  console.log(e.target.value);
+                }}
+              >
+                <option>2 person</option>
+                <option>3 person</option>
+                <option>5 person</option>
+              </select>
+            </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable>Prefered Time</OptionLable>
-            <StyledOptions
-              sortby=""
-              selectedOption={availableTimeSlot}
-              setSelectedOption={setAvailableTimeSlot}
-              options={availableTime}
-            ></StyledOptions>
+            <OptionLable htmlFor="availableTime">Available Time</OptionLable>
+            <StyledOptionsDiv>
+              <select
+                name="availableTime"
+                required
+                onChange={(e) => {
+                  setAvailableTimeSlot(e.target.value);
+                  console.log(e.target.value);
+                }}
+              >
+                {availableTime.map((item, i) => (
+                  <option key={`${item}=${i}`}>{item}</option>
+                ))}
+              </select>
+            </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable>Table type</OptionLable>
-            <StyledOptions
-              sortby=""
-              selectedOption={tableType}
-              setSelectedOption={setTableType}
-              options={tableTypeOption}
-            ></StyledOptions>
+            <OptionLable htmlFor="tableType">Table Type</OptionLable>
+            <StyledOptionsDiv>
+              <select
+                name="tableType"
+                required
+                onChange={(e) => {
+                  setTableType(e.target.value);
+                  console.log(e.target.value);
+                }}
+              >
+                {tableTypeOption.map((item, i) => (
+                  <option key={`${item}=${i}`}>{item}</option>
+                ))}
+              </select>
+            </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable>Date</OptionLable>
-            <input onChange={handleDateChange} type="date" />
+            <OptionLable htmlFor="reservationDate">Date</OptionLable>
+            <input
+              type="date"
+              name="reservationDate"
+              onChange={handleDateChange}
+              required
+            />
           </OptionDiv>
         </FilterDiv>
       </HeaderDiv>
@@ -366,11 +386,7 @@ function ReservationMenu() {
         ) : (
           <Modal>
             <Modal.Open open="reservation-window">
-              <Button
-                onClick={handleContinueReservation}
-                size="large"
-                variation="primary"
-              >
+              <Button size="large" variation="primary" type="submit">
                 Continue your reservation
               </Button>
             </Modal.Open>

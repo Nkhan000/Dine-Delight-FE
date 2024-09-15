@@ -6,12 +6,14 @@ import cartReducer from "./cartSlice";
 import venueBookingReducer from "./venueBookingSlice";
 import storage from "redux-persist/lib/storage"; // defaults to local storage for web
 import remainingOrderReducer from "./remainingOrderSlice";
+import reservationSlice from "./reservationSlice";
 
-// Combining two redux slices together
+// Combining two or more redux slices together
 const rootReducer = combineReducers({
   cart: cartReducer,
   venue: venueBookingReducer,
   remainingOrders: remainingOrderReducer,
+  reservation: reservationSlice,
 });
 
 // this is to hold the data in the local Storage even if the browser sessison ends
