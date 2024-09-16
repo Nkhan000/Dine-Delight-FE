@@ -28,10 +28,14 @@ export function useCuisine(currentPage, currentFilter) {
 
 export function useCusineSingle(id, serviceName) {
   // FETCHING DATA
-  const { isLoading, data, error } = useQuery({
+  const {
+    isLoading,
+    data: cuisineData,
+    error,
+  } = useQuery({
     queryKey: ["cuisine", id, serviceName],
     queryFn: () => getCuisineSingle(id, serviceName),
   });
 
-  return { isLoading, data, error };
+  return { isLoading, cuisineData, error };
 }

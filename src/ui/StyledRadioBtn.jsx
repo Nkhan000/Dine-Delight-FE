@@ -50,12 +50,19 @@ function StyledRadioBtn({
   name = "account_type",
   inpType = "radio",
   labelId,
+  disabled,
   onClickFn,
   children,
 }) {
   return (
     <RadioDiv>
-      <input type={inpType} onClick={onClickFn} id={labelId} name={name} />
+      <input
+        type={inpType}
+        disabled={disabled}
+        onClick={onClickFn}
+        id={labelId}
+        name={name}
+      />
       <StyledCircle></StyledCircle>
       <RadioLabel htmlFor={labelId} name={name}>
         {children}

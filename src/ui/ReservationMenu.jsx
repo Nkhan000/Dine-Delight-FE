@@ -1,19 +1,17 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "./Heading";
-import StyledOptions from "./StyledOptions";
-import GradientHighlight from "./GradientHighlight";
 import StyledRadioBtn from "./StyledRadioBtn";
 import Button from "./Button";
 import { useContext, useEffect, useState } from "react";
 import Modal from "./Modal";
 import ReservationWindowModal from "./ReservationWindowModal";
-import { useSendVerificationCodeForReservation } from "../features/cuisines/useReservation";
 import { useGetUser } from "../features/authentication/useGetUser";
 import { BannerContext } from "../utils/contexts";
 import BannerNotification from "./BannerNotification";
 import { useForm } from "react-hook-form";
 import StyledOptionsDiv from "./StyledOptionsTwo";
+import { addNewReservation } from "../features/cart/reservationSlice";
 
 const Container = styled.form`
   border-radius: 3rem;
@@ -28,30 +26,24 @@ const Container = styled.form`
 const OptionDiv = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 0.8rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid var(--color-grey-700);
 
-  /* & select {
-    background-color: transparent;
-    border: none;
-    outline: none;
-    color: var(--color-grey-50);
-    font-size: 1.6rem;
-    width: 100%;
-    & option {
-      background-color: var(--color-grey-50);
-      outline: none;
-       color: var(--color-grey-700);
-    } 
-  }
-  */
   & input {
     width: 100%;
     background-color: transparent;
     border: none;
     outline: none;
     color: var(--color-grey-50);
+    font-size: 1.4rem;
+
+    &:disabled {
+      background-color: none;
+      color: var(--color-grey-400);
+    }
   }
 `;
 
@@ -89,6 +81,7 @@ const QuantityHead = styled.div`
   border-bottom: 1px solid var(--color-grey-500);
 
   & span {
+    text-transform: capitalize;
     font-weight: 600;
     font-size: 2rem;
     color: var(--color-grey-50);
@@ -102,6 +95,7 @@ const QuantityDetailsDiv = styled.div`
   border-bottom: 1px solid var(--color-grey-700);
 
   & span {
+    text-transform: capitalize;
     /* font-weight: 600; */
     font-size: 1.6rem;
     color: var(--color-grey-50);
@@ -153,9 +147,20 @@ const RadioBtnDiv = styled.div`
 const RemakrsInputDivContianer = styled.div`
   height: auto;
   width: 100%;
+  transition-property: height, display;
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
 `;
 
 const RemarksInput = styled.textarea`
+  transition-property: height, width, display, opacity;
+  transition-duration: 0.2s;
+  transition-delay: ease-in;
+
+  /* transition: opacity 5s ease-in-out; */
   font-family: inherit;
   color: var(--color-grey-50);
   background-color: transparent;
@@ -164,14 +169,19 @@ const RemarksInput = styled.textarea`
   padding: 1rem;
   font-size: 1.4rem;
   font-weight: 600;
-  height: 10rem;
+  height: 12rem;
   width: 100%;
+  opacity: 1;
+  display: block;
 `;
 
 const ButtonDivs = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+
+  justify-content: flex-end;
 `;
 
 const ImportantInfoDiv = styled.ol`
@@ -193,42 +203,39 @@ const ImportantInfoDiv = styled.ol`
 `;
 
 function ReservationMenu() {
-  const partySizeOption = ["2 person", "3 person", "4 person", "5 person"];
+  const partySizeOption = [2, 3, 4, 5, 6];
   const reservationPrice = 49;
   const availableTime = [
-    "10:30 hours",
-    "11:00 hours",
-    "12:00 hours",
-    "13:00 hours",
-    "17:00 hours",
-    "18:00 hours",
-    "20:00 hours",
+    "10:30",
+    "11:00",
+    "12:00",
+    "13:00",
+    "17:00",
+    "18:00",
+    "20:00",
   ];
 
   const tableTypeOption = [
-    "private/cabin",
     "centered Ground floor",
+    "private/cabin",
     "centered top floor",
     "cornerd Ground floor",
     "cornered Ground floor",
   ];
 
-  const { handleSubmit, setValue, register } = useForm();
+  const { handleSubmit, setValue, reset, register } = useForm();
   const [partySize, setPartySize] = useState(partySizeOption[0]);
   const [availableTimeSlot, setAvailableTimeSlot] = useState(availableTime[0]);
   const [reservationDate, setReservationDate] = useState();
   const [tableType, setTableType] = useState(tableTypeOption[0]);
   const [addPriority, setAddPriority] = useState(false);
   const { user, isLoading, error } = useGetUser();
-
+  const [allFieldsValid, setAllFeildsValid] = useState(false);
+  const [total, setTotal] = useState();
   const { setBannerText, setBannerType, open } = useContext(BannerContext);
+  const [reservationObj, setReservationObj] = useState();
 
-  let partySizeNum = parseInt(partySize.split(" ")[0], 10);
-  const [total, setTotal] = useState(partySizeNum * reservationPrice);
-
-  const { sendVerificationCode, isSendingVerificationCode } =
-    useSendVerificationCodeForReservation();
-
+  // formate date combining both date and available time selected
   function formateDate(time, date) {
     const [hours, minutes] = time.split(":");
     const updatedDate = new Date(date);
@@ -241,111 +248,132 @@ function ReservationMenu() {
     setAddPriority((s) => !s);
   }
 
-  function handleContinueReservation() {
-    if (!user) {
-      setBannerText("Please login to create reservation");
-      setBannerType("error-warning");
-      open();
-      return;
-    }
-    const reservationObj = {
-      partySize: partySizeNum,
-      priority: addPriority,
-      reservationDate,
-      tableType,
-    };
-    sendVerificationCode();
-    console.log(reservationObj);
+  useEffect(() => {
+    if (addPriority)
+      setTotal(
+        partySize * reservationPrice + partySize * reservationPrice * 0.08
+      );
+    else setTotal(partySize * reservationPrice);
+  }, [partySize, reservationPrice, addPriority]);
+
+  function handlePartySize(e) {
+    console.log(e.target.value);
+    setPartySize(e.target.value);
+  }
+
+  function handleAvailableTime(e) {
+    console.log(e.target.value);
+    setAvailableTimeSlot(e.target.value);
+  }
+
+  function handleTableType(e) {
+    console.log(e.target.value);
+    setTableType(e.target.value);
   }
 
   function handleDateChange(e) {
-    console.log(e.target.value);
     const reserveDate = new Date(e.target.value);
-    const time = availableTimeSlot.split(" ").shift();
-    const updatedDate = formateDate(time, reserveDate);
+    const updatedDate = formateDate(availableTimeSlot, reserveDate);
     console.log(updatedDate);
     setReservationDate(updatedDate);
   }
   useEffect(() => {
     // Updates reservationDate when availableTimeSlot changes
     if (reservationDate) {
-      const time = availableTimeSlot.split(" ").shift();
-      const updatedDate = formateDate(time, reservationDate);
+      const updatedDate = formateDate(availableTimeSlot, reservationDate);
       setReservationDate(updatedDate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableTimeSlot]);
 
-  useEffect(() => {
-    const time = availableTimeSlot.split(" ").shift();
-  }, [availableTimeSlot]);
+  function onReset() {
+    reset();
+    setAllFeildsValid(false);
+  }
+
+  function onSubmit(data) {
+    if (!user) {
+      setBannerText("Please login to create reservation");
+      setBannerType("error-warning");
+      open();
+      return;
+    }
+    // console.log(data);
+    setAllFeildsValid(true);
+    setReservationObj({ reservationObj: data });
+  }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    partySizeNum = parseInt(partySize.split(" ")[0], 10);
-  }, [partySize]);
+    setValue("aprPartySize", partySize);
+    setValue("reservationDate", reservationDate);
+    setValue("tableType", tableType);
+    setValue("priority", addPriority);
+    setValue("total", total);
+  }, [total, partySize, reservationDate, tableType, addPriority, setValue]);
 
   return (
-    <Container>
+    <Container onSubmit={handleSubmit(onSubmit)}>
       <HeaderDiv>
         <FilterDiv>
           <OptionDiv>
-            <OptionLable htmlFor="aprPartySize">Party Size</OptionLable>
+            <OptionLable htmlFor="aprPartySize">Party Size*</OptionLable>
             <StyledOptionsDiv>
               <select
                 name="aprPartySize"
+                disabled={allFieldsValid}
                 required
-                onChange={(e) => {
-                  setPartySize(e.target.value);
-                  console.log(e.target.value);
-                }}
+                onChange={handlePartySize}
               >
-                <option>2 person</option>
-                <option>3 person</option>
-                <option>5 person</option>
+                {partySizeOption.map((item, i) => (
+                  <option value={item} key={`${item}-${i}`}>
+                    {item} Person
+                  </option>
+                ))}
               </select>
             </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable htmlFor="availableTime">Available Time</OptionLable>
+            <OptionLable htmlFor="availableTime">Available Time*</OptionLable>
             <StyledOptionsDiv>
               <select
                 name="availableTime"
                 required
-                onChange={(e) => {
-                  setAvailableTimeSlot(e.target.value);
-                  console.log(e.target.value);
-                }}
+                onChange={handleAvailableTime}
+                disabled={allFieldsValid}
               >
                 {availableTime.map((item, i) => (
-                  <option key={`${item}=${i}`}>{item}</option>
+                  <option value={item} key={`${item}-${i}`}>
+                    {item} Hours
+                  </option>
                 ))}
               </select>
             </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable htmlFor="tableType">Table Type</OptionLable>
+            <OptionLable htmlFor="tableType">Table Type*</OptionLable>
             <StyledOptionsDiv>
               <select
                 name="tableType"
+                disabled={allFieldsValid}
                 required
-                onChange={(e) => {
-                  setTableType(e.target.value);
-                  console.log(e.target.value);
-                }}
+                onChange={handleTableType}
               >
                 {tableTypeOption.map((item, i) => (
-                  <option key={`${item}=${i}`}>{item}</option>
+                  <option value={item} key={`${item}=${i}`}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </StyledOptionsDiv>
           </OptionDiv>
           <OptionDiv>
-            <OptionLable htmlFor="reservationDate">Date</OptionLable>
+            <OptionLable htmlFor="reservationDate">Date*</OptionLable>
             <input
               type="date"
+              min={new Date().toISOString().split("T")[0]} // todays date
               name="reservationDate"
               onChange={handleDateChange}
+              disabled={allFieldsValid}
               required
             />
           </OptionDiv>
@@ -358,6 +386,7 @@ function ReservationMenu() {
             onClickFn={handleAddPriority}
             inpType="checkbox"
             labelId={"welcome-priority"}
+            disabled={allFieldsValid}
           >
             Prioritze your reservation
           </StyledRadioBtn>
@@ -371,14 +400,40 @@ function ReservationMenu() {
           </InformationI>
         </RadioBtnDiv>
       </RadioBtnsDiv>
+      <RemakrsInputDivContianer>
+        <Heading as="h3" color="light">
+          Remarks/Special Note
+        </Heading>
+        <label htmlFor="remarks" />
+        <RemarksInput
+          name="remarks"
+          placeholder="[OPTIONAL] Any specail request ?"
+          {...register("remarks")}
+        />
+      </RemakrsInputDivContianer>
+      {allFieldsValid && (
+        <>
+          <QuantityDetailsDiv>
+            <span>{tableType}</span>
+            <span>${(partySize * reservationPrice).toFixed(2)}</span>
+          </QuantityDetailsDiv>
+          {addPriority && (
+            <QuantityDetailsDiv>
+              <span>priority(+8%)</span>
+              <span>${(partySize * reservationPrice * 0.08).toFixed(2)}</span>
+            </QuantityDetailsDiv>
+          )}
+          <QuantityHead>
+            <span>Total</span>
+            <span>${total?.toFixed(2)}</span>
+          </QuantityHead>
+        </>
+      )}
+
       <ButtonDivs>
-        {!user ? (
+        {!allFieldsValid ? (
           <>
-            <Button
-              onClick={handleContinueReservation}
-              size="large"
-              variation="primary"
-            >
+            <Button size="medium" variation="primary" type="submit">
               Continue your reservation
             </Button>
             <BannerNotification.Banner />
@@ -386,15 +441,24 @@ function ReservationMenu() {
         ) : (
           <Modal>
             <Modal.Open open="reservation-window">
-              <Button size="large" variation="primary" type="submit">
-                Continue your reservation
+              <Button size="medium" variation="primary" type="submit">
+                Confirm your reservation
               </Button>
             </Modal.Open>
             <Modal.ModalWindow name="reservation-window">
-              <ReservationWindowModal />
+              <ReservationWindowModal reservationObj={reservationObj} />
             </Modal.ModalWindow>
           </Modal>
         )}
+
+        <Button
+          size="medium"
+          variation="secondary"
+          onClick={onReset}
+          type="reset"
+        >
+          Reset
+        </Button>
       </ButtonDivs>
     </Container>
   );

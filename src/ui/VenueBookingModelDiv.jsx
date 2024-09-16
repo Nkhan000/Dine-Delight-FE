@@ -4,14 +4,13 @@ import styled from "styled-components";
 import GradientHighlight from "./GradientHighlight";
 import Button from "./Button";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addAVenueBooking,
   removeVenueBooking,
 } from "../features/cart/venueBookingSlice";
 import Modal from "./Modal";
-import CheckBeforeConfirm from "./CheckBeforeConfirm";
+import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
 import { clearCartFromReduxState } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 

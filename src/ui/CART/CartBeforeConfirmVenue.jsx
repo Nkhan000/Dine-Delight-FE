@@ -2,31 +2,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled, { css } from "styled-components";
-import Heading from "./Heading";
-import Button from "./Button";
-import StyledOptions from "./StyledOptions";
-import { useContext, useEffect, useReducer, useState } from "react";
-import cartReducer, {
-  removeItem,
-  removeSingleCuisine,
-  updateItemSize,
-  updateNewQuantity,
-} from "../features/cart/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Form, useNavigate } from "react-router-dom";
-import { useGetUser } from "../features/authentication/useGetUser";
-import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
-import { removeVenueBooking } from "../features/cart/venueBookingSlice";
-import CartBeforeConfirmOrder from "./CartBeforeConfirmOrder";
-import CartBeforeConfirmVenue from "./CartBeforeConfirmVenue";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  /* background-color: red; */
-`;
+import Heading from "../Heading";
+import Button from "../Button";
+import { useDispatch } from "react-redux";
+import { removeVenueBooking } from "../../features/cart/venueBookingSlice";
 
 const LogoImg = styled.img`
   width: 100%;
@@ -184,25 +163,65 @@ const CancelButtonDiv = styled.div`
   right: 5%;
 `;
 
-function CartBeforeConfirm({ size }) {
-  const storeCart = useSelector((store) => store.cart);
-  const storeVenue = useSelector((store) => store.venue);
-  const { cart } = storeCart;
-  const { venue } = storeVenue;
-
+function CartBeforeConfirmVenue({ size, venue }) {
+  const dispatch = useDispatch();
   return (
-    <Container>
-      {cart.length > 0 ? (
-        <CartBeforeConfirmOrder size={size} cart={cart} />
-      ) : Object.keys(venue).length > 1 ? (
-        <CartBeforeConfirmVenue size={size} venue={venue} />
-      ) : (
-        <ItemRemarks>
-          Please add Items to your cart before continuing 😂
-        </ItemRemarks>
-      )}
-    </Container>
+    <>
+      <CuisineDiv key={venue.name}>
+        <CancelButtonDiv>
+          <Button
+            size="small"
+            variation="secondary"
+            onClick={() => dispatch(removeVenueBooking())}
+          >
+            Cancel Order
+          </Button>
+        </CancelButtonDiv>
+        <OngoingOrderCusineDiv size={size}>
+          <OngoingOrderCusineLogoDiv size={size}>
+            <LogoImg src="./img/hotel-001.jpg" alt="cuisine logo" />
+          </OngoingOrderCusineLogoDiv>
+          <HeadTextContainer>
+            <Heading as={size === "large" ? "h2" : "h4"} color="light">
+              {venue.cuisineName}
+            </Heading>
+            <Heading as={size === "large" ? "h5" : "h6"} color="light">
+              {venue.cuisineAddress}
+            </Heading>
+          </HeadTextContainer>
+        </OngoingOrderCusineDiv>
+        <ItemDate>booked at : 2024/03/14 (10:55 am)</ItemDate>
+        <OngoingOrderItemList>
+          <li className="venueList">
+            <QuantityIncDecDiv>
+              <ItemName size={size}>{venue.name}</ItemName>
+            </QuantityIncDecDiv>
+
+            <ItemPriceContainer>
+              <ItemPrice size={size}>For {venue.numOfDays} days @ </ItemPrice>
+            </ItemPriceContainer>
+            <ItemPriceContainer>
+              <ItemPrice size={size}>${venue.pricePerDay}/day</ItemPrice>
+              <Button size="small" variation="danger">
+                X
+              </Button>
+            </ItemPriceContainer>
+          </li>
+        </OngoingOrderItemList>
+        <SubTotalDiv>
+          <ItemTextTotal size={size}>From : {venue.startDate}</ItemTextTotal>
+          <ItemTextTotal size={size}> To : {venue.endDate}</ItemTextTotal>
+          <ItemTextTotal size={size}>VAT(13%):&nbsp; $26.00</ItemTextTotal>
+          <ItemTextTotal size={size}>Total : ${venue.total}</ItemTextTotal>
+        </SubTotalDiv>
+      </CuisineDiv>
+
+      <ItemRemarks>
+        You are requested to be on time. You will get notified through calls or
+        messages for your Booking 😊
+      </ItemRemarks>
+    </>
   );
 }
 
-export default CartBeforeConfirm;
+export default CartBeforeConfirmVenue;

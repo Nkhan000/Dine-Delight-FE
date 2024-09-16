@@ -52,6 +52,7 @@ const variations = {
     transition: all 0.3s;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
 
     border: 1px solid var(--color-orange-50);
@@ -69,7 +70,6 @@ const variations = {
     position: relative;
     display: flex;
     align-items: center;
-    /* text-align: center; */
     justify-content: center;
     gap: 0.8rem;
     transition-property: transform, border, color;

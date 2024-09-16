@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "./Heading";
@@ -32,14 +33,17 @@ const HeadBarText = styled.div`
   /* text-align: left; */
 `;
 
-function ReservationWindowModal() {
+function ReservationWindowModal({ reservationObj }) {
+  console.log(reservationObj);
   return (
     <Container>
       <HeadBarDiv>
         <HeadBarText>We are holding a table for you . . .</HeadBarText>
       </HeadBarDiv>
 
-      <ReservationWindowVerificationCode />
+      <ReservationWindowVerificationCode
+        reservationObj={reservationObj.reservationObj}
+      />
     </Container>
   );
 }

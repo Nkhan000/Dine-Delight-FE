@@ -76,7 +76,7 @@ function FoodMenu({
   const { user, isLoading, error } = useGetUser();
   let onGoingDeliveries;
   if (!isLoading) {
-    onGoingDeliveries = user.onGoingDeliveriesId.length;
+    onGoingDeliveries = user?.onGoingDeliveriesId.length;
   }
   // console.log(data);
   return (

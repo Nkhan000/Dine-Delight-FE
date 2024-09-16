@@ -6,6 +6,7 @@ const initialState = {
 export default function reservationSlice(state = initialState, action) {
   switch (action.type) {
     case "reservation/add": {
+      console.log("acton", action);
       return {
         ...state,
         reservation: action.payload,
@@ -22,6 +23,7 @@ export default function reservationSlice(state = initialState, action) {
 }
 
 export function addNewReservation(reservationObj) {
+  console.log(reservationObj);
   return { type: "reservation/add", payload: reservationObj };
 }
 

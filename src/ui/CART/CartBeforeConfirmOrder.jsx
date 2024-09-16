@@ -2,16 +2,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled, { css } from "styled-components";
-import Heading from "./Heading";
-import Button from "./Button";
-import StyledOptions from "./StyledOptions";
+import Heading from "../Heading";
+import Button from "../Button";
+import StyledOptions from "../StyledOptions";
 import { useContext, useEffect, useReducer, useState } from "react";
 import cartReducer, {
   removeItem,
   removeSingleCuisine,
   updateItemSize,
   updateNewQuantity,
-} from "../features/cart/cartSlice";
+} from "../../features/cart/cartSlice";
 import { useDispatch } from "react-redux";
 
 const LogoImg = styled.img`

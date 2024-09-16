@@ -34,6 +34,11 @@ const StyledOptionsDiv = styled.div`
     & option {
       color: var(--color-grey-900);
       background-color: var(--color-grey-50);
+
+      &:disabled {
+        background-color: none;
+        color: var(--color-grey-800);
+      }
     }
   }
 `;

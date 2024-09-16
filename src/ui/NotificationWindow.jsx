@@ -1,28 +1,15 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { useSearchParams } from "react-router-dom";
-import Heading from "./Heading";
+
 import styled, { css } from "styled-components";
-import { createPortal } from "react-dom";
+
 import GradientHighlight from "./GradientHighlight";
 import GradientIcon from "./GradientIcon";
-import {
-  FaCartArrowDown,
-  FaCartFlatbed,
-  FaCartShopping,
-} from "react-icons/fa6";
+import { FaCartShopping } from "react-icons/fa6";
 import Button from "./Button";
 // import CartBeforeConfirm from "./CartBeforeConfirm";
-import CartBeforeConfirm from "./CartBeforeConfirm";
-import { useOutsideClick } from "../hooks/useOutsideClick";
-import {
-  cloneElement,
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import CartBeforeConfirm from "./CART/CartBeforeConfirm";
+import { useContext, useRef, useState } from "react";
 import { NotificationContext } from "../utils/contexts";
 import NotificationItem from "./NotificationItem";
 import { useSelector } from "react-redux";

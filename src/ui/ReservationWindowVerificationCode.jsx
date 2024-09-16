@@ -12,6 +12,7 @@ import {
 } from "../features/cuisines/useReservation";
 import SpinnerMini from "./SpinnerMini";
 import { useForm } from "react-hook-form";
+import { addNewReservation } from "../features/cart/reservationSlice";
 
 const VerficationContainer = styled.div`
   display: flex;
@@ -125,7 +126,8 @@ const VerifiedTextSm = styled.span`
   color: var(--color-grey-300);
 `;
 
-function ReservationWindowVerificationCode() {
+// eslint-disable-next-line react/prop-types
+function ReservationWindowVerificationCode({ reservationObj }) {
   const { verifyReservationCode, isVerifying, isError, isSuccess } =
     useVerifyReservationCode();
   const { sendVerificationCode, isSendingVerificationCode } =
@@ -173,6 +175,8 @@ function ReservationWindowVerificationCode() {
   }
 
   if (isSuccess) {
+    console.log(reservationObj);
+    addNewReservation(reservationObj);
     return (
       <VerifiedContainer>
         <GradientHighlight>

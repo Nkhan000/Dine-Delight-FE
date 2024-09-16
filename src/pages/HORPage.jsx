@@ -128,11 +128,11 @@ function HORPage() {
     }
   }, [searchParams, setSearchParams]);
 
-  const { data, isLoading, error } = useCusineSingle(
+  const { cuisineData, isLoading, error } = useCusineSingle(
     searchParams.get("id")
     // searchParams.get("serviceType") || "delivery"
   );
-  console.log(!isLoading && data);
+  // console.log(!isLoading && data);
 
   if (isLoading)
     return (
@@ -140,8 +140,7 @@ function HORPage() {
         <Spinner />
       </SpinnerContainer>
     );
-  const cuisineData = data?.cuisineData?.cuisine;
-  console.log(data);
+  console.log(cuisineData);
   const { name, logoImage, address, deliveryPrice } = cuisineData;
   return (
     <StyledContainer>

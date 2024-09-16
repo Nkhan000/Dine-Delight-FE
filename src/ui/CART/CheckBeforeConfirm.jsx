@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "./Button";
+import Button from "../Button";
 
 const ButtonsDiv = styled.div`
   width: 100%;

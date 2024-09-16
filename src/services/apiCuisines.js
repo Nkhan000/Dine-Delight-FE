@@ -22,10 +22,13 @@ export async function getCusines(page, currentFilter) {
   }
 }
 
-export async function getACuisinePrivate(id) {
-  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/businessProfile/${id}`;
+export async function getACuisinePrivate() {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/businessProfile`;
+  const token = localStorage.getItem("jwt");
   try {
-    const response = await axios.get(requestUrl);
+    const response = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     console.log(response.data);
     // return response.data;
   } catch (err) {
@@ -39,8 +42,7 @@ export async function getCuisineSingle(id) {
 
   try {
     const response = await axios.get(requestUrl);
-    // console.log(response.data);
-    return response.data;
+    return response.data.cuisineData.cuisine;
   } catch (err) {
     console.log("error fetching cuisine data. Try again", err);
   }

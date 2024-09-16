@@ -15,7 +15,7 @@ import BannerNotification from "./BannerNotification";
 import { useGetUser } from "../features/authentication/useGetUser";
 import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
 import Modal from "./Modal";
-import CheckBeforeConfirm from "./CheckBeforeConfirm";
+import CheckBeforeConfirm from "../ui/CART/CheckBeforeConfirm";
 import {
   addAVenueBooking,
   removeVenueBooking,

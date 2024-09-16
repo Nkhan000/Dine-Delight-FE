@@ -4,7 +4,7 @@ import GradientHighlight from "../ui/GradientHighlight";
 import { HiShoppingCart, HiTicket } from "react-icons/hi2";
 import GradientIcon from "../ui/GradientIcon";
 import Heading from "../ui/Heading";
-import CartBeforeConfirm from "../ui/CartBeforeConfirm";
+import CartBeforeConfirm from "../ui/CART/CartBeforeConfirm";
 import Button from "../ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateDelivery } from "../features/delivery/useDelivery";
