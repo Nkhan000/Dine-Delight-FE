@@ -12,6 +12,8 @@ import BannerNotification from "./BannerNotification";
 import { useForm } from "react-hook-form";
 import StyledOptionsDiv from "./StyledOptionsTwo";
 import { addNewReservation } from "../features/cart/reservationSlice";
+import { useSelector } from "react-redux";
+import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
 
 const Container = styled.form`
   border-radius: 3rem;
@@ -234,7 +236,25 @@ function ReservationMenu() {
   const [total, setTotal] = useState();
   const { setBannerText, setBannerType, open } = useContext(BannerContext);
   const [reservationObj, setReservationObj] = useState();
+  const [isCartEmpty, setIsCartEmpty] = useState();
 
+  const {
+    cart: storeCart,
+    venue: storeVenue,
+    reservation: storeReservation,
+  } = useSelector((store) => store);
+
+  console.log(storeCart);
+  console.log(storeVenue);
+  console.log(storeReservation);
+
+  useEffect(() => {
+    setIsCartEmpty(
+      storeCart.cart.length == 0 ||
+        Object.keys(storeVenue).length == 0 ||
+        Object.keys(storeReservation).length == 0
+    );
+  }, [storeCart, storeReservation, storeVenue]);
   // formate date combining both date and available time selected
   function formateDate(time, date) {
     const [hours, minutes] = time.split(":");
@@ -298,9 +318,8 @@ function ReservationMenu() {
       open();
       return;
     }
-    // console.log(data);
     setAllFeildsValid(true);
-    setReservationObj({ reservationObj: data });
+    setReservationObj(data);
   }
 
   useEffect(() => {
@@ -438,7 +457,7 @@ function ReservationMenu() {
             </Button>
             <BannerNotification.Banner />
           </>
-        ) : (
+        ) : isCartEmpty ? (
           <Modal>
             <Modal.Open open="reservation-window">
               <Button size="medium" variation="primary" type="submit">
@@ -447,6 +466,17 @@ function ReservationMenu() {
             </Modal.Open>
             <Modal.ModalWindow name="reservation-window">
               <ReservationWindowModal reservationObj={reservationObj} />
+            </Modal.ModalWindow>
+          </Modal>
+        ) : (
+          <Modal>
+            <Modal.Open open="venue-confirmation-window">
+              <Button size="medium" variation="primary">
+                Confirm Booking
+              </Button>
+            </Modal.Open>
+            <Modal.ModalWindow name="venue-confirmation-window">
+              <CheckBeforeConfirm dataObj={reservationObj} type="reservation" />
             </Modal.ModalWindow>
           </Modal>
         )}

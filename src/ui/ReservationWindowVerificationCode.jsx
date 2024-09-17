@@ -13,6 +13,7 @@ import {
 import SpinnerMini from "./SpinnerMini";
 import { useForm } from "react-hook-form";
 import { addNewReservation } from "../features/cart/reservationSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const VerficationContainer = styled.div`
   display: flex;
@@ -128,6 +129,11 @@ const VerifiedTextSm = styled.span`
 
 // eslint-disable-next-line react/prop-types
 function ReservationWindowVerificationCode({ reservationObj }) {
+  const dispatch = useDispatch();
+
+  // temp
+  const [isVerified, setIsVerified] = useState(false);
+
   const { verifyReservationCode, isVerifying, isError, isSuccess } =
     useVerifyReservationCode();
   const { sendVerificationCode, isSendingVerificationCode } =
@@ -145,7 +151,7 @@ function ReservationWindowVerificationCode({ reservationObj }) {
   );
 
   useEffect(() => {
-    sendVerificationCode();
+    // sendVerificationCode();
   }, []);
 
   // Control when the "Send Code Again" logic resets
@@ -171,12 +177,15 @@ function ReservationWindowVerificationCode({ reservationObj }) {
   }
 
   function onSubmit(data) {
-    verifyReservationCode(data);
+    console.log(data);
+    setIsVerified(true);
+    // verifyReservationCode(data);
   }
 
-  if (isSuccess) {
+  // if (isSuccess) {
+  if (isVerified) {
     console.log(reservationObj);
-    addNewReservation(reservationObj);
+    dispatch(addNewReservation(reservationObj));
     return (
       <VerifiedContainer>
         <GradientHighlight>

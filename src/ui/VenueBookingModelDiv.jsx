@@ -11,8 +11,9 @@ import {
 } from "../features/cart/venueBookingSlice";
 import Modal from "./Modal";
 import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
-import { clearCartFromReduxState } from "../features/cart/cartSlice";
+import { removeAllDeliveries } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { removeReservation } from "../features/cart/reservationSlice";
 
 const ModalDiv = styled.div`
   display: flex;
@@ -147,6 +148,8 @@ function VenueBookingModelDiv({
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [numOfDays, setNumOfDays] = useState(null);
+  const [isCartEmpty, setIsCartEmpty] = useState();
+
   const dispatch = useDispatch();
 
   // function to calculate difference in date
@@ -155,7 +158,6 @@ function VenueBookingModelDiv({
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (end < start) {
-      // alert("Please enter valid dates");
       return;
     }
     const diffrenceTime = Math.abs(end - start) + 1;
@@ -174,9 +176,15 @@ function VenueBookingModelDiv({
   // to check whether the cart is empty or has some ongoing orders
   const storeCart = useSelector((store) => store.cart);
   const storeVenue = useSelector((store) => store.venue);
+  const storeReservation = useSelector((store) => store.reservation);
 
-  const isCartEmpty =
-    storeCart.cart.length === 0 && Object.keys(storeVenue.venue).length === 0;
+  useEffect(() => {
+    setIsCartEmpty(
+      storeCart.cart.length === 0 &&
+        Object.keys(storeVenue.venue).length === 0 &&
+        Object.keys(storeReservation).length === 0
+    );
+  }, [storeCart, storeReservation, storeVenue]);
 
   // Use useEffect to calculate difference whenever dates change
   useEffect(() => {
@@ -204,8 +212,9 @@ function VenueBookingModelDiv({
     if (isCartEmpty) {
       dispatch(addAVenueBooking(orderObj));
     } else {
-      dispatch(clearCartFromReduxState());
+      dispatch(removeAllDeliveries());
       dispatch(removeVenueBooking());
+      dispatch(removeReservation());
       dispatch(addAVenueBooking(orderObj));
     }
     navigate("/checkout");
@@ -292,16 +301,13 @@ function VenueBookingModelDiv({
               </Button>
             ) : (
               <Modal>
-                <Modal.Open name="test">
+                <Modal.Open open="venue-confirmation-window">
                   <Button size="medium" variation="primary">
                     Confirm Booking
                   </Button>
                 </Modal.Open>
-                <Modal.ModalWindow>
-                  <CheckBeforeConfirm
-                    type="venue"
-                    handleClickVenue={handleConfirmClick}
-                  />
+                <Modal.ModalWindow name="venue-confirmation-window">
+                  <CheckBeforeConfirm handleClick={handleConfirmClick} />
                 </Modal.ModalWindow>
               </Modal>
             )}

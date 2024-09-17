@@ -6,7 +6,7 @@ import {
   apiGetADeliveryData,
 } from "../../services/apiDelivery";
 import { useDispatch } from "react-redux";
-import { clearCartFromReduxState } from "../cart/cartSlice";
+import { removeAllDeliveries } from "../cart/cartSlice";
 
 export function useCreateDelivery() {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export function useCreateDelivery() {
     mutationFn: (data) => apiCreateDelivery(data),
     onSuccess: () => {
       // localStorage.removeItem("persist:root");
-      dispatch(clearCartFromReduxState());
+      dispatch(removeAllDeliveries());
       navigate("/dashboard?userPanel=ongoingOrders");
     },
     onError: (err) => {

@@ -10,7 +10,7 @@ import { Link, useLocation } from "react-router-dom";
 // import { CartContext } from "../context/cartContext";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, clearCartFromReduxState } from "../features/cart/cartSlice";
+import { addItem, removeAllDeliveries } from "../features/cart/cartSlice";
 import BannerNotification from "./BannerNotification";
 import { useGetUser } from "../features/authentication/useGetUser";
 import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
@@ -20,6 +20,7 @@ import {
   addAVenueBooking,
   removeVenueBooking,
 } from "../features/cart/venueBookingSlice";
+import { removeReservation } from "../features/cart/reservationSlice";
 
 const Container = styled.form`
   /* display: flex; */
@@ -176,7 +177,12 @@ function FoodMenuItem({
     remainingBatchOrders = user.remainingBatchOrders;
   }
 
-  const reduxStore = useSelector((store) => store);
+  const {
+    cart: storeCartObj,
+    remainingOrders: storeRemainingOrders,
+    venue: storeVenueObj,
+    reservation: storeReservation,
+  } = useSelector((store) => store);
   // console.log(remainingBatchOrders);
 
   useEffect(() => {
@@ -184,11 +190,8 @@ function FoodMenuItem({
       decreaseRemOrderOnAddNewOrder({ remainingOrders: remainingBatchOrders })
     );
   }, [remainingBatchOrders, dispatch]);
-  const {
-    cart: storeCartObj,
-    remainingOrders: storeRemainingOrders,
-    venue: storeVenueObj,
-  } = reduxStore;
+
+  console.log(storeVenueObj);
   const storeCart = storeCartObj.cart;
   const storeVenue = storeVenueObj.venue;
 
@@ -201,9 +204,18 @@ function FoodMenuItem({
     setOverWriteWarning(
       !hasUserPremium &&
         remainingOrders === 0 &&
-        (storeCart.length === 1 || Object.keys(storeVenue).length >= 1)
+        (storeCart.length === 1 ||
+          Object.keys(storeVenue).length >= 1 ||
+          Object.keys(storeReservation).length >= 1)
     );
-  }, [location, remainingOrders, storeCart, storeVenue, hasUserPremium]);
+  }, [
+    location,
+    remainingOrders,
+    storeCart,
+    storeVenue,
+    hasUserPremium,
+    storeReservation,
+  ]);
 
   useEffect(() => {
     setCurrentCusine(cuisineName);
@@ -236,7 +248,6 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
-    console.log(orderObj);
     if (storeCart.some((item) => item.cuisineName === cuisineName)) {
       dispatch(addItem(orderObj));
       setBannerItemObj(updatedData);
@@ -278,8 +289,9 @@ function FoodMenuItem({
     // 3. Allow adding from the cusine which are already present in the cart
   }
   function handleClickCart() {
-    dispatch(clearCartFromReduxState());
+    dispatch(removeAllDeliveries());
     dispatch(removeVenueBooking());
+    dispatch(removeReservation());
     dispatch(addItem(orderObj));
 
     // navigate("/checkout");
@@ -379,16 +391,13 @@ function FoodMenuItem({
               currentCuisine !== storeCart[0]?.cuisineName) ||
             Object.keys(storeVenue).length > 1 ? (
               <Modal>
-                <Modal.Open name="test">
+                <Modal.Open open="delivery-confirmation-window">
                   <Button type="submit" size="medium" variation="primary">
                     Add to cart
                   </Button>
                 </Modal.Open>
-                <Modal.ModalWindow>
-                  <CheckBeforeConfirm
-                    type="cart"
-                    handleClickCart={handleClickCart}
-                  />
+                <Modal.ModalWindow name="delivery-confirmation-window">
+                  <CheckBeforeConfirm handleClick={handleClickCart} />
                 </Modal.ModalWindow>
               </Modal>
             ) : (
@@ -401,39 +410,9 @@ function FoodMenuItem({
                 >
                   Add to cart
                 </Button>
-                <BannerNotification.Banner></BannerNotification.Banner>
+                <BannerNotification.Banner />
               </>
             )}
-
-            {/* {overWriteWarning ? (
-              <Modal>
-                <Modal.Open name="test">
-                  <Button size="medium" variation="primary">
-                    Add to cart
-                  </Button>
-                </Modal.Open>
-                <Modal.ModalWindow>
-                  <CheckBeforeConfirm />
-                </Modal.ModalWindow>
-              </Modal>
-            ) : (
-              <>
-                <Button
-                  type="submit"
-                  size="medium"
-                  variation="primary"
-                  hover="no"
-                >
-                  Add to cart
-                </Button>
-                <BannerNotification.Banner></BannerNotification.Banner>
-              </>
-            )} */}
-
-            {/* <Button type="submit" size="medium" variation="primary" hover="no">
-              Add to cart
-            </Button>
-            <BannerNotification.Banner></BannerNotification.Banner> */}
           </ButtonsDiv>
           <ButtonsDiv>
             <Button
@@ -443,7 +422,7 @@ function FoodMenuItem({
               variation="secondary"
               hover="no"
             >
-              Add and Checkout
+              Go to Cart
             </Button>
           </ButtonsDiv>
         </ButtonsContainer>

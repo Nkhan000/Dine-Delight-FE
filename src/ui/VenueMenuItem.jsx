@@ -136,7 +136,7 @@ function VenueMenuItem({
   const { setItemObj, setBannerText, setType } = useContext(BannerContext);
 
   const { user, isLoading, error } = useGetUser();
-  const { register, handleSubmit, setValue } = useForm();
+  // const { register, handleSubmit, setValue } = useForm();
 
   function onSubmit(data) {
     console.log(data);

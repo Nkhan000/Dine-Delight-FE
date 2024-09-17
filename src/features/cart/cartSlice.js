@@ -241,7 +241,7 @@ export function removeSingleCuisine(itemObj) {
 export function updateItemSize(itemObj) {
   return { type: "cart/updateItemSize", payload: itemObj };
 }
-export function clearCartFromReduxState() {
+export function removeAllDeliveries() {
   return { type: "cart/clearAll" };
 }
 

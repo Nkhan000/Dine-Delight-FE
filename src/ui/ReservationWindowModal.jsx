@@ -34,16 +34,13 @@ const HeadBarText = styled.div`
 `;
 
 function ReservationWindowModal({ reservationObj }) {
-  console.log(reservationObj);
   return (
     <Container>
       <HeadBarDiv>
         <HeadBarText>We are holding a table for you . . .</HeadBarText>
       </HeadBarDiv>
 
-      <ReservationWindowVerificationCode
-        reservationObj={reservationObj.reservationObj}
-      />
+      <ReservationWindowVerificationCode reservationObj={reservationObj} />
     </Container>
   );
 }

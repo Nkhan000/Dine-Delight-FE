@@ -9,7 +9,7 @@ import Button from "../ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateDelivery } from "../features/delivery/useDelivery";
 import { useCreateANewBooking } from "../features/cuisines/useVenue";
-import { clearCartFromReduxState } from "../features/cart/cartSlice";
+import { removeAllDeliveries } from "../features/cart/cartSlice";
 import { removeVenueBooking } from "../features/cart/venueBookingSlice";
 
 const Container = styled.div`
@@ -194,7 +194,7 @@ function Checkout() {
     } else if (Object.keys(venue).length > 1) {
       createANewVenueBooking(venue);
     }
-    dispatch(clearCartFromReduxState());
+    dispatch(removeAllDeliveries());
     dispatch(removeVenueBooking());
   }
 
