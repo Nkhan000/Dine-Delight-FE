@@ -95,7 +95,7 @@ function CuisineOpenUI() {
           <RequiredDocumentsList>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -103,7 +103,7 @@ function CuisineOpenUI() {
             </li>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -112,7 +112,7 @@ function CuisineOpenUI() {
 
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -121,7 +121,7 @@ function CuisineOpenUI() {
             </li>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -131,7 +131,7 @@ function CuisineOpenUI() {
           <RequiredDocumentsList>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -139,7 +139,7 @@ function CuisineOpenUI() {
             </li>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -147,7 +147,7 @@ function CuisineOpenUI() {
             </li>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}
@@ -156,7 +156,7 @@ function CuisineOpenUI() {
             </li>
             <li>
               <DocListItemIcon>
-                <GradientIcon iconHeight={3}>
+                <GradientIcon iconheight={3}>
                   <FaCheckCircle />
                 </GradientIcon>
               </DocListItemIcon>{" "}

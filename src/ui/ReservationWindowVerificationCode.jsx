@@ -178,7 +178,7 @@ function ReservationWindowVerificationCode({ reservationObj }) {
 
   function onSubmit(data) {
     console.log(data);
-    setIsVerified(true);
+    // setIsVerified(true);
     // verifyReservationCode(data);
   }
 

@@ -11,9 +11,14 @@ import { BannerContext } from "../utils/contexts";
 import BannerNotification from "./BannerNotification";
 import { useForm } from "react-hook-form";
 import StyledOptionsDiv from "./StyledOptionsTwo";
-import { addNewReservation } from "../features/cart/reservationSlice";
-import { useSelector } from "react-redux";
+import {
+  addNewReservation,
+  removeReservation,
+} from "../features/cart/reservationSlice";
+import { useDispatch, useSelector } from "react-redux";
 import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
+import { removeAllDeliveries } from "../features/cart/cartSlice";
+import { removeVenueBooking } from "../features/cart/venueBookingSlice";
 
 const Container = styled.form`
   border-radius: 3rem;
@@ -236,7 +241,7 @@ function ReservationMenu() {
   const [total, setTotal] = useState();
   const { setBannerText, setBannerType, open } = useContext(BannerContext);
   const [reservationObj, setReservationObj] = useState();
-  const [isCartEmpty, setIsCartEmpty] = useState();
+  const dispatch = useDispatch();
 
   const {
     cart: storeCart,
@@ -247,6 +252,7 @@ function ReservationMenu() {
   console.log(storeCart);
   console.log(storeVenue);
   console.log(storeReservation);
+  const [isCartEmpty, setIsCartEmpty] = useState();
 
   useEffect(() => {
     setIsCartEmpty(
@@ -320,6 +326,12 @@ function ReservationMenu() {
     }
     setAllFeildsValid(true);
     setReservationObj(data);
+  }
+
+  function handleEmptyTheCart() {
+    dispatch(removeAllDeliveries());
+    dispatch(removeReservation());
+    dispatch(removeVenueBooking());
   }
 
   useEffect(() => {
@@ -450,14 +462,31 @@ function ReservationMenu() {
       )}
 
       <ButtonDivs>
-        {!allFieldsValid ? (
+        {!allFieldsValid && (
           <>
             <Button size="medium" variation="primary" type="submit">
               Continue your reservation
             </Button>
             <BannerNotification.Banner />
           </>
-        ) : isCartEmpty ? (
+        )}
+        {allFieldsValid && !isCartEmpty && (
+          <Modal>
+            <Modal.Open open="venue-confirmation-window">
+              <Button size="medium" variation="primary">
+                Confirm Booking
+              </Button>
+            </Modal.Open>
+            <Modal.ModalWindow name="venue-confirmation-window">
+              <CheckBeforeConfirm
+                dataObj={reservationObj}
+                handleClick={handleEmptyTheCart}
+                type="reservation"
+              />
+            </Modal.ModalWindow>
+          </Modal>
+        )}
+        {allFieldsValid && isCartEmpty && (
           <Modal>
             <Modal.Open open="reservation-window">
               <Button size="medium" variation="primary" type="submit">
@@ -466,17 +495,6 @@ function ReservationMenu() {
             </Modal.Open>
             <Modal.ModalWindow name="reservation-window">
               <ReservationWindowModal reservationObj={reservationObj} />
-            </Modal.ModalWindow>
-          </Modal>
-        ) : (
-          <Modal>
-            <Modal.Open open="venue-confirmation-window">
-              <Button size="medium" variation="primary">
-                Confirm Booking
-              </Button>
-            </Modal.Open>
-            <Modal.ModalWindow name="venue-confirmation-window">
-              <CheckBeforeConfirm dataObj={reservationObj} type="reservation" />
             </Modal.ModalWindow>
           </Modal>
         )}
@@ -495,3 +513,27 @@ function ReservationMenu() {
 }
 
 export default ReservationMenu;
+
+// ) : isCartEmpty ? (
+// <Modal>
+//   <Modal.Open open="reservation-window">
+//     <Button size="medium" variation="primary" type="submit">
+//       Confirm your reservation
+//     </Button>
+//   </Modal.Open>
+//   <Modal.ModalWindow name="reservation-window">
+//     <ReservationWindowModal reservationObj={reservationObj} />
+//   </Modal.ModalWindow>
+// </Modal>
+// ) : (
+// <Modal>
+//   <Modal.Open open="venue-confirmation-window">
+//     <Button size="medium" variation="primary">
+//       Confirm Booking
+//     </Button>
+//   </Modal.Open>
+//   <Modal.ModalWindow name="venue-confirmation-window">
+//     <CheckBeforeConfirm dataObj={reservationObj} type="reservation" />
+//   </Modal.ModalWindow>
+// </Modal>
+// )
