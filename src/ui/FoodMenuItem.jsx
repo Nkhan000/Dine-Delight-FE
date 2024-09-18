@@ -181,19 +181,18 @@ function FoodMenuItem({
     cart: storeCartObj,
     remainingOrders: storeRemainingOrders,
     venue: storeVenueObj,
-    reservation: storeReservation,
+    reservation: storeReservationObj,
   } = useSelector((store) => store);
-  // console.log(remainingBatchOrders);
+
+  const storeCart = storeCartObj.cart;
+  const storeVenue = storeVenueObj.venue;
+  const storeReservation = storeReservationObj.reservation;
 
   useEffect(() => {
     dispatch(
       decreaseRemOrderOnAddNewOrder({ remainingOrders: remainingBatchOrders })
     );
   }, [remainingBatchOrders, dispatch]);
-
-  console.log(storeVenueObj);
-  const storeCart = storeCartObj.cart;
-  const storeVenue = storeVenueObj.venue;
 
   const remainingOrders = storeRemainingOrders.remainingOrders;
   const [overWriteWarning, setOverWriteWarning] = useState(false);
@@ -380,16 +379,8 @@ function FoodMenuItem({
 
         <ButtonsContainer>
           <ButtonsDiv>
-            {console.log(
-              overWriteWarning,
-              currentCuisine !== storeCart[0]?.cuisineName,
-              currentCuisine,
-              storeCart[0]?.cuisineName,
-              Object.keys(storeVenue).length > 1
-            )}
-            {(overWriteWarning &&
-              currentCuisine !== storeCart[0]?.cuisineName) ||
-            Object.keys(storeVenue).length > 1 ? (
+            {overWriteWarning &&
+            currentCuisine !== storeCart[0]?.cuisineName ? (
               <Modal>
                 <Modal.Open open="delivery-confirmation-window">
                   <Button type="submit" size="medium" variation="primary">

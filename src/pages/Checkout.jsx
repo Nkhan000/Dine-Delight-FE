@@ -174,13 +174,16 @@ const GrandTotalTextSm = styled.span`
 `;
 
 function Checkout() {
+  const dispatch = useDispatch();
   const storeCart = useSelector((store) => store.cart);
   const storeVenue = useSelector((store) => store.venue);
+  const storeReservation = useSelector((store) => store.reservation);
 
   const { cart, cartTotal } = storeCart;
   const { venue } = storeVenue;
+  const { reservation } = storeReservation;
+  // console.log(reservation);
   const totalDeliveryCharge = cart.map((item) => item.deliveryPrice);
-  const dispatch = useDispatch();
 
   const { isLoading: isCreatingNewOrder, newOrder } = useCreateDelivery();
   const { createANewVenueBooking } = useCreateANewBooking();
@@ -290,10 +293,43 @@ function Checkout() {
                 </BillingOfferForm>
               </>
             )}
+
+            {Object.keys(reservation).length > 1 && (
+              <>
+                <BillingCuisineDiv>
+                  <BillingCuisineLogo>
+                    <LogoImg src="./img/hotel-001.jpg" alt="logo-img" />
+                  </BillingCuisineLogo>
+                  <BillingCusineTextDiv>
+                    <BillingCuisineName>
+                      {reservation.cuisineName}
+                    </BillingCuisineName>
+                    <BillingCodesContainer>
+                      {/* <span>THC50OFF</span>
+                      <span>THCW10OFF</span> */}
+                    </BillingCodesContainer>
+                  </BillingCusineTextDiv>
+                </BillingCuisineDiv>
+
+                <BillingOfferForm>
+                  <BillingOfferInputDiv
+                    type="text"
+                    placeholder="Redeem Offer Code"
+                  />
+                  <button>
+                    <GradientIcon iconheight={3.5}>
+                      <span>
+                        <HiTicket />
+                      </span>
+                    </GradientIcon>
+                  </button>
+                </BillingOfferForm>
+              </>
+            )}
           </BillingCuisinesContainer>
 
           <GrandTotalDiv>
-            {cartTotal > 0 ? (
+            {cartTotal > 0 && (
               <GrandTotalTextDiv>
                 <GrandTotalTextSm>Delivery : </GrandTotalTextSm>
                 <GrandTotalTextSm>
@@ -303,25 +339,35 @@ function Checkout() {
                     .toFixed(2)}{" "}
                 </GrandTotalTextSm>
               </GrandTotalTextDiv>
-            ) : venue.total > 0 ? (
+            )}{" "}
+            {venue.total > 0 && (
               <GrandTotalTextDiv>
                 <GrandTotalTextSm>Vat(13%) : </GrandTotalTextSm>
                 <GrandTotalTextSm>
                   ${(venue.total * 0.13).toFixed(2)}
                 </GrandTotalTextSm>
               </GrandTotalTextDiv>
-            ) : (
-              <></>
+            )}
+            {reservation.total > 0 && (
+              <GrandTotalTextDiv>
+                <GrandTotalTextSm>Vat(13%) : </GrandTotalTextSm>
+                <GrandTotalTextSm>
+                  ${(reservation.total * 0.13).toFixed(2)}
+                </GrandTotalTextSm>
+              </GrandTotalTextDiv>
             )}
             <GrandTotalTextDiv>
               <GrandTotalTextBg>Grand Total : </GrandTotalTextBg>
               <GrandTotalTextBg>
                 $
-                {cartTotal > 0
-                  ? (cartTotal * 0.13 + cartTotal + 10).toFixed(2)
-                  : venue.total > 0
-                  ? (venue.total * 0.13 + venue.total + 10).toFixed(2)
-                  : "0.00"}
+                {cartTotal > 0 &&
+                  (cartTotal * 0.13 + cartTotal + 10).toFixed(2)}
+                {venue.total > 0 &&
+                  (venue.total * 0.13 + venue.total + 10).toFixed(2)}
+                {reservation.total > 0 &&
+                  (reservation.total * 0.13 + reservation.total + 10).toFixed(
+                    2
+                  )}
               </GrandTotalTextBg>
             </GrandTotalTextDiv>
             <div>

@@ -4,8 +4,9 @@
 import styled, { css } from "styled-components";
 import Heading from "../Heading";
 import Button from "../Button";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeVenueBooking } from "../../features/cart/venueBookingSlice";
+// removeVenueBooking
 
 const LogoImg = styled.img`
   width: 100%;

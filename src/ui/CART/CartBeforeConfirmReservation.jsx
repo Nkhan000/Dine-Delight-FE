@@ -4,30 +4,8 @@
 import styled, { css } from "styled-components";
 import Heading from "../Heading";
 import Button from "../Button";
-import StyledOptions from "../StyledOptions";
-import { useContext, useEffect, useReducer, useState } from "react";
-import cartReducer, {
-  removeItem,
-  removeSingleCuisine,
-  updateItemSize,
-  updateNewQuantity,
-} from "../../features/cart/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Form, useNavigate } from "react-router-dom";
-import { useGetUser } from "../../features/authentication/useGetUser";
-import { decreaseRemOrderOnAddNewOrder } from "../../features/cart/remainingOrderSlice";
-import { removeVenueBooking } from "../../features/cart/venueBookingSlice";
-import CartBeforeConfirmOrder from "./CartBeforeConfirmOrder";
-import CartBeforeConfirmVenue from "./CartBeforeConfirmVenue";
-import CartBeforeConfirmReservation from "./CartBeforeConfirmReservation";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  /* background-color: red; */
-`;
+import { useDispatch } from "react-redux";
+import { removeReservation } from "../../features/cart/reservationSlice";
 
 const LogoImg = styled.img`
   width: 100%;
@@ -84,7 +62,7 @@ const OngoingOrderItemList = styled.ul`
     width: 100%;
     padding-bottom: 0.5rem;
     display: grid;
-    grid-template-columns: 60% 1fr 1fr;
+    grid-template-columns: 45% auto;
 
     align-items: center;
     ${(props) =>
@@ -105,6 +83,7 @@ const ItemPriceContainer = styled.div`
 
 const ItemName = styled.span`
   font-weight: 600;
+  text-transform: capitalize;
   color: var(--color-grey-300);
   font-size: 1.7rem;
   ${(props) =>
@@ -185,29 +164,66 @@ const CancelButtonDiv = styled.div`
   right: 5%;
 `;
 
-function CartBeforeConfirm({ size }) {
-  const storeCart = useSelector((store) => store.cart);
-  const storeVenue = useSelector((store) => store.venue);
-  const storeReservation = useSelector((store) => store.reservation);
-  const { cart } = storeCart;
-  const { venue } = storeVenue;
-  const { reservation } = storeReservation;
+function CartBeforeConfirmReservation({ size, reservation }) {
+  const formatedDate = new Date(reservation.reservationDate).toDateString();
+  const reservationTime = `${new Date(
+    reservation.reservationDate
+  ).getHours()}:${new Date(reservation.reservationDate).getMinutes()}`;
+  console.log(reservationTime);
 
+  const dispatch = useDispatch();
   return (
-    <Container>
-      {cart.length > 0 ? (
-        <CartBeforeConfirmOrder size={size} cart={cart} />
-      ) : Object.keys(venue).length > 1 ? (
-        <CartBeforeConfirmVenue size={size} venue={venue} />
-      ) : Object.keys(reservation).length > 1 ? (
-        <CartBeforeConfirmReservation size={size} reservation={reservation} />
-      ) : (
-        <ItemRemarks>
-          Please add Items to your cart before continuing 😂
-        </ItemRemarks>
-      )}
-    </Container>
+    <>
+      <CuisineDiv>
+        <CancelButtonDiv>
+          <Button
+            size="small"
+            variation="secondary"
+            onClick={() => dispatch(removeReservation())}
+          >
+            Cancel Order
+          </Button>
+        </CancelButtonDiv>
+        <OngoingOrderCusineDiv size={size}>
+          <OngoingOrderCusineLogoDiv size={size}>
+            <LogoImg src="./img/hotel-001.jpg" alt="cuisine logo" />
+          </OngoingOrderCusineLogoDiv>
+          <HeadTextContainer>
+            <Heading as={size === "large" ? "h2" : "h4"} color="light">
+              {reservation.cuisineName}
+            </Heading>
+            <Heading as={size === "large" ? "h5" : "h6"} color="light">
+              {reservation.cuisineAddress}
+            </Heading>
+          </HeadTextContainer>
+        </OngoingOrderCusineDiv>
+        <ItemDate>booked at : 2024/03/14 (10:55 am)</ItemDate>
+        <OngoingOrderItemList>
+          <li className="venueList">
+            <QuantityIncDecDiv>
+              <ItemName size={size}>{reservation.tableType}</ItemName>
+            </QuantityIncDecDiv>
+
+            <ItemPriceContainer>
+              <ItemPrice size={size}>Total : ${reservation.total}</ItemPrice>
+            </ItemPriceContainer>
+          </li>
+        </OngoingOrderItemList>
+        <SubTotalDiv>
+          <ItemTextTotal size={size}>
+            Party Size : {reservation.aprPartySize} person
+          </ItemTextTotal>
+          <ItemTextTotal size={size}>On : {formatedDate}</ItemTextTotal>
+          <ItemTextTotal size={size}>Time : {reservationTime}</ItemTextTotal>
+        </SubTotalDiv>
+      </CuisineDiv>
+
+      <ItemRemarks>
+        You are requested to be on time. You will get notified through calls or
+        messages for your Booking 😊
+      </ItemRemarks>
+    </>
   );
 }
 
-export default CartBeforeConfirm;
+export default CartBeforeConfirmReservation;

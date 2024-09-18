@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "./Heading";
@@ -19,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
 import { removeAllDeliveries } from "../features/cart/cartSlice";
 import { removeVenueBooking } from "../features/cart/venueBookingSlice";
+import { useCusineSingle } from "../features/cuisines/useCuisines";
 
 const Container = styled.form`
   border-radius: 3rem;
@@ -209,7 +211,7 @@ const ImportantInfoDiv = styled.ol`
   }
 `;
 
-function ReservationMenu() {
+function ReservationMenu({ cuisineId }) {
   const partySizeOption = [2, 3, 4, 5, 6];
   const reservationPrice = 49;
   const availableTime = [
@@ -230,37 +232,31 @@ function ReservationMenu() {
     "cornered Ground floor",
   ];
 
+  const dispatch = useDispatch();
+  const { cuisineData } = useCusineSingle(cuisineId);
+  console.log(cuisineData);
+
+  const { name: cuisineName, logoImage: cuisineImage } = cuisineData;
+  // console.log(cuisineName, cuisineImage);
+  const { setBannerText, setBannerType, open } = useContext(BannerContext);
   const { handleSubmit, setValue, reset, register } = useForm();
+  const { user, isLoading, error } = useGetUser();
+
   const [partySize, setPartySize] = useState(partySizeOption[0]);
   const [availableTimeSlot, setAvailableTimeSlot] = useState(availableTime[0]);
   const [reservationDate, setReservationDate] = useState();
   const [tableType, setTableType] = useState(tableTypeOption[0]);
   const [addPriority, setAddPriority] = useState(false);
-  const { user, isLoading, error } = useGetUser();
   const [allFieldsValid, setAllFeildsValid] = useState(false);
   const [total, setTotal] = useState();
-  const { setBannerText, setBannerType, open } = useContext(BannerContext);
   const [reservationObj, setReservationObj] = useState();
-  const dispatch = useDispatch();
 
-  const {
-    cart: storeCart,
-    venue: storeVenue,
-    reservation: storeReservation,
-  } = useSelector((store) => store);
+  // const {
+  //   cart: storeCart,
+  //   venue: storeVenue,
+  //   reservation: storeReservation,
+  // } = useSelector((store) => store);
 
-  console.log(storeCart);
-  console.log(storeVenue);
-  console.log(storeReservation);
-  const [isCartEmpty, setIsCartEmpty] = useState();
-
-  useEffect(() => {
-    setIsCartEmpty(
-      storeCart.cart.length == 0 ||
-        Object.keys(storeVenue).length == 0 ||
-        Object.keys(storeReservation).length == 0
-    );
-  }, [storeCart, storeReservation, storeVenue]);
   // formate date combining both date and available time selected
   function formateDate(time, date) {
     const [hours, minutes] = time.split(":");
@@ -283,24 +279,20 @@ function ReservationMenu() {
   }, [partySize, reservationPrice, addPriority]);
 
   function handlePartySize(e) {
-    console.log(e.target.value);
     setPartySize(e.target.value);
   }
 
   function handleAvailableTime(e) {
-    console.log(e.target.value);
     setAvailableTimeSlot(e.target.value);
   }
 
   function handleTableType(e) {
-    console.log(e.target.value);
     setTableType(e.target.value);
   }
 
   function handleDateChange(e) {
     const reserveDate = new Date(e.target.value);
     const updatedDate = formateDate(availableTimeSlot, reserveDate);
-    console.log(updatedDate);
     setReservationDate(updatedDate);
   }
   useEffect(() => {
@@ -324,8 +316,13 @@ function ReservationMenu() {
       open();
       return;
     }
+    const updatedDate = {
+      cuisineName,
+      cuisineImage,
+      ...data,
+    };
     setAllFeildsValid(true);
-    setReservationObj(data);
+    setReservationObj(updatedDate);
   }
 
   function handleEmptyTheCart() {
@@ -462,34 +459,22 @@ function ReservationMenu() {
       )}
 
       <ButtonDivs>
-        {!allFieldsValid && (
+        {!allFieldsValid ? (
           <>
             <Button size="medium" variation="primary" type="submit">
               Continue your reservation
             </Button>
             <BannerNotification.Banner />
           </>
-        )}
-        {allFieldsValid && !isCartEmpty && (
-          <Modal>
-            <Modal.Open open="venue-confirmation-window">
-              <Button size="medium" variation="primary">
-                Confirm Booking
-              </Button>
-            </Modal.Open>
-            <Modal.ModalWindow name="venue-confirmation-window">
-              <CheckBeforeConfirm
-                dataObj={reservationObj}
-                handleClick={handleEmptyTheCart}
-                type="reservation"
-              />
-            </Modal.ModalWindow>
-          </Modal>
-        )}
-        {allFieldsValid && isCartEmpty && (
+        ) : (
           <Modal>
             <Modal.Open open="reservation-window">
-              <Button size="medium" variation="primary" type="submit">
+              <Button
+                onClick={handleEmptyTheCart}
+                size="medium"
+                variation="primary"
+                type="submit"
+              >
                 Confirm your reservation
               </Button>
             </Modal.Open>

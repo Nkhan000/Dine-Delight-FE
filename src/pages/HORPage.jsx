@@ -114,6 +114,7 @@ const SpinnerContainer = styled.div`
 function HORPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
+  // setting initial params in the url for intial functioning
   useEffect(() => {
     if (
       !searchParams.has("serviceType") &&
@@ -140,8 +141,9 @@ function HORPage() {
         <Spinner />
       </SpinnerContainer>
     );
-  console.log(cuisineData);
-  const { name, logoImage, address, deliveryPrice } = cuisineData;
+  // console.log(cuisineData);
+  const { name, logoImage, address, deliveryPrice, _id } = cuisineData;
+
   return (
     <StyledContainer>
       <GalleryContainer data={cuisineData} />
@@ -197,7 +199,7 @@ function HORPage() {
             />
           )}
           {searchParams.get("serviceType") === "table-reservation" && (
-            <ReservationMenu />
+            <ReservationMenu searchParams={searchParams} cuisineId={_id} />
           )}
           {searchParams.get("serviceType") === "venue-booking" && (
             <VenueMenu

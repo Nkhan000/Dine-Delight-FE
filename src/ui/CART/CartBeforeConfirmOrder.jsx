@@ -12,7 +12,7 @@ import cartReducer, {
   updateItemSize,
   updateNewQuantity,
 } from "../../features/cart/cartSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const LogoImg = styled.img`
   width: 100%;

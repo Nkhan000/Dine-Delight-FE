@@ -133,9 +133,12 @@ function ReservationWindowVerificationCode({ reservationObj }) {
 
   // temp
   const [isVerified, setIsVerified] = useState(false);
+  const [isCodeSentAgain, setIsCodeSentAgain] = useState(false);
 
   const { verifyReservationCode, isVerifying, isError, isSuccess } =
     useVerifyReservationCode();
+
+  console.log(isVerified);
   const { sendVerificationCode, isSendingVerificationCode } =
     useSendVerificationCodeForReservation();
 
@@ -143,15 +146,15 @@ function ReservationWindowVerificationCode({ reservationObj }) {
   const INITIAL_WAITING_SECOND = 0;
 
   const { register, handleSubmit } = useForm();
-  const [isCodeSentAgain, setIsCodeSentAgain] = useState(false);
   const { timer, startTimer, stopTimer, isRunning } = useCountDownTimer(
     INITIAL_WAITING_MINUTES,
     INITIAL_WAITING_SECOND,
     1
   );
 
+  // sending email verification code in mount
   useEffect(() => {
-    // sendVerificationCode();
+    // sendVerificationCode(); // commented for testing purpose
   }, []);
 
   // Control when the "Send Code Again" logic resets
@@ -173,39 +176,37 @@ function ReservationWindowVerificationCode({ reservationObj }) {
   function handleCodeSentAgain() {
     setIsCodeSentAgain(true);
     sendVerificationCode();
-    console.log("set to true");
   }
+
+  // remove after testing
+  useEffect(() => {
+    if (isVerified) {
+      dispatch(addNewReservation(reservationObj));
+    }
+  }, [isVerified, dispatch, reservationObj]);
 
   function onSubmit(data) {
     console.log(data);
-    // setIsVerified(true);
-    // verifyReservationCode(data);
-  }
-
-  // if (isSuccess) {
-  if (isVerified) {
-    console.log(reservationObj);
-    dispatch(addNewReservation(reservationObj));
-    return (
-      <VerifiedContainer>
-        <GradientHighlight>
-          <VerifiedText>VERIFIED</VerifiedText>
-        </GradientHighlight>
-        <VerifiedTextSm>
-          Click on this link to get to the checkout page.{" "}
-          <GradientHighlight>
-            <Link to="/checkout">Checkout</Link>
-          </GradientHighlight>
-        </VerifiedTextSm>
-      </VerifiedContainer>
-    );
+    setIsVerified(true);
   }
 
   if (isSendingVerificationCode) {
     return <Spinner />;
   }
 
-  return (
+  return isVerified ? (
+    <VerifiedContainer>
+      <GradientHighlight>
+        <VerifiedText>VERIFIED</VerifiedText>
+      </GradientHighlight>
+      <VerifiedTextSm>
+        Click on this link to get to the checkout page.{" "}
+        <GradientHighlight>
+          <Link to="/checkout">Checkout</Link>
+        </GradientHighlight>
+      </VerifiedTextSm>
+    </VerifiedContainer>
+  ) : (
     <VerficationContainer>
       <VerificationForm onSubmit={handleSubmit(onSubmit)}>
         <VerificationTextDiv>
