@@ -165,11 +165,11 @@ const CancelButtonDiv = styled.div`
 `;
 
 function CartBeforeConfirmReservation({ size, reservation }) {
+  const currentDate = new Date().toISOString().split("T")[0];
   const formatedDate = new Date(reservation.reservationDate).toDateString();
-  const reservationTime = `${new Date(
-    reservation.reservationDate
-  ).getHours()}:${new Date(reservation.reservationDate).getMinutes()}`;
-  console.log(reservationTime);
+  const reservationHour = new Date(reservation.reservationDate).getHours();
+  const reservationMinutes = new Date(reservation.reservationDate).getMinutes();
+  const reservationTime = `${reservationHour}:${reservationMinutes}`;
 
   const dispatch = useDispatch();
   return (
@@ -197,15 +197,17 @@ function CartBeforeConfirmReservation({ size, reservation }) {
             </Heading>
           </HeadTextContainer>
         </OngoingOrderCusineDiv>
-        <ItemDate>booked at : 2024/03/14 (10:55 am)</ItemDate>
+        <ItemDate>booked at : {currentDate}</ItemDate>
         <OngoingOrderItemList>
           <li className="venueList">
             <QuantityIncDecDiv>
-              <ItemName size={size}>{reservation.tableType}</ItemName>
+              <ItemName size={size}>Table: {reservation.tableType}</ItemName>
             </QuantityIncDecDiv>
 
             <ItemPriceContainer>
-              <ItemPrice size={size}>Total : ${reservation.total}</ItemPrice>
+              <ItemPrice size={size}>
+                Total : ${reservation.total.toFixed(2)}
+              </ItemPrice>
             </ItemPriceContainer>
           </li>
         </OngoingOrderItemList>
@@ -214,7 +216,9 @@ function CartBeforeConfirmReservation({ size, reservation }) {
             Party Size : {reservation.aprPartySize} person
           </ItemTextTotal>
           <ItemTextTotal size={size}>On : {formatedDate}</ItemTextTotal>
-          <ItemTextTotal size={size}>Time : {reservationTime}</ItemTextTotal>
+          <ItemTextTotal size={size}>
+            Time : {reservationTime} {reservationHour < 12 ? "AM" : "PM"}
+          </ItemTextTotal>
         </SubTotalDiv>
       </CuisineDiv>
 

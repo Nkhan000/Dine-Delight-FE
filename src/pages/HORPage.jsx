@@ -142,7 +142,8 @@ function HORPage() {
       </SpinnerContainer>
     );
   // console.log(cuisineData);
-  const { name, logoImage, address, deliveryPrice, _id } = cuisineData;
+  const { name, logoImage, address, deliveryPrice, reservationPrice, _id } =
+    cuisineData;
 
   return (
     <StyledContainer>
@@ -199,7 +200,14 @@ function HORPage() {
             />
           )}
           {searchParams.get("serviceType") === "table-reservation" && (
-            <ReservationMenu searchParams={searchParams} cuisineId={_id} />
+            <ReservationMenu
+              searchParams={searchParams}
+              cuisineImage={logoImage}
+              cuisineName={name}
+              cuisineAddress={address}
+              reservationPrice={reservationPrice}
+              cuisineId={_id}
+            />
           )}
           {searchParams.get("serviceType") === "venue-booking" && (
             <VenueMenu

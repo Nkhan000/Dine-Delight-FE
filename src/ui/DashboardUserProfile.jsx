@@ -10,6 +10,7 @@ import OngoingVenueBooking from "./OngoingVenueBooking";
 import OngoingDelivery from "./OngoingDelivery";
 import { useGetADelivery } from "../features/delivery/useDelivery";
 import { useGetABookedVenueData } from "../features/cuisines/useVenue";
+import OngoingReservation from "./OngoingReservation";
 
 // USER PROFILE DIV
 const UserProfileContainer = styled.div`
@@ -221,12 +222,6 @@ const ButtonDiv = styled.div`
 `;
 
 function DashboardUserProfile({ user, searchParams, setSearchParams }) {
-  // const { bookedVenue, isLoading } = useGetABookedVenueData();
-
-  // console.log(bookedVenue);
-  // console.log(deliveryData);
-
-  // const UrlParams = new URLSearchParams();
   function handleClick(e) {
     const elementValue = e.target.getAttribute("value");
     searchParams.set("userPanel", elementValue);
@@ -371,6 +366,7 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
                     Reservation
                   </Heading>
                 </OngoingOrderHead>
+                <OngoingReservation />
                 {/* <Venue /> */}
               </OngoingOrderDiv>
               <OngoingOrderDiv>

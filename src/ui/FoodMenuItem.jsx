@@ -21,6 +21,7 @@ import {
   removeVenueBooking,
 } from "../features/cart/venueBookingSlice";
 import { removeReservation } from "../features/cart/reservationSlice";
+import { useCusineSingle } from "../features/cuisines/useCuisines";
 
 const Container = styled.form`
   /* display: flex; */
@@ -146,8 +147,8 @@ const QuantityInput = styled.input`
 function FoodMenuItem({
   data,
   cuisineName,
-  cuisineImage,
   cuisineAddress,
+  cuisineImage,
   cuisineId,
   deliveryPrice,
 }) {

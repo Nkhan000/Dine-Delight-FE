@@ -11,6 +11,8 @@ import { useCreateDelivery } from "../features/delivery/useDelivery";
 import { useCreateANewBooking } from "../features/cuisines/useVenue";
 import { removeAllDeliveries } from "../features/cart/cartSlice";
 import { removeVenueBooking } from "../features/cart/venueBookingSlice";
+import { removeReservation } from "../features/cart/reservationSlice";
+import { useCreateANewReservation } from "../features/cuisines/useReservation";
 
 const Container = styled.div`
   height: 60rem;
@@ -182,11 +184,13 @@ function Checkout() {
   const { cart, cartTotal } = storeCart;
   const { venue } = storeVenue;
   const { reservation } = storeReservation;
-  // console.log(reservation);
+  console.log(reservation);
   const totalDeliveryCharge = cart.map((item) => item.deliveryPrice);
 
   const { isLoading: isCreatingNewOrder, newOrder } = useCreateDelivery();
   const { createANewVenueBooking } = useCreateANewBooking();
+  const { createANewReservation, isPending, isError } =
+    useCreateANewReservation();
   function handleConfirmOrder() {
     if (cart.length > 0) {
       const orderObj = {
@@ -196,9 +200,12 @@ function Checkout() {
       newOrder(orderObj);
     } else if (Object.keys(venue).length > 1) {
       createANewVenueBooking(venue);
+    } else if (Object.keys(reservation).length > 1) {
+      createANewReservation(reservation);
     }
     dispatch(removeAllDeliveries());
     dispatch(removeVenueBooking());
+    dispatch(removeReservation());
   }
 
   return (
@@ -219,7 +226,7 @@ function Checkout() {
               Summary
             </Heading>
           </SummaryDivHead>
-          {cart && <CartBeforeConfirm size="large" />}
+          <CartBeforeConfirm size="large" />
         </SummaryDiv>
       </CheckoutDetailsContainer>
 
@@ -271,10 +278,10 @@ function Checkout() {
                   </BillingCuisineLogo>
                   <BillingCusineTextDiv>
                     <BillingCuisineName>{venue.cuisineName}</BillingCuisineName>
-                    <BillingCodesContainer>
+                    {/* <BillingCodesContainer>
                       <span>THC50OFF</span>
                       <span>THCW10OFF</span>
-                    </BillingCodesContainer>
+                    </BillingCodesContainer> */}
                   </BillingCusineTextDiv>
                 </BillingCuisineDiv>
 
@@ -365,9 +372,7 @@ function Checkout() {
                 {venue.total > 0 &&
                   (venue.total * 0.13 + venue.total + 10).toFixed(2)}
                 {reservation.total > 0 &&
-                  (reservation.total * 0.13 + reservation.total + 10).toFixed(
-                    2
-                  )}
+                  (reservation.total * 0.13 + reservation.total).toFixed(2)}
               </GrandTotalTextBg>
             </GrandTotalTextDiv>
             <div>

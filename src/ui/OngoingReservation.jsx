@@ -3,6 +3,9 @@
 import styled from "styled-components";
 import Heading from "./Heading";
 import GradientHighlight from "./GradientHighlight";
+import StyledTag from "./StyledTag";
+import { useGetAllReservationsOfUser } from "../features/cuisines/useReservation";
+import Spinner from "./Spinner";
 
 const HeadContainer = styled.div`
   padding: 2rem 2.5rem;
@@ -78,61 +81,76 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 
+const StatusContainer = styled.div``;
+
 function OngoingReservation() {
-  return (
-    <>
-      <HeadContainer>
-        <OngoingOrderCusineDiv>
-          <OngoingOrderCusineLogoDiv>
-            <LogoImg src="./img/hotel-001.jpg" />
-          </OngoingOrderCusineLogoDiv>
-          <HeadTextContainer>
-            <Heading as="h2" color="light">
-              The BEAR Bar
+  const { reservationData, isLoading } = useGetAllReservationsOfUser();
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+  {
+    return reservationData.map((item) => (
+      <>
+        <HeadContainer>
+          <StatusContainer>
+            <StyledTag type={item.status}>{item.status}</StyledTag>
+          </StatusContainer>
+          <OngoingOrderCusineDiv>
+            <OngoingOrderCusineLogoDiv>
+              <LogoImg src="./img/hotel-001.jpg" />
+            </OngoingOrderCusineLogoDiv>
+            <HeadTextContainer>
+              <Heading as="h2" color="light">
+                The BEAR Bar
+              </Heading>
+              <Heading as="h5" color="light">
+                Kathmandu, nepal
+              </Heading>
+            </HeadTextContainer>
+          </OngoingOrderCusineDiv>
+        </HeadContainer>
+
+        <ReservationDetailDiv>
+          <ReservationDetailTextDiv>
+            <GradientHighlight>
+              <StyleGradientdSpan>
+                You have a table reservation on
+              </StyleGradientdSpan>
+            </GradientHighlight>
+            <Heading as="h4" color="light">
+              {/* {`${formatedDate}`} */}
+
+              {}
             </Heading>
-            <Heading as="h5" color="light">
-              Kathmandu, nepal
-            </Heading>
-          </HeadTextContainer>
-        </OngoingOrderCusineDiv>
-      </HeadContainer>
+          </ReservationDetailTextDiv>
 
-      <ReservationDetailDiv>
-        <ReservationDetailTextDiv>
-          <GradientHighlight>
-            <StyleGradientdSpan>
-              You have a table reservation on
-            </StyleGradientdSpan>
-          </GradientHighlight>
-          <Heading as="h4" color="light">
-            {/* {`${formatedDate}`} */}
-            2024/03/05 (7:30 p.m)
-          </Heading>
-        </ReservationDetailTextDiv>
+          <ReservationDetails>
+            <GradientHighlight>
+              <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
+            </GradientHighlight>
 
-        <ReservationDetails>
-          <GradientHighlight>
-            <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
-          </GradientHighlight>
-
-          <DetailTextDiv>
-            <DetailText>ID : {}</DetailText>
-            <DetailText>Booked For : Nazir Khan</DetailText>
-            <DetailText>Venue Name : </DetailText>
-            <DetailText>Paid : </DetailText>
-            <DetailText>O.T.P : </DetailText>
-            <DetailText>Party size: 60 people (expected)</DetailText>
-          </DetailTextDiv>
-        </ReservationDetails>
-      </ReservationDetailDiv>
-      <ReservationNoteDiv>
-        <span>
-          Customer are requested to arrive atleast 10 mins before the reserved
-          time
-        </span>
-      </ReservationNoteDiv>
-    </>
-  );
+            <DetailTextDiv>
+              <DetailText>ID : {item._id}</DetailText>
+              <DetailText>Booked For : Nazir Khan</DetailText>
+              <DetailText>Table Type : </DetailText>
+              <DetailText>Paid : {item.isPaid} </DetailText>
+              <DetailText>O.T.P : {item.otpCode} </DetailText>
+              <DetailText>
+                Party size: {item.aprPartySize} person (expected)
+              </DetailText>
+            </DetailTextDiv>
+          </ReservationDetails>
+        </ReservationDetailDiv>
+        <ReservationNoteDiv>
+          <span>
+            Customer are requested to arrive atleast 10 mins before the reserved
+            time
+          </span>
+        </ReservationNoteDiv>
+      </>
+    ));
+  }
 }
 
 export default OngoingReservation;

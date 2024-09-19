@@ -213,30 +213,18 @@ const ImportantInfoDiv = styled.ol`
 
 function ReservationMenu({ cuisineId }) {
   const partySizeOption = [2, 3, 4, 5, 6];
-  const reservationPrice = 49;
-  const availableTime = [
-    "10:30",
-    "11:00",
-    "12:00",
-    "13:00",
-    "17:00",
-    "18:00",
-    "20:00",
-  ];
-
-  const tableTypeOption = [
-    "centered Ground floor",
-    "private/cabin",
-    "centered top floor",
-    "cornerd Ground floor",
-    "cornered Ground floor",
-  ];
 
   const dispatch = useDispatch();
   const { cuisineData } = useCusineSingle(cuisineId);
-  console.log(cuisineData);
 
-  const { name: cuisineName, logoImage: cuisineImage } = cuisineData;
+  const {
+    name: cuisineName,
+    logoImage: cuisineImage,
+    availableTableReservationTime: availableTime,
+    address: cuisineAddress,
+    tableTypeOptions,
+    reservationPrice,
+  } = cuisineData;
   // console.log(cuisineName, cuisineImage);
   const { setBannerText, setBannerType, open } = useContext(BannerContext);
   const { handleSubmit, setValue, reset, register } = useForm();
@@ -245,24 +233,18 @@ function ReservationMenu({ cuisineId }) {
   const [partySize, setPartySize] = useState(partySizeOption[0]);
   const [availableTimeSlot, setAvailableTimeSlot] = useState(availableTime[0]);
   const [reservationDate, setReservationDate] = useState();
-  const [tableType, setTableType] = useState(tableTypeOption[0]);
+  const [tableType, setTableType] = useState(tableTypeOptions[0]);
   const [addPriority, setAddPriority] = useState(false);
   const [allFieldsValid, setAllFeildsValid] = useState(false);
-  const [total, setTotal] = useState();
+  const [total, setTotal] = useState(reservationPrice);
   const [reservationObj, setReservationObj] = useState();
 
-  // const {
-  //   cart: storeCart,
-  //   venue: storeVenue,
-  //   reservation: storeReservation,
-  // } = useSelector((store) => store);
-
-  // formate date combining both date and available time selected
   function formateDate(time, date) {
     const [hours, minutes] = time.split(":");
     const updatedDate = new Date(date);
     updatedDate.setHours(hours);
     updatedDate.setMinutes(minutes);
+    console.log(updatedDate);
     return updatedDate;
   }
 
@@ -271,12 +253,8 @@ function ReservationMenu({ cuisineId }) {
   }
 
   useEffect(() => {
-    if (addPriority)
-      setTotal(
-        partySize * reservationPrice + partySize * reservationPrice * 0.08
-      );
-    else setTotal(partySize * reservationPrice);
-  }, [partySize, reservationPrice, addPriority]);
+    if (addPriority) setTotal(reservationPrice + reservationPrice * 0.08);
+  }, [reservationPrice, addPriority]);
 
   function handlePartySize(e) {
     setPartySize(e.target.value);
@@ -317,8 +295,10 @@ function ReservationMenu({ cuisineId }) {
       return;
     }
     const updatedDate = {
+      cuisineId,
       cuisineName,
       cuisineImage,
+      cuisineAddress,
       ...data,
     };
     setAllFeildsValid(true);
@@ -386,7 +366,7 @@ function ReservationMenu({ cuisineId }) {
                 required
                 onChange={handleTableType}
               >
-                {tableTypeOption.map((item, i) => (
+                {tableTypeOptions.map((item, i) => (
                   <option value={item} key={`${item}=${i}`}>
                     {item}
                   </option>
@@ -443,7 +423,7 @@ function ReservationMenu({ cuisineId }) {
         <>
           <QuantityDetailsDiv>
             <span>{tableType}</span>
-            <span>${(partySize * reservationPrice).toFixed(2)}</span>
+            <span>${reservationPrice.toFixed(2)}</span>
           </QuantityDetailsDiv>
           {addPriority && (
             <QuantityDetailsDiv>
