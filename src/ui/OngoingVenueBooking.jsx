@@ -95,6 +95,10 @@ function OngoingVenueBooking() {
   if (isLoading) {
     return <Spinner />;
   }
+
+  if (!bookedVenue) {
+    return <span>No bookings to show</span>;
+  }
   console.log(bookedVenue);
   const {
     bookedOnDate,

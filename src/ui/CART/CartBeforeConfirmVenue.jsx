@@ -210,10 +210,15 @@ function CartBeforeConfirmVenue({ size, venue }) {
           </li>
         </OngoingOrderItemList>
         <SubTotalDiv>
-          <ItemTextTotal size={size}>From : {venue.startDate}</ItemTextTotal>
-          <ItemTextTotal size={size}> To : {venue.endDate}</ItemTextTotal>
+          <ItemTextTotal size={size}>
+            From : {venue.venueBookingStartDate}
+          </ItemTextTotal>
+          <ItemTextTotal size={size}>
+            {" "}
+            To : {venue.venueBookingEndDate}
+          </ItemTextTotal>
           <ItemTextTotal size={size}>VAT(13%):&nbsp; $26.00</ItemTextTotal>
-          <ItemTextTotal size={size}>Total : ${venue.total}</ItemTextTotal>
+          <ItemTextTotal size={size}>Total : ${venue.totalPrice}</ItemTextTotal>
         </SubTotalDiv>
       </CuisineDiv>
 

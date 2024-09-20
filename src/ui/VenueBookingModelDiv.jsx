@@ -145,8 +145,8 @@ function VenueBookingModelDiv({
   cuisineAddress,
   cuisineImage,
 }) {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [venueBookingStartDate, setVenueBookingStartDate] = useState("");
+  const [venueBookingEndDate, setVenueBookingEndDate] = useState("");
   const [numOfDays, setNumOfDays] = useState(null);
   const [isCartEmpty, setIsCartEmpty] = useState();
 
@@ -154,9 +154,9 @@ function VenueBookingModelDiv({
 
   // function to calculate difference in date
   const calculateDate = useCallback(() => {
-    if (!startDate || !endDate) return;
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    if (!venueBookingStartDate || !venueBookingEndDate) return;
+    const start = new Date(venueBookingStartDate);
+    const end = new Date(venueBookingEndDate);
     if (end < start) {
       return;
     }
@@ -164,13 +164,13 @@ function VenueBookingModelDiv({
     const differenceDays = Math.ceil(diffrenceTime / (1000 * 60 * 60 * 24));
     console.log(differenceDays);
     setNumOfDays(differenceDays);
-  }, [startDate, endDate]); // to memoize the function and only re-render when start date and end date changes
+  }, [venueBookingStartDate, venueBookingEndDate]); // to memoize the function and only re-render when start date and end date changes
 
   function handleStartDateChange(e) {
-    setStartDate(e.target.value);
+    setVenueBookingStartDate(e.target.value);
   }
   function handleEndDateChange(e) {
-    setEndDate(e.target.value);
+    setVenueBookingEndDate(e.target.value);
   }
 
   // to check whether the cart is empty or has some ongoing orders
@@ -182,14 +182,14 @@ function VenueBookingModelDiv({
     setIsCartEmpty(
       storeCart.cart.length === 0 &&
         Object.keys(storeVenue.venue).length === 0 &&
-        Object.keys(storeReservation).length === 0
+        Object.keys(storeReservation.reservation).length === 0
     );
   }, [storeCart, storeReservation, storeVenue]);
 
   // Use useEffect to calculate difference whenever dates change
   useEffect(() => {
     calculateDate();
-  }, [startDate, calculateDate, endDate]);
+  }, [venueBookingStartDate, calculateDate, venueBookingEndDate]);
 
   const orderObj = {
     cuisineName,
@@ -199,8 +199,8 @@ function VenueBookingModelDiv({
     name,
     venueId,
     aprPartySize,
-    startDate,
-    endDate,
+    venueBookingStartDate,
+    venueBookingEndDate,
     numOfDays,
     pricePerDay,
     totalPrice: pricePerDay * numOfDays * 0.13 + pricePerDay * numOfDays,

@@ -81,7 +81,10 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 
-const StatusContainer = styled.div``;
+const StatusContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
 function OngoingReservation() {
   const { reservationData, isLoading } = useGetAllReservationsOfUser();
@@ -119,9 +122,11 @@ function OngoingReservation() {
               </StyleGradientdSpan>
             </GradientHighlight>
             <Heading as="h4" color="light">
-              {/* {`${formatedDate}`} */}
-
-              {}
+              {`${new Date(item.reservationDate).toDateString()} (${new Date(
+                item.reservationDate
+              ).getHours()}:${new Date(item.reservationDate).getMinutes()} ${
+                new Date(item.reservationDate).getHours() < 12 ? "AM" : "PM"
+              })`}
             </Heading>
           </ReservationDetailTextDiv>
 
@@ -133,7 +138,7 @@ function OngoingReservation() {
             <DetailTextDiv>
               <DetailText>ID : {item._id}</DetailText>
               <DetailText>Booked For : Nazir Khan</DetailText>
-              <DetailText>Table Type : </DetailText>
+              <DetailText>Table Type : {item.tableType} </DetailText>
               <DetailText>Paid : {item.isPaid} </DetailText>
               <DetailText>O.T.P : {item.otpCode} </DetailText>
               <DetailText>

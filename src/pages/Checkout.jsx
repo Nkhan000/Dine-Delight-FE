@@ -187,10 +187,12 @@ function Checkout() {
   console.log(reservation);
   const totalDeliveryCharge = cart.map((item) => item.deliveryPrice);
 
-  const { isLoading: isCreatingNewOrder, newOrder } = useCreateDelivery();
-  const { createANewVenueBooking } = useCreateANewBooking();
+  const { newOrder, isLoading: isCreatingNewOrder } = useCreateDelivery();
+  const { createANewVenueBooking, isCreatingNewVenueBooking } =
+    useCreateANewBooking();
   const { createANewReservation, isPending, isError } =
     useCreateANewReservation();
+
   function handleConfirmOrder() {
     if (cart.length > 0) {
       const orderObj = {
@@ -203,9 +205,11 @@ function Checkout() {
     } else if (Object.keys(reservation).length > 1) {
       createANewReservation(reservation);
     }
-    dispatch(removeAllDeliveries());
-    dispatch(removeVenueBooking());
-    dispatch(removeReservation());
+    if (!isCreatingNewOrder || !isPending || !isCreatingNewVenueBooking) {
+      dispatch(removeAllDeliveries());
+      dispatch(removeVenueBooking());
+      dispatch(removeReservation());
+    }
   }
 
   return (
@@ -347,11 +351,11 @@ function Checkout() {
                 </GrandTotalTextSm>
               </GrandTotalTextDiv>
             )}{" "}
-            {venue.total > 0 && (
+            {venue.totalPrice > 0 && (
               <GrandTotalTextDiv>
                 <GrandTotalTextSm>Vat(13%) : </GrandTotalTextSm>
                 <GrandTotalTextSm>
-                  ${(venue.total * 0.13).toFixed(2)}
+                  ${(venue.totalPrice * 0.13).toFixed(2)}
                 </GrandTotalTextSm>
               </GrandTotalTextDiv>
             )}
@@ -369,8 +373,7 @@ function Checkout() {
                 $
                 {cartTotal > 0 &&
                   (cartTotal * 0.13 + cartTotal + 10).toFixed(2)}
-                {venue.total > 0 &&
-                  (venue.total * 0.13 + venue.total + 10).toFixed(2)}
+                {venue.totalPrice > 0 && venue.totalPrice.toFixed(2)}
                 {reservation.total > 0 &&
                   (reservation.total * 0.13 + reservation.total).toFixed(2)}
               </GrandTotalTextBg>
