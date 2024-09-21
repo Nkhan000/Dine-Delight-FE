@@ -4,13 +4,9 @@ import styled, { css } from "styled-components";
 import Button from "./Button";
 import TableItem from "./TableItem";
 import Heading from "./Heading";
-// import CartBeforeConfirm from "./CartBeforeConfirm";
 import OngoingVenueBooking from "./OngoingVenueBooking";
-// import { useSearchParams } from "react-router-dom";
 import OngoingDelivery from "./OngoingDelivery";
-import { useGetADelivery } from "../features/delivery/useDelivery";
-import { useGetABookedVenueData } from "../features/cuisines/useVenue";
-import OngoingReservation from "./OngoingReservation";
+import OngoingReservation from "./RESERVATION/OngoingReservation";
 
 // USER PROFILE DIV
 const UserProfileContainer = styled.div`
@@ -34,10 +30,7 @@ const UserProfileContainerLower = styled.div`
 `;
 
 const UserProfileContainerFlex = styled.div`
-  /* display: flex;
-  align-items: center;
-  justify-content: space-between; */
-  /* padding: 4rem 0; */
+  /*  */
 `;
 
 const ProfileUserDetails = styled.div`
@@ -162,11 +155,12 @@ const OngoingOrderContainer = styled.div`
   padding: 2rem;
 `;
 const OngoingOrderDiv = styled.div`
-  height: 55rem;
+  max-height: 55rem;
   width: 40rem;
   border: 1px solid var(--color-grey-800);
   overflow-y: scroll;
   border-radius: 5px;
+  padding-bottom: 2rem;
 
   // setting scrollbar width 0
   &::-webkit-scrollbar {
@@ -200,18 +194,6 @@ const OngoingOrderHead = styled.div`
       background-color: var(--color-grey-700);
     `}
   padding: 1rem 2rem;
-`;
-
-const NoOrderDiv = styled.div`
-  display: flex;
-  justify-content: center;
-
-  & span {
-    color: var(--color-grey-500);
-    font-size: 2rem;
-    font-weight: 600;
-    padding: 5rem 2rem;
-  }
 `;
 
 const ButtonDiv = styled.div`

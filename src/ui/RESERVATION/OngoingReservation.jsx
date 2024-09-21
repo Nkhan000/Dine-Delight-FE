@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Heading from "./Heading";
-import GradientHighlight from "./GradientHighlight";
-import StyledTag from "./StyledTag";
-import { useGetAllReservationsOfUser } from "../features/cuisines/useReservation";
-import Spinner from "./Spinner";
+import Heading from "../Heading";
+import GradientHighlight from "../GradientHighlight";
+import StyledTag from "../StyledTag";
+import { useGetAllReservationsOfUser } from "../../features/reservations/useReservation";
+import Spinner from "../Spinner";
 
 const HeadContainer = styled.div`
   padding: 2rem 2.5rem;
@@ -36,7 +36,14 @@ const OngoingOrderCusineLogoDiv = styled.div`
   overflow: hidden;
   border-radius: 5rem;
 `;
-
+const ItemRemarks = styled.span`
+  font-size: 1.4;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--color-grey-500);
+  padding: 2rem;
+  text-align: center;
+`;
 //
 const ReservationDetailDiv = styled.div`
   display: flex;
@@ -92,6 +99,11 @@ function OngoingReservation() {
   if (isLoading) {
     return <Spinner />;
   }
+  console.log(reservationData);
+
+  if (reservationData.length == 0) {
+    return <ItemRemarks>No ongoing reservations to show</ItemRemarks>;
+  }
   {
     return reservationData.map((item) => (
       <>
@@ -122,11 +134,9 @@ function OngoingReservation() {
               </StyleGradientdSpan>
             </GradientHighlight>
             <Heading as="h4" color="light">
-              {`${new Date(item.reservationDate).toDateString()} (${new Date(
-                item.reservationDate
-              ).getHours()}:${new Date(item.reservationDate).getMinutes()} ${
-                new Date(item.reservationDate).getHours() < 12 ? "AM" : "PM"
-              })`}
+              {`${new Date(item.reservationDate).toLocaleDateString()} (${
+                item.reservationTimeStr
+              } ${item.reservationTimeStr.split(":")[0] < 12 ? "AM" : "PM"})`}
             </Heading>
           </ReservationDetailTextDiv>
 

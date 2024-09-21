@@ -3,6 +3,8 @@
 import styled, { css } from "styled-components";
 import StyledTag from "./StyledTag";
 import Pagination from "./Pagination";
+import { useGetAllOrders } from "../features/user/useGetAllOrders";
+import Spinner from "./Spinner";
 
 const TableItemDiv = styled.div`
   padding: 1rem 0rem;
@@ -96,6 +98,8 @@ const RemarksSpan = styled.span`
   }
 `;
 function TableItem({ tableType }) {
+  const { allOrders, isLoading } = useGetAllOrders();
+  console.log(allOrders);
   return (
     <TableItemDiv>
       <div>
@@ -123,38 +127,28 @@ function TableItem({ tableType }) {
         )}
 
         <TableItemContentDiv>
-          {tableType == "lastSevenDaysList" && (
+          {isLoading && <Spinner />}
+          {!isLoading && tableType == "lastSevenDaysList" && (
             <>
-              <TableItemContent tableType={tableType}>
-                <span>001</span>
-                <span>The Bar</span>
-                <span>2024-05-09</span>
-                <StyledTag type="delivery">delivery</StyledTag>
-                <span>$47.99</span>
-                <RemarksSpan remarks="Delivered on Time by The bar delivery guy">
-                  Food was delivered
-                </RemarksSpan>
-              </TableItemContent>
-              <TableItemContent tableType={tableType}>
-                <span>002</span>
-                <span>The Bar</span>
-                <span>2024-05-09</span>
-                <StyledTag type="reservation">reservation</StyledTag>
-                <span>$47.99</span>
-                <RemarksSpan remarks="Delivered on Time by The bar delivery guy">
-                  Food was delivered
-                </RemarksSpan>
-              </TableItemContent>
-              <TableItemContent tableType={tableType}>
-                <span>001</span>
-                <span>The Bar</span>
-                <span>2024-05-09</span>
-                <StyledTag type="venue">venue</StyledTag>
-                <span>$47.99</span>
-                <RemarksSpan remarks="Delivered on Time by The bar delivery guy">
-                  Food was delivered
-                </RemarksSpan>
-              </TableItemContent>
+              {allOrders.map((orderItem, oIdx) => (
+                <TableItemContent
+                  key={`${orderItem.type}${oIdx}`}
+                  tableType={tableType}
+                >
+                  <span>0{oIdx + 1}</span>
+                  <span>{orderItem.cuisineId.name}</span>
+                  <span>
+                    {new Date(
+                      orderItem.reservationDate || orderItem.deliveryDate
+                    ).toLocaleDateString()}
+                  </span>
+                  <StyledTag type={orderItem.type}>{orderItem.type}</StyledTag>
+                  <span>${orderItem.total.toFixed(2)}</span>
+                  <RemarksSpan remarks={orderItem.remarks}>
+                    Hover to see remarks
+                  </RemarksSpan>
+                </TableItemContent>
+              ))}
             </>
           )}
           {tableType == "reservationListForBusiness" && (

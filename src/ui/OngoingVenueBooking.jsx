@@ -23,12 +23,15 @@ const HeadTextContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
-// const LogoImgDiv = styled.div`
-//   height: 4rem;
-//   width: 4rem;
-//   overflow: hidden;
-//   border-radius: 5rem;
-// `;
+const ItemRemarks = styled.span`
+  font-size: 1.4;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--color-grey-500);
+  padding: 2rem;
+  text-align: center;
+`;
+
 const OngoingOrderCusineDiv = styled.div`
   padding-bottom: 0;
   display: flex;
@@ -96,10 +99,11 @@ function OngoingVenueBooking() {
     return <Spinner />;
   }
 
-  if (!bookedVenue) {
-    return <span>No bookings to show</span>;
+  // console.log("bookedVenue", bookedVenue);
+  if (bookedVenue.length == 0) {
+    return <ItemRemarks>No bookings to show</ItemRemarks>;
   }
-  console.log(bookedVenue);
+  // console.log(bookedVenue);
   const {
     bookedOnDate,
     cuisineId,

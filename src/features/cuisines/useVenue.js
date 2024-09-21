@@ -4,9 +4,15 @@ import {
   apiCreateANewVenueBooking,
   apiGetABookedVenueData,
 } from "../../services/apiVenue";
+import { useDispatch } from "react-redux";
+import { removeAllDeliveries } from "../cart/cartSlice";
+import { removeVenueBooking } from "../cart/venueBookingSlice";
+import { removeReservation } from "../cart/reservationSlice";
+import { useNavigate } from "react-router-dom";
 
 export function useCreateANewBooking() {
-  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     mutate: createANewVenueBooking,
     isLoading: isCreatingNewVenueBooking,
@@ -14,6 +20,8 @@ export function useCreateANewBooking() {
   } = useMutation({
     mutationFn: (data) => apiCreateANewVenueBooking(data),
     onSuccess: (data) => {
+      dispatch(removeVenueBooking());
+      navigate("/dashboard?userPanel=ongoingOrders");
       console.log(data);
     },
     onError: (err) => {
@@ -24,13 +32,9 @@ export function useCreateANewBooking() {
 }
 
 export function useGetABookedVenueData() {
-  // const queryClient = useQueryClient();
   const { data: bookedVenue, isLoading } = useQuery({
     queryKey: ["bookedVenue"],
     queryFn: () => apiGetABookedVenueData(),
   });
-  // everytime a new data is fetched this will reinvalidate or update it to the new data in the cache
-  // queryClient.invalidateQueries("bookedVenue");
-
   return { bookedVenue, isLoading };
 }

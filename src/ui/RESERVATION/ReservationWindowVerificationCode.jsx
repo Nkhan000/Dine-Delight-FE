@@ -1,18 +1,18 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "./Button";
+import Button from "../Button";
 import { useEffect, useState } from "react";
-import { useCountDownTimer } from "../hooks/useCountDownTimer";
-import GradientHighlight from "./GradientHighlight";
-import Spinner from "./Spinner";
+import { useCountDownTimer } from "../../hooks/useCountDownTimer";
+import GradientHighlight from "../GradientHighlight";
+import Spinner from "../Spinner";
 import { Link } from "react-router-dom";
 import {
   useSendVerificationCodeForReservation,
   useVerifyReservationCode,
-} from "../features/cuisines/useReservation";
-import SpinnerMini from "./SpinnerMini";
+} from "../../features/reservations/useReservation";
+import SpinnerMini from "../SpinnerMini";
 import { useForm } from "react-hook-form";
-import { addNewReservation } from "../features/cart/reservationSlice";
+import { addNewReservation } from "../../features/cart/reservationSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const VerficationContainer = styled.div`

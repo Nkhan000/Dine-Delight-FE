@@ -5,6 +5,9 @@ import {
   apiVerifyReservationCode,
   getAllReservationOfUser,
 } from "../../services/apiReservations";
+import { useDispatch } from "react-redux";
+import { removeReservation } from "../cart/reservationSlice";
+import { useNavigate } from "react-router-dom";
 // import { isPending } from "@reduxjs/toolkit";
 
 export function useSendVerificationCodeForReservation() {
@@ -43,10 +46,14 @@ export function useVerifyReservationCode() {
 }
 
 export function useCreateANewReservation() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (data) => apiCreateReservation(data),
     onSuccess: () => {
       console.log("reservation was created");
+      dispatch(removeReservation());
+      navigate("/dashboard?userPanel=ongoingOrders");
     },
     onError: () => {
       console.log("Error creating a reservation");

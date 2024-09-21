@@ -3,11 +3,11 @@
 
 import styled from "styled-components";
 // import Heading from "./Heading";
-import MenuItem from "./MenuItem";
+import MenuItem from "../MenuItem";
 // import StyledOptions from "./StyledOptions";
 // import Pagination from "./Pagination";
-import ItemsMenu from "./ItemsMenu";
-import { useGetUser } from "../features/authentication/useGetUser";
+import ItemsMenu from "../ItemsMenu";
+import { useGetUser } from "../../features/authentication/useGetUser";
 import FoodMenuItem from "./FoodMenuItem";
 
 const MenuContainer = styled.div`

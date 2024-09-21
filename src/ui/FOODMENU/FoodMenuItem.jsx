@@ -1,27 +1,27 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import StyledTag from "./StyledTag";
-import Button from "./Button";
-import StyledOptions from "./StyledOptions";
+import StyledTag from "../StyledTag";
+import Button from "../Button";
+import StyledOptions from "../StyledOptions";
 import { useContext, useEffect, useState } from "react";
-import { BannerContext, NotificationContext } from "../utils/contexts";
+import { BannerContext, NotificationContext } from "../../utils/contexts";
 import { Link, useLocation } from "react-router-dom";
 // import { CartContext } from "../context/cartContext";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, removeAllDeliveries } from "../features/cart/cartSlice";
-import BannerNotification from "./BannerNotification";
-import { useGetUser } from "../features/authentication/useGetUser";
-import { decreaseRemOrderOnAddNewOrder } from "../features/cart/remainingOrderSlice";
-import Modal from "./Modal";
-import CheckBeforeConfirm from "../ui/CART/CheckBeforeConfirm";
+import { addItem, removeAllDeliveries } from "../../features/cart/cartSlice";
+import BannerNotification from "../BannerNotification";
+import { useGetUser } from "../../features/authentication/useGetUser";
+import { decreaseRemOrderOnAddNewOrder } from "../../features/cart/remainingOrderSlice";
+import Modal from "../Modal";
+import CheckBeforeConfirm from "../CART/CheckBeforeConfirm";
 import {
   addAVenueBooking,
   removeVenueBooking,
-} from "../features/cart/venueBookingSlice";
-import { removeReservation } from "../features/cart/reservationSlice";
-import { useCusineSingle } from "../features/cuisines/useCuisines";
+} from "../../features/cart/venueBookingSlice";
+import { removeReservation } from "../../features/cart/reservationSlice";
+import { useCusineSingle } from "../../features/cuisines/useCuisines";
 
 const Container = styled.form`
   /* display: flex; */

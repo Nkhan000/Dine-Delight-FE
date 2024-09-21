@@ -9,10 +9,8 @@ import Button from "../ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateDelivery } from "../features/delivery/useDelivery";
 import { useCreateANewBooking } from "../features/cuisines/useVenue";
-import { removeAllDeliveries } from "../features/cart/cartSlice";
-import { removeVenueBooking } from "../features/cart/venueBookingSlice";
-import { removeReservation } from "../features/cart/reservationSlice";
-import { useCreateANewReservation } from "../features/cuisines/useReservation";
+
+import { useCreateANewReservation } from "../features/reservations/useReservation";
 
 const Container = styled.div`
   height: 60rem;
@@ -204,11 +202,6 @@ function Checkout() {
       createANewVenueBooking(venue);
     } else if (Object.keys(reservation).length > 1) {
       createANewReservation(reservation);
-    }
-    if (!isCreatingNewOrder || !isPending || !isCreatingNewVenueBooking) {
-      dispatch(removeAllDeliveries());
-      dispatch(removeVenueBooking());
-      dispatch(removeReservation());
     }
   }
 

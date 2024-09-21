@@ -128,7 +128,7 @@ function OngoingDelivery({ size }) {
   const { deliveryData, isLoading } = useGetADelivery();
 
   if (isLoading) return <Spinner />;
-  if (deliveryData == null)
+  if (deliveryData.length == 0)
     return (
       <Container>
         <ItemRemarks>You do not have any ongoing orders😊</ItemRemarks>

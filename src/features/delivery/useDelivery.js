@@ -19,7 +19,6 @@ export function useCreateDelivery() {
   } = useMutation({
     mutationFn: (data) => apiCreateDelivery(data),
     onSuccess: () => {
-      // localStorage.removeItem("persist:root");
       dispatch(removeAllDeliveries());
       navigate("/dashboard?userPanel=ongoingOrders");
     },
@@ -32,7 +31,6 @@ export function useCreateDelivery() {
 }
 
 export function useGetADelivery() {
-  // const token = localStorage.getItem("jwt");
   const { data: deliveryData, isLoading } = useQuery({
     queryKey: ["onGoingDelivery"],
     queryFn: () => apiGetADeliveryData(),

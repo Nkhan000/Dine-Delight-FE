@@ -1,26 +1,26 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Heading from "./Heading";
-import StyledRadioBtn from "./StyledRadioBtn";
-import Button from "./Button";
+import Heading from "../Heading";
+import StyledRadioBtn from "../StyledRadioBtn";
+import Button from "../Button";
 import { useContext, useEffect, useState } from "react";
-import Modal from "./Modal";
+import Modal from "../Modal";
 import ReservationWindowModal from "./ReservationWindowModal";
-import { useGetUser } from "../features/authentication/useGetUser";
-import { BannerContext } from "../utils/contexts";
-import BannerNotification from "./BannerNotification";
+import { useGetUser } from "../../features/authentication/useGetUser";
+import { BannerContext } from "../../utils/contexts";
+import BannerNotification from "../BannerNotification";
 import { useForm } from "react-hook-form";
-import StyledOptionsDiv from "./StyledOptionsTwo";
+import StyledOptionsDiv from "../StyledOptionsTwo";
 import {
   addNewReservation,
   removeReservation,
-} from "../features/cart/reservationSlice";
+} from "../../features/cart/reservationSlice";
 import { useDispatch, useSelector } from "react-redux";
-import CheckBeforeConfirm from "./CART/CheckBeforeConfirm";
-import { removeAllDeliveries } from "../features/cart/cartSlice";
-import { removeVenueBooking } from "../features/cart/venueBookingSlice";
-import { useCusineSingle } from "../features/cuisines/useCuisines";
+import CheckBeforeConfirm from "../CART/CheckBeforeConfirm";
+import { removeAllDeliveries } from "../../features/cart/cartSlice";
+import { removeVenueBooking } from "../../features/cart/venueBookingSlice";
+import { useCusineSingle } from "../../features/cuisines/useCuisines";
 
 const Container = styled.form`
   border-radius: 3rem;
@@ -223,7 +223,7 @@ function ReservationMenu({ cuisineId }) {
     availableTableReservationTime: availableTime,
     address: cuisineAddress,
     tableTypeOptions,
-    reservationPrice,
+    tableReservationPrice,
   } = cuisineData;
   // console.log(cuisineName, cuisineImage);
   const { setBannerText, setBannerType, open } = useContext(BannerContext);
@@ -236,7 +236,7 @@ function ReservationMenu({ cuisineId }) {
   const [tableType, setTableType] = useState(tableTypeOptions[0]);
   const [addPriority, setAddPriority] = useState(false);
   const [allFieldsValid, setAllFeildsValid] = useState(false);
-  const [total, setTotal] = useState(reservationPrice);
+  const [total, setTotal] = useState(tableReservationPrice);
   const [reservationObj, setReservationObj] = useState();
 
   function formateDate(time, date) {
@@ -253,8 +253,9 @@ function ReservationMenu({ cuisineId }) {
   }
 
   useEffect(() => {
-    if (addPriority) setTotal(reservationPrice + reservationPrice * 0.08);
-  }, [reservationPrice, addPriority]);
+    if (addPriority)
+      setTotal(tableReservationPrice + tableReservationPrice * 0.08);
+  }, [tableReservationPrice, addPriority]);
 
   function handlePartySize(e) {
     setPartySize(e.target.value);
@@ -299,6 +300,7 @@ function ReservationMenu({ cuisineId }) {
       cuisineName,
       cuisineImage,
       cuisineAddress,
+      reservationTimeStr: availableTimeSlot,
       ...data,
     };
     setAllFeildsValid(true);
@@ -416,19 +418,21 @@ function ReservationMenu({ cuisineId }) {
         <RemarksInput
           name="remarks"
           placeholder="[OPTIONAL] Any specail request ?"
-          {...register("remarks")}
+          {...register("additionalRequest")}
         />
       </RemakrsInputDivContianer>
       {allFieldsValid && (
         <>
           <QuantityDetailsDiv>
             <span>{tableType}</span>
-            <span>${reservationPrice.toFixed(2)}</span>
+            <span>${tableReservationPrice.toFixed(2)}</span>
           </QuantityDetailsDiv>
           {addPriority && (
             <QuantityDetailsDiv>
               <span>priority(+8%)</span>
-              <span>${(partySize * reservationPrice * 0.08).toFixed(2)}</span>
+              <span>
+                ${(partySize * tableReservationPrice * 0.08).toFixed(2)}
+              </span>
             </QuantityDetailsDiv>
           )}
           <QuantityHead>

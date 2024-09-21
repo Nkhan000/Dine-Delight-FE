@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Heading from "./Heading";
-import GradientHighlight from "./GradientHighlight";
-import Button from "./Button";
+import Heading from "../Heading";
+import GradientHighlight from "../GradientHighlight";
+import Button from "../Button";
 import { useEffect, useState } from "react";
-import { useCountDownTimer } from "../hooks/useCountDownTimer";
+import { useCountDownTimer } from "../../hooks/useCountDownTimer";
 import ReservationWindowVerificationCode from "./ReservationWindowVerificationCode";
 // import { useTimer } from "./Timer";
 
