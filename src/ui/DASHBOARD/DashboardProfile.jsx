@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "../ui/Button";
-import GradientHighlight from "../ui/GradientHighlight";
-import GradientIcon from "../ui/GradientIcon";
-import { HiCurrencyDollar, HiHandThumbUp } from "react-icons/hi2";
+import Button from "../Button";
+
 import { HiPencilSquare } from "react-icons/hi2";
+import { Link } from "react-router-dom";
 
 const ProfileDiv = styled.div`
   display: grid;
@@ -164,21 +163,47 @@ function DashboardProfile() {
       <ProfileMenusDiv>
         <ProfileMenusHead>Menus / Lists</ProfileMenusHead>
         <ProfileMenusTab>
-          <ProfileMenusTabTex>Food menu</ProfileMenusTabTex>
-          <Button size="small" variation="primary">
-            Edit food menu
+          <ProfileMenusTabTex>Add/Edit Food menu</ProfileMenusTabTex>
+          <Button
+            as={Link}
+            to="/update-cuisine?type=food-menu"
+            size="small"
+            variation="primary"
+          >
+            Click here
           </Button>
         </ProfileMenusTab>
         <ProfileMenusTab>
-          <ProfileMenusTabTex>Venue</ProfileMenusTabTex>
-          <Button size="small" variation="primary">
-            Edit Venue
+          <ProfileMenusTabTex>Add/Edit Venue</ProfileMenusTabTex>
+          <Button
+            as={Link}
+            to="/update-cuisine?type=venue"
+            size="small"
+            variation="primary"
+          >
+            Click here
           </Button>
         </ProfileMenusTab>
         <ProfileMenusTab>
-          <ProfileMenusTabTex>Highlights</ProfileMenusTabTex>
-          <Button size="small" variation="primary">
-            Edit Higlights
+          <ProfileMenusTabTex>Edit Reservations</ProfileMenusTabTex>
+          <Button
+            as={Link}
+            to="/update-cuisine?type=reservation"
+            size="small"
+            variation="primary"
+          >
+            Click here
+          </Button>
+        </ProfileMenusTab>
+        <ProfileMenusTab>
+          <ProfileMenusTabTex>Add/Remove Highlights</ProfileMenusTabTex>
+          <Button
+            as={Link}
+            to="/update-cuisine?type=highlights"
+            size="small"
+            variation="primary"
+          >
+            Click here
           </Button>
         </ProfileMenusTab>
       </ProfileMenusDiv>

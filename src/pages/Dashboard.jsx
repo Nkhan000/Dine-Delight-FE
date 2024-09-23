@@ -1,30 +1,14 @@
 /* eslint-disable no-unused-vars */
 import styled, { css } from "styled-components";
 import Button from "../ui/Button";
-import Modal from "../ui/Modal";
-import GradientHighlight from "../ui/GradientHighlight";
-import GradientIcon from "../ui/GradientIcon";
-import {
-  HiCalendar,
-  HiCurrencyDollar,
-  HiHandThumbUp,
-  HiTruck,
-} from "react-icons/hi2";
-import { HiPencilSquare } from "react-icons/hi2";
 
-import GalleryContainer from "../ui/GalleryContainer";
-import DashboardProfile from "../ui/DashboardProfile";
-import Table from "../ui/Table";
-import Filter from "../ui/Filter";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-// import Modal from "../ui/Modal";
-import { HiClipboardCheck } from "react-icons/hi";
+import GradientHighlight from "../ui/GradientHighlight";
+
+import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CuisineOpenForm from "../ui/cuisineOpenForm";
 import { useGetUser } from "../features/authentication/useGetUser";
-import TableItem from "../ui/TableItem";
-import DashboardUserProfile from "../ui/DashboardUserProfile";
-import DashboardBusinessProfile from "../ui/DashboardBusinessProfile";
+import DashboardUserProfile from "../ui/DASHBOARD/DashboardUserProfile";
+import DashboardBusinessProfile from "../ui/DASHBOARD/DashboardBusinessProfile";
 
 const Container = styled.div`
   background-color: var(--color-grey-900);

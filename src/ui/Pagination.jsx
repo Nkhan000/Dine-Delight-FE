@@ -3,11 +3,7 @@
 import { FaArrowLeft } from "react-icons/fa";
 import { FaArrowRight } from "react-icons/fa6";
 import styled, { css } from "styled-components";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCusines } from "../services/apiCuisines";
 import { useSearchParams } from "react-router-dom";
-import { useCuisine } from "../features/cuisines/useCuisines";
-import { useState } from "react";
 
 const StyledPagination = styled.div`
   /* width: 100%; */
@@ -89,16 +85,19 @@ const PaginationButton = styled.button`
 `;
 function Pagination({ isLoading, numberOfPages }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const createAscendingArray = (length) => {
+
+  function createAscendingArray(length) {
     const array = [];
     for (let i = 0; i < length; i++) {
       array.push(i + 1); // Add values starting from 1
     }
     return array;
-  };
+  }
+
   const array = createAscendingArray(numberOfPages);
   const currentPage = +searchParams.get("page");
 
+  // shal remove this function in future
   function getIntoView(id = "hotel-card-container") {
     // const element = document.getElementById("hotel-card-container");
     const element = document.getElementById(id);

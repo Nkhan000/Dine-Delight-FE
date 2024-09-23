@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
-import styled, { css } from "styled-components";
-import GradientHighlight from "./GradientHighlight";
-import { HiAcademicCap, HiLocationMarker } from "react-icons/hi";
-import Button from "./Button";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import styled from "styled-components";
+import GradientHighlight from "../GradientHighlight";
+import { HiLocationMarker } from "react-icons/hi";
+import Button from "../Button";
+import { FaChevronRight } from "react-icons/fa";
 import { useState } from "react";
 
 const Container = styled.div`

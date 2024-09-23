@@ -15,6 +15,7 @@ import ProtectedRoute from "./ui/ProtectedRoute";
 import Notification from "./ui/NotificationWindow";
 import Checkout from "./pages/Checkout";
 import BannerNotification from "./ui/BannerNotification";
+import UpdateCuisine from "./pages/UpdateCuisine";
 {
   /* <GlobalStyles /> */
 }
@@ -42,6 +43,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/update-cuisine"
+                  element={
+                    <ProtectedRoute>
+                      <UpdateCuisine />
                     </ProtectedRoute>
                   }
                 />

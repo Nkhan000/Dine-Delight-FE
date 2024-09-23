@@ -1,25 +1,14 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "./Button";
+import Button from "../Button";
 import DashboardProfile from "./DashboardProfile";
-import Table from "./Table";
-import GradientHighlight from "./GradientHighlight";
-import GradientIcon from "./GradientIcon";
-import {
-  HiCalendar,
-  HiCheck,
-  HiCheckBadge,
-  HiCheckCircle,
-  HiCurrencyDollar,
-  HiTruck,
-} from "react-icons/hi2";
+import Table from "../Table";
+import GradientHighlight from "../GradientHighlight";
+import GradientIcon from "../GradientIcon";
+import { HiCalendar, HiCurrencyDollar, HiTruck } from "react-icons/hi2";
 import { HiClipboardCheck } from "react-icons/hi";
-import { useCusineBs } from "../features/dashboard/useCuisineBs.Js";
-import { FaCheckCircle } from "react-icons/fa";
-import { useState } from "react";
-import Modal from "./Modal";
-import CuisineOpenForm from "./cuisineOpenForm";
+import { useCusineBs } from "../../features/dashboard/useCuisineBs";
 import CuisineOpenUI from "./CuisineOpenUi";
 
 const Container = styled.div`
@@ -203,18 +192,21 @@ function DashboardBusinessProfile({ user, searchParams, setSearchParams }) {
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$32,333</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextSm>
                   This month&apos;s :
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$324444</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextSm>
                   Last month&apos;s :
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$324444</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextBg>Profit :</InsightTabContentTextBg>
                 <InsightTabContentTextBg> + $0</InsightTabContentTextBg>
@@ -236,18 +228,21 @@ function DashboardBusinessProfile({ user, searchParams, setSearchParams }) {
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$32,333</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextSm>
                   This month&apos;s :
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$324444</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextSm>
                   Last month&apos;s :
                 </InsightTabContentTextSm>
                 <InsightTabContentTextBg>$324444</InsightTabContentTextBg>
               </InsightTabContentTextContainer>
+
               <InsightTabContentTextContainer>
                 <InsightTabContentTextBg>Profit :</InsightTabContentTextBg>
                 <InsightTabContentTextBg> + $0</InsightTabContentTextBg>

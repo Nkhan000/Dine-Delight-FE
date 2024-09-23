@@ -89,8 +89,16 @@ const ReservationNoteDiv = styled.div`
   }
 `;
 const StatusContainer = styled.div`
-  align-self: flex-end;
-  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* justify-content: flex-end; */
+`;
+
+const IndexSpan = styled.span`
+  font-weight: 600;
+  font-size: 3.4rem;
+  color: var(--color-grey-800);
 `;
 
 function OngoingVenueBooking() {
@@ -100,92 +108,169 @@ function OngoingVenueBooking() {
   }
 
   // console.log("bookedVenue", bookedVenue);
-  if (bookedVenue.length == 0) {
+  if (!isLoading && bookedVenue.length == 0) {
     return <ItemRemarks>No bookings to show</ItemRemarks>;
   }
+
+  return bookedVenue.map((bookedItem, itemIdx) => {
+    const {
+      bookedOnDate,
+      cuisineId,
+      userId,
+      name,
+      otpCode,
+      aprPartySize,
+      hasPaid,
+      status,
+      _id,
+      totalPrice,
+    } = bookedItem;
+
+    return (
+      <>
+        <HeadContainer>
+          <StatusContainer>
+            <StyledTag type={status}>{status}</StyledTag>
+          </StatusContainer>
+          <OngoingOrderCusineDiv>
+            <OngoingOrderCusineLogoDiv>
+              <LogoImg src="./img/hotel-001.jpg" />
+            </OngoingOrderCusineLogoDiv>
+            <HeadTextContainer>
+              <Heading as="h2" color="light">
+                The BEAR Bar
+              </Heading>
+              <Heading as="h5" color="light">
+                Kathmandu, nepal
+              </Heading>
+            </HeadTextContainer>
+          </OngoingOrderCusineDiv>
+        </HeadContainer>
+
+        <ReservationDetailDiv>
+          <ReservationDetailTextDiv>
+            <GradientHighlight>
+              <StyleGradientdSpan>
+                You have a Venue Booking on
+              </StyleGradientdSpan>
+            </GradientHighlight>
+            <Heading as="h4" color="light">
+              {/* {`${formatedDate}`} */}
+
+              {/* 2024/03/05 (7:30 p.m) */}
+            </Heading>
+          </ReservationDetailTextDiv>
+
+          <ReservationDetails>
+            <GradientHighlight>
+              <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
+            </GradientHighlight>
+
+            <DetailTextDiv>
+              <DetailText>ID : {_id}</DetailText>
+              <DetailText>Booked For : {userId.name.toUpperCase()}</DetailText>
+              <DetailText>Venue Name : {name}</DetailText>
+              <DetailText>Cuisine Name: {cuisineId?.name}</DetailText>
+              <DetailText>Paid : {`${hasPaid}`}</DetailText>
+              <DetailText>Price : {`$${(+totalPrice).toFixed(2)}`}</DetailText>
+              <DetailText>O.T.P : {`${otpCode}`}</DetailText>
+              <DetailText>
+                Party size: {aprPartySize} people (expected)
+              </DetailText>
+            </DetailTextDiv>
+          </ReservationDetails>
+        </ReservationDetailDiv>
+        <ReservationNoteDiv>
+          <span>
+            Customer are requested to arrive atleast 10 mins before the reserved
+            time
+          </span>
+        </ReservationNoteDiv>
+      </>
+    );
+  });
   // console.log(bookedVenue);
-  const {
-    bookedOnDate,
-    cuisineId,
-    userId,
-    name,
-    otpCode,
-    aprPartySize,
-    hasPaid,
-    status,
-    _id,
-    totalPrice,
-  } = bookedVenue;
+  // const {
+  //   bookedOnDate,
+  //   cuisineId,
+  //   userId,
+  //   name,
+  //   otpCode,
+  //   aprPartySize,
+  //   hasPaid,
+  //   status,
+  //   _id,
+  //   totalPrice,
+  // } = bookedVenue;
 
-  if (!bookedOnDate) {
-    return <DetailText>Nothing to show</DetailText>;
-  }
+  // console.log(bookedVenue)
 
-  const newDate = new Date(bookedOnDate);
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formatedDate = new Intl.DateTimeFormat("en-US", options).format(
-    newDate
-  );
-  return (
-    <>
-      <HeadContainer>
-        <StatusContainer>
-          <StyledTag type={status}>{status}</StyledTag>
-        </StatusContainer>
-        <OngoingOrderCusineDiv>
-          <OngoingOrderCusineLogoDiv>
-            <LogoImg src="./img/hotel-001.jpg" />
-          </OngoingOrderCusineLogoDiv>
-          <HeadTextContainer>
-            <Heading as="h2" color="light">
-              The BEAR Bar
-            </Heading>
-            <Heading as="h5" color="light">
-              Kathmandu, nepal
-            </Heading>
-          </HeadTextContainer>
-        </OngoingOrderCusineDiv>
-      </HeadContainer>
+  // const newDate = new Date(bookedOnDate);
+  // const options = { year: "numeric", month: "long", day: "numeric" };
+  // const formatedDate = new Intl.DateTimeFormat("en-US", options).format(
+  //   newDate
+  // );
 
-      <ReservationDetailDiv>
-        <ReservationDetailTextDiv>
-          <GradientHighlight>
-            <StyleGradientdSpan>You have a Venue Booking on</StyleGradientdSpan>
-          </GradientHighlight>
-          <Heading as="h4" color="light">
-            {`${formatedDate}`}
+  // return (
+  //   <>
+  //     <HeadContainer>
+  //       <StatusContainer>
+  //         <StyledTag type={status}>{status}</StyledTag>
+  //       </StatusContainer>
+  //       <OngoingOrderCusineDiv>
+  //         <OngoingOrderCusineLogoDiv>
+  //           <LogoImg src="./img/hotel-001.jpg" />
+  //         </OngoingOrderCusineLogoDiv>
+  //         <HeadTextContainer>
+  //           <Heading as="h2" color="light">
+  //             The BEAR Bar
+  //           </Heading>
+  //           <Heading as="h5" color="light">
+  //             Kathmandu, nepal
+  //           </Heading>
+  //         </HeadTextContainer>
+  //       </OngoingOrderCusineDiv>
+  //     </HeadContainer>
 
-            {/* 2024/03/05 (7:30 p.m) */}
-          </Heading>
-        </ReservationDetailTextDiv>
+  //     <ReservationDetailDiv>
+  //       <ReservationDetailTextDiv>
+  //         <GradientHighlight>
+  //           <StyleGradientdSpan>You have a Venue Booking on</StyleGradientdSpan>
+  //         </GradientHighlight>
+  //         <Heading as="h4" color="light">
+  //           {`${formatedDate}`}
 
-        <ReservationDetails>
-          <GradientHighlight>
-            <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
-          </GradientHighlight>
+  //           {/* 2024/03/05 (7:30 p.m) */}
+  //         </Heading>
+  //       </ReservationDetailTextDiv>
 
-          <DetailTextDiv>
-            <DetailText>ID : {_id}</DetailText>
-            <DetailText>Booked For : {userId.name.toUpperCase()}</DetailText>
-            <DetailText>Venue Name : {name.toUpperCase()}</DetailText>
-            <DetailText>Cuisine Name: {cuisineId.name}</DetailText>
-            <DetailText>Paid : {`${hasPaid}`}</DetailText>
-            <DetailText>Price : {`${totalPrice}`}</DetailText>
-            <DetailText>O.T.P : {`${otpCode}`}</DetailText>
-            <DetailText>
-              Party size: {aprPartySize} people (expected)
-            </DetailText>
-          </DetailTextDiv>
-        </ReservationDetails>
-      </ReservationDetailDiv>
-      <ReservationNoteDiv>
-        <span>
-          Customer are requested to arrive atleast 10 mins before the reserved
-          time
-        </span>
-      </ReservationNoteDiv>
-    </>
-  );
+  //       <ReservationDetails>
+  //         <GradientHighlight>
+  //           <StyleGradientdSpan>Booking Details :</StyleGradientdSpan>
+  //         </GradientHighlight>
+
+  //         <DetailTextDiv>
+  //           <DetailText>ID : {_id}</DetailText>
+  //           <DetailText>Booked For : {userId.name.toUpperCase()}</DetailText>
+  //           <DetailText>Venue Name : {name.toUpperCase()}</DetailText>
+  //           <DetailText>Cuisine Name: {cuisineId.name}</DetailText>
+  //           <DetailText>Paid : {`${hasPaid}`}</DetailText>
+  //           <DetailText>Price : {`${totalPrice}`}</DetailText>
+  //           <DetailText>O.T.P : {`${otpCode}`}</DetailText>
+  //           <DetailText>
+  //             Party size: {aprPartySize} people (expected)
+  //           </DetailText>
+  //         </DetailTextDiv>
+  //       </ReservationDetails>
+  //     </ReservationDetailDiv>
+  //     <ReservationNoteDiv>
+  //       <span>
+  //         Customer are requested to arrive atleast 10 mins before the reserved
+  //         time
+  //       </span>
+  //     </ReservationNoteDiv>
+  //   </>
+  // );
 }
 
 export default OngoingVenueBooking;

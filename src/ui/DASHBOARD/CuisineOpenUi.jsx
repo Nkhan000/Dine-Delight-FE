@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { FaCheckCircle } from "react-icons/fa";
-import Button from "./Button";
-import GradientIcon from "./GradientIcon";
-import Modal from "./Modal";
+import Button from "../Button";
+import GradientIcon from "../GradientIcon";
+import Modal from "../Modal";
 import CuisineOpenForm from "./cuisineOpenForm";
 import styled from "styled-components";
-import GradientHighlight from "./GradientHighlight";
+import GradientHighlight from "../GradientHighlight";
 import { useState } from "react";
 const OnStartUpCusine = styled.div`
   width: 100%;

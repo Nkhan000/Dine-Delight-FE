@@ -8,5 +8,5 @@ export function useGetAllOrders() {
     queryFn: apiGetAllOrders,
   });
 
-  return { allOrders: data?.totalOrdersArr, isLoading, error };
+  return { allOrders: data, isLoading, error };
 }

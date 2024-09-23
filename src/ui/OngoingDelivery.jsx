@@ -111,6 +111,7 @@ const CuisineDiv = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding: 0 1rem;
 `;
 
 const SingleCusineContainer = styled.div`
@@ -120,8 +121,15 @@ const SingleCusineContainer = styled.div`
 `;
 
 const StatusContainer = styled.div`
-  align-self: flex-end;
-  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const IndexSpan = styled.span`
+  font-weight: 600;
+  font-size: 3.4rem;
+  color: var(--color-grey-800);
 `;
 
 function OngoingDelivery({ size }) {
@@ -139,9 +147,10 @@ function OngoingDelivery({ size }) {
     <Container>
       <>
         <CuisineDiv>
-          {deliveryData.map((order, oId) => (
-            <SingleCusineContainer key={`${order.cuisineId}${oId}`}>
+          {deliveryData.map((order, oIdx) => (
+            <SingleCusineContainer key={`${order.cuisineId}${oIdx}`}>
               <StatusContainer>
+                <IndexSpan>0{oIdx + 1}</IndexSpan>
                 <StyledTag type={order.status}>{order.status}</StyledTag>
               </StatusContainer>
               <OngoingOrderCusineDiv size={size}>

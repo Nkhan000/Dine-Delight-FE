@@ -90,7 +90,15 @@ const ReservationNoteDiv = styled.div`
 
 const StatusContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  /* justify-content: flex-end; */
+`;
+
+const IndexSpan = styled.span`
+  font-weight: 600;
+  font-size: 3.4rem;
+  color: var(--color-grey-800);
 `;
 
 function OngoingReservation() {
@@ -105,10 +113,11 @@ function OngoingReservation() {
     return <ItemRemarks>No ongoing reservations to show</ItemRemarks>;
   }
   {
-    return reservationData.map((item) => (
+    return reservationData.map((item, itemIdx) => (
       <>
         <HeadContainer>
           <StatusContainer>
+            <IndexSpan>0{itemIdx + 1}</IndexSpan>
             <StyledTag type={item.status}>{item.status}</StyledTag>
           </StatusContainer>
           <OngoingOrderCusineDiv>

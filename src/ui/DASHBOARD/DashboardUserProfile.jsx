@@ -1,12 +1,16 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import styled, { css } from "styled-components";
-import Button from "./Button";
-import TableItem from "./TableItem";
-import Heading from "./Heading";
-import OngoingVenueBooking from "./OngoingVenueBooking";
-import OngoingDelivery from "./OngoingDelivery";
-import OngoingReservation from "./RESERVATION/OngoingReservation";
+import Button from "../Button";
+import TableItem from "../TableItem";
+import Heading from "../Heading";
+import OngoingVenueBooking from "../OngoingVenueBooking";
+import OngoingDelivery from "../OngoingDelivery";
+import OngoingReservation from "../RESERVATION/OngoingReservation";
+import { useGetAllOrders } from "../../features/user/useGetAllOrders";
+import Spinner from "../Spinner";
+import DashboardLastSevenDaysList from "./DasboardLastSevenDaysList";
+import DashboardOnGoingOrders from "./DashboardOnGoingOrders";
 
 // USER PROFILE DIV
 const UserProfileContainer = styled.div`
@@ -80,7 +84,7 @@ const DetailDivTextBg = styled.p`
 `;
 
 const SummaryContainer = styled.div`
-  //
+  /* height: auto; */
 `;
 const SummaryTabContainer = styled.div`
   display: flex;
@@ -137,10 +141,11 @@ const SummaryTabSpanBg = styled.span`
 
 const SummaryListContainer = styled.div`
   padding: 1rem;
-  padding-top: 4rem;
+  padding-top: 0;
+  /* padding-top: 4rem; */
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 `;
 
 const HeadTextGrey = styled.div`
@@ -204,12 +209,17 @@ const ButtonDiv = styled.div`
 `;
 
 function DashboardUserProfile({ user, searchParams, setSearchParams }) {
+  const { allOrders, isLoading } = useGetAllOrders();
+
   function handleClick(e) {
     const elementValue = e.target.getAttribute("value");
     searchParams.set("userPanel", elementValue);
     setSearchParams(searchParams);
   }
 
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <>
       <ButtonDiv>
@@ -254,45 +264,7 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
       <UserProfileContainer>
         {searchParams.get("userPanel") === "profile" && (
           <UserProfileContainerUpper>
-            <SummaryContainer>
-              <SummaryTabContainer>
-                <SummaryTabContainerSm>
-                  <SummaryTabDiv type="delivery">
-                    <SummaryTabSpanBg>23</SummaryTabSpanBg>{" "}
-                    <SummaryTabSpanSm>Orders</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                  <SummaryTabDiv type="delivery">
-                    <SummaryTabSpanBg>$230</SummaryTabSpanBg>
-                    <SummaryTabSpanSm>Highest Paid</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                </SummaryTabContainerSm>
-                <SummaryTabContainerSm>
-                  <SummaryTabDiv type="reservation">
-                    <SummaryTabSpanBg>23</SummaryTabSpanBg>{" "}
-                    <SummaryTabSpanSm>Reservations</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                  <SummaryTabDiv type="reservation">
-                    <SummaryTabSpanBg>$230</SummaryTabSpanBg>
-                    <SummaryTabSpanSm>Highest Paid</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                </SummaryTabContainerSm>
-                <SummaryTabContainerSm>
-                  <SummaryTabDiv type="venue">
-                    <SummaryTabSpanBg>23</SummaryTabSpanBg>{" "}
-                    <SummaryTabSpanSm>Bookings</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                  <SummaryTabDiv type="venue">
-                    <SummaryTabSpanBg>$230</SummaryTabSpanBg>{" "}
-                    <SummaryTabSpanSm>Highest Paid</SummaryTabSpanSm>
-                  </SummaryTabDiv>
-                </SummaryTabContainerSm>
-              </SummaryTabContainer>
-
-              <SummaryListContainer>
-                <HeadTextGrey>From last 7 days</HeadTextGrey>
-                <TableItem tableType={"lastSevenDaysList"} />
-              </SummaryListContainer>
-            </SummaryContainer>
+            <DashboardLastSevenDaysList allOrders={allOrders} />
             <UserProfileContainerFlex>
               <ProfileUserDetails>
                 <ProfileImgDiv>
@@ -328,45 +300,12 @@ function DashboardUserProfile({ user, searchParams, setSearchParams }) {
         )}
         {searchParams.get("userPanel") === "ongoingOrders" && (
           <UserProfileContainerLower>
-            <HeadTextGrey>Ongoing orders</HeadTextGrey>
-            <OngoingOrderContainer>
-              <OngoingOrderDiv>
-                <OngoingOrderHead type="delivery">
-                  <Heading as="h3" color="light">
-                    Delivery
-                  </Heading>
-                </OngoingOrderHead>
-                <OngoingDelivery
-                // deliveryData={!isLoading && deliveryData.data}
-                // isLoading={isLoading}
-                />
-              </OngoingOrderDiv>
-
-              <OngoingOrderDiv>
-                <OngoingOrderHead type="reservation">
-                  <Heading as="h3" color="light">
-                    Reservation
-                  </Heading>
-                </OngoingOrderHead>
-                <OngoingReservation />
-                {/* <Venue /> */}
-              </OngoingOrderDiv>
-              <OngoingOrderDiv>
-                <OngoingOrderHead type="venue">
-                  <Heading as="h3" color="light">
-                    Venue
-                  </Heading>
-                </OngoingOrderHead>
-                <OngoingVenueBooking
-                  type="venue"
-                  // data={!isLoading && bookedVenue.bookedVenue}
-                />
-
-                {/* <NoOrderDiv>
-                  <span>No items to show</span>
-                </NoOrderDiv> */}
-              </OngoingOrderDiv>
-            </OngoingOrderContainer>
+            <DashboardOnGoingOrders />
+          </UserProfileContainerLower>
+        )}
+        {searchParams.get("userPanel") === "userSettings" && (
+          <UserProfileContainerLower>
+            {/* settings ui is to be made later */}
           </UserProfileContainerLower>
         )}
       </UserProfileContainer>

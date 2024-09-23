@@ -5,6 +5,8 @@ import StyledTag from "./StyledTag";
 import Pagination from "./Pagination";
 import { useGetAllOrders } from "../features/user/useGetAllOrders";
 import Spinner from "./Spinner";
+import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const TableItemDiv = styled.div`
   padding: 1rem 0rem;
@@ -63,10 +65,8 @@ const TableItemContent = styled.div`
   & span,
   div {
     display: flex;
-    /* font-weight: 600; */
     color: var(--color-grey-300);
     justify-content: center;
-    /* border-bottom: 1px solid; */
   }
 `;
 
@@ -97,8 +97,25 @@ const RemarksSpan = styled.span`
     display: block;
   }
 `;
-function TableItem({ tableType }) {
-  const { allOrders, isLoading } = useGetAllOrders();
+function TableItem({ tableType, allOrders, isLoading }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!searchParams.get("page")) {
+      searchParams.set("page", 1);
+      setSearchParams(searchParams);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  const currentPageNumber = searchParams.get("page");
+  const skipValue = 5;
+  const totalNumberOfPages = Math.ceil(allOrders.length / skipValue);
+
   console.log(allOrders);
   return (
     <TableItemDiv>
@@ -130,25 +147,32 @@ function TableItem({ tableType }) {
           {isLoading && <Spinner />}
           {!isLoading && tableType == "lastSevenDaysList" && (
             <>
-              {allOrders.map((orderItem, oIdx) => (
-                <TableItemContent
-                  key={`${orderItem.type}${oIdx}`}
-                  tableType={tableType}
-                >
-                  <span>0{oIdx + 1}</span>
-                  <span>{orderItem.cuisineId.name}</span>
-                  <span>
-                    {new Date(
-                      orderItem.reservationDate || orderItem.deliveryDate
-                    ).toLocaleDateString()}
-                  </span>
-                  <StyledTag type={orderItem.type}>{orderItem.type}</StyledTag>
-                  <span>${orderItem.total.toFixed(2)}</span>
-                  <RemarksSpan remarks={orderItem.remarks}>
-                    Hover to see remarks
-                  </RemarksSpan>
-                </TableItemContent>
-              ))}
+              {allOrders
+                .slice(
+                  (currentPageNumber - 1) * skipValue,
+                  currentPageNumber * skipValue
+                )
+                .map((orderItem, oIdx) => (
+                  <TableItemContent
+                    key={`${orderItem.type}${oIdx}`}
+                    tableType={tableType}
+                  >
+                    <span>0{oIdx + 1}</span>
+                    <span>{orderItem.cuisineId.name}</span>
+                    <span>
+                      {new Date(
+                        orderItem.reservationDate || orderItem.deliveryDate
+                      ).toLocaleDateString()}
+                    </span>
+                    <StyledTag type={orderItem.type}>
+                      {orderItem.type}
+                    </StyledTag>
+                    <span>${orderItem.total.toFixed(2)}</span>
+                    <RemarksSpan remarks={orderItem.remarks}>
+                      Hover to see remarks
+                    </RemarksSpan>
+                  </TableItemContent>
+                ))}
             </>
           )}
           {tableType == "reservationListForBusiness" && (
@@ -216,6 +240,11 @@ function TableItem({ tableType }) {
       {tableType == "reservationListForBusiness" && (
         <PaginationDiv>
           <Pagination numberOfPages={4} />
+        </PaginationDiv>
+      )}
+      {tableType == "lastSevenDaysList" && (
+        <PaginationDiv>
+          <Pagination numberOfPages={totalNumberOfPages} />
         </PaginationDiv>
       )}
     </TableItemDiv>
