@@ -185,9 +185,9 @@ function FoodMenuItem({
     reservation: storeReservationObj,
   } = useSelector((store) => store);
 
-  const storeCart = storeCartObj.cart;
-  const storeVenue = storeVenueObj.venue;
-  const storeReservation = storeReservationObj.reservation;
+  const storeCart = storeCartObj?.cart;
+  const storeVenue = storeVenueObj?.venue;
+  const storeReservation = storeReservationObj?.reservation;
 
   useEffect(() => {
     dispatch(

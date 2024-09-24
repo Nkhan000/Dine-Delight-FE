@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "../Button";
+import Button from "../../Button";
 
 import { HiPencilSquare } from "react-icons/hi2";
 import { Link } from "react-router-dom";

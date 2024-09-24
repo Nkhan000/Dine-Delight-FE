@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Button from "../ui/Button";
 
 import GradientHighlight from "../ui/GradientHighlight";
@@ -7,8 +7,8 @@ import GradientHighlight from "../ui/GradientHighlight";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGetUser } from "../features/authentication/useGetUser";
-import DashboardUserProfile from "../ui/DASHBOARD/DashboardUserProfile";
-import DashboardBusinessProfile from "../ui/DASHBOARD/DashboardBusinessProfile";
+import DashboardUserProfile from "../ui/DASHBOARD/User/DashboardUserProfile";
+import DashboardBusinessProfile from "../ui/DASHBOARD/BUSINESS/DashboardBusinessProfile";
 
 const Container = styled.div`
   background-color: var(--color-grey-900);

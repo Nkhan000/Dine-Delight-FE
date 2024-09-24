@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import GradientHighlight from "../GradientHighlight";
+import GradientHighlight from "../../GradientHighlight";
 import { HiLocationMarker } from "react-icons/hi";
-import Button from "../Button";
+import Button from "../../Button";
 import { FaChevronRight } from "react-icons/fa";
 import { useState } from "react";
 

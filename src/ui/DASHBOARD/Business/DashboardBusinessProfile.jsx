@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Button from "../Button";
-import DashboardProfile from "./DashboardProfile";
-import Table from "../Table";
-import GradientHighlight from "../GradientHighlight";
-import GradientIcon from "../GradientIcon";
+import Button from "../../Button";
+import Table from "../../Table";
+import GradientHighlight from "../../GradientHighlight";
+import GradientIcon from "../../GradientIcon";
 import { HiCalendar, HiCurrencyDollar, HiTruck } from "react-icons/hi2";
 import { HiClipboardCheck } from "react-icons/hi";
-import { useCusineBs } from "../../features/dashboard/useCuisineBs";
-import CuisineOpenUI from "./CuisineOpenUi";
+import { useCusineBs } from "../../../features/dashboard/useCuisineBs";
+import CuisineOpenUI from "../User/CuisineOpenUi";
+import Spinner from "../../Spinner";
+import DashboardProfile from "./DashboardProfile";
 
 const Container = styled.div`
   background-color: var(--color-grey-900);
@@ -127,14 +128,33 @@ const BusinessProfileContainer = styled.div``;
 function DashboardBusinessProfile({ user, searchParams, setSearchParams }) {
   const { cuisineData, loadingCuisineData, error } = useCusineBs();
 
-  console.log(cuisineData);
-  function handleClick(e) {
-    const elemenetValue = e.target.getAttribute("value");
-    searchParams.set("tableFor", elemenetValue);
-    setSearchParams(searchParams);
+  if (loadingCuisineData) {
+    return <Spinner />;
+  }
+
+  function handleChangeParam(e) {
+    const elemValue = e.target.getAttribute("value");
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("tableFor", elemValue);
+    setSearchParams(newParams);
   }
 
   if (!user.hasCuisine) return <CuisineOpenUI />;
+
+  const HeadBtns = (val, label) => {
+    return (
+      <Button
+        value={val}
+        variation={
+          searchParams.get("tableFor") === val ? "primary" : "secondary"
+        }
+        size="medium"
+        onClick={handleChangeParam}
+      >
+        {label}
+      </Button>
+    );
+  };
 
   return (
     <BusinessProfileContainer>
@@ -286,50 +306,10 @@ function DashboardBusinessProfile({ user, searchParams, setSearchParams }) {
       </InsightsDiv>
 
       <DashboardHeadMenu id="dashboard-bottom-container">
-        <Button
-          value="profile"
-          size="medium"
-          variation={
-            searchParams.get("tableFor") === "profile" ? "primary" : "secondary"
-          }
-          onClick={handleClick}
-        >
-          Profile
-        </Button>
-        <Button
-          value="reservation"
-          size="medium"
-          variation={
-            searchParams.get("tableFor") === "reservation"
-              ? "primary"
-              : "secondary"
-          }
-          onClick={handleClick}
-        >
-          Reservations
-        </Button>
-        <Button
-          value="deliveries"
-          size="medium"
-          variation={
-            searchParams.get("tableFor") === "deliveries"
-              ? "primary"
-              : "secondary"
-          }
-          onClick={handleClick}
-        >
-          Deliveries
-        </Button>
-        <Button
-          value="venue"
-          size="medium"
-          variation={
-            searchParams.get("tableFor") === "venue" ? "primary" : "secondary"
-          }
-          onClick={handleClick}
-        >
-          Bookings
-        </Button>
+        {HeadBtns("profile", "Profile")}
+        {HeadBtns("reservations", "Reservations")}
+        {HeadBtns("deliveries", "Deliveries")}
+        {HeadBtns("venues", "Venue Bookings")}
       </DashboardHeadMenu>
 
       <BottomContainer>

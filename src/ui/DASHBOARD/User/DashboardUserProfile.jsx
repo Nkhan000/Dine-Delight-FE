@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import styled, { css } from "styled-components";
-import Button from "../Button";
-import TableItem from "../TableItem";
-import Heading from "../Heading";
-import OngoingVenueBooking from "../OngoingVenueBooking";
-import OngoingDelivery from "../OngoingDelivery";
-import OngoingReservation from "../RESERVATION/OngoingReservation";
-import { useGetAllOrders } from "../../features/user/useGetAllOrders";
-import Spinner from "../Spinner";
+import Button from "../../Button";
+import TableItem from "../../TableItem";
+import Heading from "../../Heading";
+import OngoingVenueBooking from "../../OngoingVenueBooking";
+import OngoingDelivery from "../../OngoingDelivery";
+import OngoingReservation from "../../RESERVATION/OngoingReservation";
+import { useGetAllOrders } from "../../../features/user/useGetAllOrders";
+import Spinner from "../../Spinner";
 import DashboardLastSevenDaysList from "./DasboardLastSevenDaysList";
 import DashboardOnGoingOrders from "./DashboardOnGoingOrders";
 

@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import styled, { css } from "styled-components";
-import Heading from "../Heading";
-import OngoingVenueBooking from "../OngoingVenueBooking";
-import OngoingDelivery from "../OngoingDelivery";
-import OngoingReservation from "../RESERVATION/OngoingReservation";
+import Heading from "../../Heading";
+import OngoingVenueBooking from "../../OngoingVenueBooking";
+import OngoingDelivery from "../../OngoingDelivery";
+import OngoingReservation from "../../RESERVATION/OngoingReservation";
 
 const HeadTextGrey = styled.div`
   font-size: 3.5rem;
