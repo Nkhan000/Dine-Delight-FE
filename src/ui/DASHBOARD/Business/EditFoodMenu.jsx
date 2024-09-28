@@ -13,11 +13,7 @@ const Container = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  /* justify-items: stretch; */
-  /* align-items: stretch; */
-  /* align-items: ;
-  gap: 2rem; */
+
   gap: 2rem;
 `;
 
@@ -123,29 +119,7 @@ const BtnsDiv = styled.div`
   gap: 1rem;
   margin-left: 1rem;
 `;
-const RadioDiv = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 
-  & input {
-    display: none;
-  }
-  & input:checked + div::after {
-    display: block;
-  }
-
-  & input:checked ~ label {
-    color: var(--color-grey-300);
-  }
-`;
-
-const StyledRadioDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 1rem 0rem;
-`;
 const AddNewBtnDiv = styled.div`
   margin-top: auto;
 
@@ -192,7 +166,7 @@ function EditFoodMenu() {
             <FoodItemTextDiv>
               <FoodItemName>
                 <FoodItemTextBg>{item.name}</FoodItemTextBg>
-                <StyledTag type="veg">veg</StyledTag>
+                <StyledTag type={item.type}>{item.type}</StyledTag>
               </FoodItemName>
               <FoodItemPriceSizeDiv>
                 <FoodItemTextSm>

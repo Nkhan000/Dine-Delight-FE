@@ -14,3 +14,17 @@ export async function apiGetAllFoodItems() {
     throw err;
   }
 }
+
+export async function apiAddANewFoodItem(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/update-menu-items`;
+
+  try {
+    const response = await axios.post(requestUrl, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(response.data);
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+}

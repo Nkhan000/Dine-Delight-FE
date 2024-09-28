@@ -26,6 +26,7 @@ const EditMenuDiv = styled.div`
   height: 80vh;
   border: 1px solid var(--color-grey-800);
   border-radius: 3rem;
+  overflow-y: scroll;
 `;
 
 function UpdateCuisine() {

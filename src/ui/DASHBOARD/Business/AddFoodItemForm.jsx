@@ -1,8 +1,11 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "../../Heading";
-import StyledRadioBtn from "../../StyledRadioBtn";
 import Button from "../../Button";
+import { useForm } from "react-hook-form";
+import StyledOptionsDiv from "../../StyledOptionsTwo";
+import { useState } from "react";
+import useAddNewFoodItem from "../../../hooks/useAddNewFoodItem";
 
 const Container = styled.div`
   width: 55vw;
@@ -11,8 +14,6 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  /* align-items: center; */
   gap: 2rem;
 `;
 const FormHeadDiv = styled.div`
@@ -61,13 +62,26 @@ const FormInput = styled.input`
   }
 `;
 
-const RadioDiv = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-`;
-
 function AddFoodItemForm() {
+  const [selectedOption, setSelectedOption] = useState("veg");
+  const { register, handleSubmit } = useForm();
+  const { mutate, isPending } = useAddNewFoodItem();
+
+  function onSubmit(data) {
+    const { prices } = data;
+    let pricesObj = prices.split(",");
+    pricesObj = pricesObj.reduce((acc, curr) => {
+      const [key, value] = curr.split(":").map((item) => item.trim());
+      acc[key] = Number(value);
+      return acc;
+    }, {});
+    data.prices = pricesObj;
+    // will delete later when handeling file uploads
+    data.image = "food-002.jpg";
+    data.quantityPerServing = "10pcs";
+    // console.log(data);
+    mutate(data);
+  }
   return (
     <Container>
       <FormHeadDiv>
@@ -76,7 +90,7 @@ function AddFoodItemForm() {
         </Heading>
       </FormHeadDiv>
 
-      <FormDiv>
+      <FormDiv onSubmit={handleSubmit(onSubmit)}>
         <FormInputDiv>
           <FormLabel htmlFor="name">Name : </FormLabel>
           <FormInput
@@ -84,6 +98,7 @@ function AddFoodItemForm() {
             type="text"
             required
             placeholder="chicken steam momo"
+            {...register("name")}
           />
         </FormInputDiv>
 
@@ -93,40 +108,56 @@ function AddFoodItemForm() {
             id="category"
             type="text"
             placeholder="noodles, momo . . ."
+            {...register("category")}
             required
           />
         </FormInputDiv>
         <FormInputDiv>
-          <FormLabel htmlFor="category">Price : </FormLabel>
+          <FormLabel htmlFor="mainIngredients">Main Ingredients : </FormLabel>
           <FormInput
-            id="category"
+            id="mainIngredients"
+            type="text"
+            placeholder="onions, carrots, ... (seperete with a comma)"
+            {...register("mainIngredients")}
+            required
+          />
+        </FormInputDiv>
+        <FormInputDiv>
+          <FormLabel htmlFor="prices">Price : </FormLabel>
+          <FormInput
+            id="prices"
             type="text"
             placeholder="eg: {small : 30, medium : 50} (seperated them with a comma)"
+            {...register("prices")}
             required
           />
         </FormInputDiv>
 
         <FormInputRadiosDiv>
-          <FormLabel>Type :</FormLabel>
-          <RadioDiv>
-            <StyledRadioBtn name="type" labelId="veg">
-              Veg
-            </StyledRadioBtn>
-            <StyledRadioBtn name="type" labelId="non-veg">
-              Non-veg
-            </StyledRadioBtn>
-          </RadioDiv>
+          <StyledOptionsDiv>
+            <label>
+              <FormLabel>Type</FormLabel>
+            </label>
+            <select
+              name="type"
+              onChange={(e) => setSelectedOption(e.target.value)}
+              {...register("type")}
+            >
+              <option value="veg">Veg</option>
+              <option value="non-veg">Non-veg</option>
+            </select>
+          </StyledOptionsDiv>
         </FormInputRadiosDiv>
 
         <FormInputDiv>
           <FormLabel>Image :</FormLabel>
-          <FormInput type="file" required />
+          <FormInput type="file" {...register("image")} />
         </FormInputDiv>
-      </FormDiv>
 
-      <Button size="medium" variation="primary" type="submit">
-        Submit
-      </Button>
+        <Button size="medium" variation="primary" type="submit">
+          Submit
+        </Button>
+      </FormDiv>
     </Container>
   );
 }
