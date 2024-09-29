@@ -7,6 +7,8 @@ import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
 import Spinner from "../../Spinner";
 import Modal from "../../Modal";
 import AddFoodItemForm from "./AddFoodItemForm";
+import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
+import EditMenuBtn from "./EditMenuBtn";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -38,22 +40,18 @@ const HeadOptionsDiv = styled.div`
 `;
 
 const FoodItemsDiv = styled.div`
-  /* height: 100%; */
-  /* justify-self: flex-end; */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr;
   grid-row-gap: 1.4rem;
-
-  /* justify-content: flex-start;
-  justify-self: flex-start; */
+  column-gap: 5rem;
 `;
 
 const FoodItem = styled.div`
   display: flex;
-  align-items: center;
-  gap: 1.4rem;
-  width: fit-content;
+  flex-direction: column;
+  gap: 2rem;
+
   padding: 1.2rem 0.5rem;
   border-bottom: 2px solid var(--color-grey-800);
   border-radius: 1rem;
@@ -63,17 +61,27 @@ const FoodItem = styled.div`
   }
 `;
 
+const ImageAndNameDiv = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const PriceAndBtnDiv = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const FoodItemNum = styled.span`
   span {
-    font-size: 4.5rem;
+    font-size: 3rem;
     font-weight: 600;
     color: var(--color-grey-800);
   }
 `;
 
 const FoodItemImgDiv = styled.div`
-  height: 8rem;
-  width: 8rem;
+  height: 6rem;
+  width: 6rem;
   border-radius: 1rem;
   overflow: hidden;
 
@@ -89,11 +97,18 @@ const FoodItemTextDiv = styled.div`
   flex-direction: column;
   gap: 0.8rem;
 `;
+const FoodItemTextDiv2 = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  width: 80%;
+`;
 
 const FoodItemName = styled.div`
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.2rem;
 `;
 
 const FoodItemPriceSizeDiv = styled.div`
@@ -105,19 +120,13 @@ const FoodItemPriceSizeDiv = styled.div`
 const FoodItemTextSm = styled.span`
   font-weight: 600;
   color: var(--color-grey-200);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
+  text-transform: capitalize;
 `;
 const FoodItemTextBg = styled.span`
   font-weight: 600;
   color: var(--color-grey-200);
-  font-size: 2.5rem;
-`;
-
-const BtnsDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-left: 1rem;
+  font-size: 2rem;
 `;
 
 const AddNewBtnDiv = styled.div`
@@ -129,12 +138,19 @@ const AddNewBtnDiv = styled.div`
 
 function EditFoodMenu() {
   const { foodItems, isLoading } = useGetFoodMenu();
+  const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  console.log(foodItems);
+  function handleDeleteFoodItem(id) {
+    const reqObj = {
+      itemId: id,
+    };
+    console.log(reqObj);
+    removeFoodItem(reqObj);
+  }
 
   return (
     <Container>
@@ -155,40 +171,57 @@ function EditFoodMenu() {
       </HeadDiv>
 
       <FoodItemsDiv>
+        {foodItems.length === 0 && (
+          <FoodItemNum>No food Items To Show</FoodItemNum>
+        )}
         {foodItems.map((item, ind) => (
           <FoodItem key={item._id}>
-            <FoodItemNum>
-              <span>0{ind + 1}</span>
-            </FoodItemNum>
-            <FoodItemImgDiv>
-              <img src="./img/food-001.jpg" alt="food-item" />
-            </FoodItemImgDiv>
-            <FoodItemTextDiv>
-              <FoodItemName>
-                <FoodItemTextBg>{item.name}</FoodItemTextBg>
+            <ImageAndNameDiv>
+              <FoodItemNum>
+                <span>0{ind + 1}</span>
+              </FoodItemNum>
+              <FoodItemImgDiv>
+                <img src={`./img/${item.image}`} alt="food-item" />
+              </FoodItemImgDiv>
+              <FoodItemTextDiv>
+                <FoodItemName>
+                  <FoodItemTextBg>{item.name}</FoodItemTextBg>
+                </FoodItemName>
                 <StyledTag type={item.type}>{item.type}</StyledTag>
-              </FoodItemName>
-              <FoodItemPriceSizeDiv>
-                <FoodItemTextSm>
-                  Prices :-{" "}
-                  {Object.entries(item.prices).map(([size, price]) => (
-                    <FoodItemTextSm key={size}>
-                      {size} : ${price}
-                      <FoodItemTextSm>, </FoodItemTextSm>
-                    </FoodItemTextSm>
-                  ))}
-                </FoodItemTextSm>
-              </FoodItemPriceSizeDiv>
-            </FoodItemTextDiv>
+              </FoodItemTextDiv>
+            </ImageAndNameDiv>
 
-            <BtnsDiv>
-              <Button size="small" variation="primary">
-                Edit
-              </Button>
-              <Button size="small" variation="secondary">
-                Delete
-              </Button>
-            </BtnsDiv>
+            <PriceAndBtnDiv>
+              <FoodItemTextDiv2>
+                <FoodItemPriceSizeDiv>
+                  <FoodItemTextSm>
+                    Prices :-{" "}
+                    {Object.entries(item.prices).map(([size, price]) => (
+                      <FoodItemTextSm key={size}>
+                        {size} : ${price}
+                        {", "}
+                      </FoodItemTextSm>
+                    ))}
+                  </FoodItemTextSm>
+                </FoodItemPriceSizeDiv>
+                <FoodItemPriceSizeDiv>
+                  <FoodItemTextSm>
+                    Main Ingredients :-{" "}
+                    {item.mainIngredients.map((item, idx) => (
+                      <FoodItemTextSm key={`${item}-${idx}`}>
+                        {item}
+                        {", "}
+                      </FoodItemTextSm>
+                    ))}{" "}
+                  </FoodItemTextSm>
+                </FoodItemPriceSizeDiv>
+              </FoodItemTextDiv2>
+
+              <EditMenuBtn
+                itemId={item._id}
+                handleDeleteFoodItem={handleDeleteFoodItem}
+              />
+            </PriceAndBtnDiv>
           </FoodItem>
         ))}
       </FoodItemsDiv>

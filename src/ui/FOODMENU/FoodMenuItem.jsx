@@ -230,6 +230,7 @@ function FoodMenuItem({
     setItemQuantity((s) => (s === 1 ? s : s - 1));
   }
   let orderObj;
+  // If no user is logged in then error message is sent
   function onSubmit(data) {
     if (!user) {
       setBannerText("Please login to place an order");
@@ -248,6 +249,8 @@ function FoodMenuItem({
       discount: 0,
       orderItems: [updatedData],
     };
+
+    // If redux state has an orderObject from same cuisine than it will add new item automatically to that object
     if (storeCart.some((item) => item.cuisineName === cuisineName)) {
       dispatch(addItem(orderObj));
       setBannerItemObj(updatedData);
@@ -255,6 +258,8 @@ function FoodMenuItem({
       open();
       return;
     }
+
+    // If no over write warning was detected and no order is there than add order to the cart
     if (!overWriteWarning && storeCart.length === 0) {
       dispatch(addItem(orderObj));
       setBannerItemObj(updatedData);
@@ -263,7 +268,9 @@ function FoodMenuItem({
       return;
     }
 
+    // for non-premium users
     if (!hasUserPremium) {
+      // Only one batch order is allowed and if remainingOrders is 1 then allow order from upto 3 cuisines at a time
       if (storeCart.length === 3 && remainingOrders === 1) {
         setBannerText(
           "Maximum numbers of cuisines added. Complete previous order to continue."
@@ -277,16 +284,6 @@ function FoodMenuItem({
         open();
       }
     }
-
-    // if noPremium and has no batch orders left and trying to add more than one cuisines to the cart -> send error
-
-    // if has noPremium has batch orders left (meaning only 1 batchOrder is left) then
-
-    // 1. Allow upto three cuisines to be added to cart and decrease remainingOrders to 0
-
-    // 2. see if there are already 3 cuisines in the cart -> send error saying maximum numbers of cusines has been added
-
-    // 3. Allow adding from the cusine which are already present in the cart
   }
   function handleClickCart() {
     dispatch(removeAllDeliveries());

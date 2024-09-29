@@ -32,20 +32,19 @@ const CheckTextDiv = styled.div`
   }
 `;
 
-function CheckBeforeConfirm({ type, dataObj, handleClick }) {
+function CheckBeforeConfirm({ type, dataObj, text, handleClick }) {
   return (
     <CheckContainer>
       <CheckTextDiv>
         <span>
-          You already have some ongoing order. Do you wish Overwrite the
-          previous order with new one?
+          {text ||
+            "You already have some ongoing order. Do you wish Overwrite the previous order with new one?"}
         </span>
       </CheckTextDiv>
       <ButtonsDiv>
         <Button
           size="medium"
           variation="primary"
-          // onClick={type === "cart" ? handleClickCart : handleClickVenue}
           onClick={handleClick}
           className="no-outside-click"
         >

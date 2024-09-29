@@ -1,11 +1,18 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Heading from "../../Heading";
 import Button from "../../Button";
 import { useForm } from "react-hook-form";
 import StyledOptionsDiv from "../../StyledOptionsTwo";
-import { useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useAddNewFoodItem from "../../../hooks/useAddNewFoodItem";
+import Modal from "../../Modal";
+import { ModalContext } from "../../../utils/contexts";
+import SpinnerMini from "../../SpinnerMini";
+import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
+import { current } from "@reduxjs/toolkit";
+import Spinner from "../../Spinner";
 
 const Container = styled.div`
   width: 55vw;
@@ -62,10 +69,32 @@ const FormInput = styled.input`
   }
 `;
 
-function AddFoodItemForm() {
+// eslint-disable-next-line react/prop-types
+function AddFoodItemForm({ itemId = "" }) {
+  const { foodItems, isLoading } = useGetFoodMenu();
+  const currItem = foodItems.filter((item) => item._id == itemId)[0];
+
   const [selectedOption, setSelectedOption] = useState("veg");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   const { mutate, isPending } = useAddNewFoodItem();
+  const { close: closeModal } = useContext(ModalContext);
+
+  const formatPrices = useCallback(() => {
+    return Object.entries(currItem?.prices)
+      .map((item) => item.join(":"))
+      .join(",");
+  }, [currItem?.prices]);
+
+  useEffect(() => {
+    if (currItem) {
+      setValue("name", currItem.name || "");
+      setValue("type", currItem.type || "");
+      setValue("category", currItem.category || "");
+      setValue("image", currItem.image || "");
+      setValue("mainIngredients", currItem.mainIngredients || "");
+      setValue("prices", formatPrices(currItem.prices) || "");
+    }
+  }, [currItem, formatPrices, setValue]);
 
   function onSubmit(data) {
     const { prices } = data;
@@ -79,9 +108,13 @@ function AddFoodItemForm() {
     // will delete later when handeling file uploads
     data.image = "food-002.jpg";
     data.quantityPerServing = "10pcs";
-    // console.log(data);
-    mutate(data);
+    console.log(data);
+    // mutate(data);
+    if (!isPending) {
+      closeModal(); // closes the modal form after submission
+    }
   }
+
   return (
     <Container>
       <FormHeadDiv>
@@ -127,7 +160,7 @@ function AddFoodItemForm() {
           <FormInput
             id="prices"
             type="text"
-            placeholder="eg: {small : 30, medium : 50} (seperated them with a comma)"
+            placeholder="eg: small : 30, 10pcs : 40 "
             {...register("prices")}
             required
           />
@@ -156,6 +189,7 @@ function AddFoodItemForm() {
 
         <Button size="medium" variation="primary" type="submit">
           Submit
+          {isPending && <SpinnerMini />}
         </Button>
       </FormDiv>
     </Container>

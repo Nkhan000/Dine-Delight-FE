@@ -13,11 +13,6 @@ const StyledTag = styled.span`
   display: flex;
   align-items: center;
 
-  /* ${(props) =>
-    (props.type == "delivery" || props.type == "veg") &&
-    css`
-      background-color: var(--color-green-700);
-    `} */
   ${(props) =>
     (props.type == "reservation" || props.type == "non-veg") &&
     css`
@@ -37,7 +32,6 @@ const StyledTag = styled.span`
     css`
       background-color: var(--color-blue-700);
       font-size: 1.3rem;
-      /* width: max-content !important; */
       justify-self: center;
     `}
   ${(props) =>
@@ -48,17 +42,13 @@ const StyledTag = styled.span`
       props.type == "veg") &&
     css`
       background-color: var(--color-green-700);
-      /* font-size: 1.3rem; */
-      /* width: max-content !important; */
       justify-self: center;
     `}
   ${(props) =>
     (props.type == "cancled" || props.type == "no") &&
     css`
       background-color: var(--color-red-700);
-
       font-size: 1.3rem;
-      /* width: max-content !important; */
       justify-self: center;
     `}
 `;

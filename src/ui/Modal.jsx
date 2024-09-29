@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import { HiXMark } from "react-icons/hi2";
 import styled, { css } from "styled-components";
 import { useOutsideClick } from "../hooks/useOutsideClick";
+import { ModalContext } from "../utils/contexts";
 
 const StyledModal = styled.div`
   position: relative;
@@ -70,7 +71,8 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
-const ModalContext = createContext();
+// const ModalContext = createContext();
+// const ModalContext = useContext(ModalContext);
 
 function Modal({ children }) {
   const [openName, setOpenName] = useState("");
