@@ -13,6 +13,7 @@ import SpinnerMini from "../../SpinnerMini";
 import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
 import { current } from "@reduxjs/toolkit";
 import Spinner from "../../Spinner";
+import { useUpdateAFoodItem } from "../../../hooks/FoodMenu/useUpdateAFoodItem";
 
 const Container = styled.div`
   width: 55vw;
@@ -74,9 +75,13 @@ function AddFoodItemForm({ itemId = "" }) {
   const { foodItems, isLoading } = useGetFoodMenu();
   const currItem = foodItems.filter((item) => item._id == itemId)[0];
 
+  // console.log(currItem ? true : false);
+
   const [selectedOption, setSelectedOption] = useState("veg");
   const { register, handleSubmit, setValue } = useForm();
-  const { mutate, isPending } = useAddNewFoodItem();
+  const { addANewFoodItem, isAddingANewFoodItem } = useAddNewFoodItem();
+  const { updateAFoodItem, isUpdatingAFoodItem } = useUpdateAFoodItem();
+
   const { close: closeModal } = useContext(ModalContext);
 
   const formatPrices = useCallback(() => {
@@ -99,6 +104,8 @@ function AddFoodItemForm({ itemId = "" }) {
   function onSubmit(data) {
     const { prices } = data;
     let pricesObj = prices.split(",");
+    console.log(pricesObj);
+    pricesObj.filter((item) => item == "," || item == " " || item == "");
     pricesObj = pricesObj.reduce((acc, curr) => {
       const [key, value] = curr.split(":").map((item) => item.trim());
       acc[key] = Number(value);
@@ -108,9 +115,12 @@ function AddFoodItemForm({ itemId = "" }) {
     // will delete later when handeling file uploads
     data.image = "food-002.jpg";
     data.quantityPerServing = "10pcs";
+    data.itemId = itemId ? itemId : null;
     console.log(data);
-    // mutate(data);
-    if (!isPending) {
+    console.log(currItem);
+    currItem ? updateAFoodItem(data) : addANewFoodItem(data);
+
+    if (!isAddingANewFoodItem || !isUpdatingAFoodItem) {
       closeModal(); // closes the modal form after submission
     }
   }
@@ -189,7 +199,7 @@ function AddFoodItemForm({ itemId = "" }) {
 
         <Button size="medium" variation="primary" type="submit">
           Submit
-          {isPending && <SpinnerMini />}
+          {(isAddingANewFoodItem || isUpdatingAFoodItem) && <SpinnerMini />}
         </Button>
       </FormDiv>
     </Container>

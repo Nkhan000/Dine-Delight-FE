@@ -46,7 +46,7 @@ export async function apiDeleteAFoodItem(data) {
 export async function apiUpdateAFoodItem(data) {
   const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/update-menu-items`;
   try {
-    const response = await axios.patch(requestUrl, data, {
+    const response = await axios.put(requestUrl, data, {
       headers: { Authorization: `Bearer ${token}` },
     });
 

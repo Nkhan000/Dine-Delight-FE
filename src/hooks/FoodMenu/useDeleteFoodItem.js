@@ -7,7 +7,7 @@ export function useDeleteFoodItem() {
     mutationFn: (data) => apiDeleteAFoodItem(data),
     onSuccess: () => {
       console.log("Food item was removed successfully");
-      queryClient.invalidateQueries("food menu");
+      queryClient.invalidateQueries("foodMenu");
     },
     onError: () => {
       console.log("Error removing the selected Item. Try again.");

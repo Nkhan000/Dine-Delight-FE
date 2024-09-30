@@ -4,7 +4,7 @@ import { apiGetAllFoodItems } from "../services/apiBusiness";
 
 export function useGetFoodMenu() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["food menu"],
+    queryKey: ["foodMenu"],
     queryFn: apiGetAllFoodItems,
   });
 

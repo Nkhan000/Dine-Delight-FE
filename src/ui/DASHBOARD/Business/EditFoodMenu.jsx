@@ -9,6 +9,7 @@ import Modal from "../../Modal";
 import AddFoodItemForm from "./AddFoodItemForm";
 import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
 import EditMenuBtn from "./EditMenuBtn";
+import { useSearchParams } from "react-router-dom";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -63,6 +64,7 @@ const FoodItem = styled.div`
 
 const ImageAndNameDiv = styled.div`
   display: flex;
+  align-items: center;
   gap: 1rem;
 `;
 
@@ -73,15 +75,15 @@ const PriceAndBtnDiv = styled.div`
 
 const FoodItemNum = styled.span`
   span {
-    font-size: 3rem;
+    font-size: 3.6rem;
     font-weight: 600;
     color: var(--color-grey-800);
   }
 `;
 
 const FoodItemImgDiv = styled.div`
-  height: 6rem;
-  width: 6rem;
+  height: 7rem;
+  width: 7rem;
   border-radius: 1rem;
   overflow: hidden;
 
@@ -137,6 +139,7 @@ const AddNewBtnDiv = styled.div`
 `;
 
 function EditFoodMenu() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { foodItems, isLoading } = useGetFoodMenu();
   const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
 
@@ -161,7 +164,7 @@ function EditFoodMenu() {
         <HeadOptionsDiv>
           <StyledOptions
             sortby="Type"
-            options={["non-veg", "veg"]}
+            options={["All", "Veg", "Non-veg"]}
           ></StyledOptions>
           <StyledOptions
             sortby="Category"
@@ -194,6 +197,9 @@ function EditFoodMenu() {
             <PriceAndBtnDiv>
               <FoodItemTextDiv2>
                 <FoodItemPriceSizeDiv>
+                  <FoodItemTextSm>Category :- {item.category}</FoodItemTextSm>
+                </FoodItemPriceSizeDiv>
+                <FoodItemPriceSizeDiv>
                   <FoodItemTextSm>
                     Prices :-{" "}
                     {Object.entries(item.prices).map(([size, price]) => (
@@ -204,6 +210,7 @@ function EditFoodMenu() {
                     ))}
                   </FoodItemTextSm>
                 </FoodItemPriceSizeDiv>
+
                 <FoodItemPriceSizeDiv>
                   <FoodItemTextSm>
                     Main Ingredients :-{" "}
