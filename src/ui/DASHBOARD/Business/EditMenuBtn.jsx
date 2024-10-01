@@ -5,6 +5,7 @@ import Button from "../../Button";
 import Modal from "../../Modal";
 import CheckBeforeConfirm from "../../CART/CheckBeforeConfirm";
 import AddFoodItemForm from "./AddFoodItemForm";
+import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
 
 const BtnsDiv = styled.div`
   display: flex;
@@ -13,7 +14,16 @@ const BtnsDiv = styled.div`
   margin-left: 1rem;
 `;
 
-function EditMenuBtn({ itemId, handleDeleteFoodItem }) {
+function EditMenuBtn({ itemId }) {
+  const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
+
+  function handleDeleteFoodItem(id) {
+    const reqObj = {
+      itemId: id,
+    };
+    console.log(reqObj);
+    removeFoodItem(reqObj);
+  }
   function handleDelete() {
     handleDeleteFoodItem(itemId);
   }
@@ -28,6 +38,7 @@ function EditMenuBtn({ itemId, handleDeleteFoodItem }) {
         <Modal.ModalWindow name="edit-item">
           <AddFoodItemForm itemId={itemId} />
         </Modal.ModalWindow>
+
         <Modal.Open open="delete-item">
           <Button size="small" variation="secondary">
             Delete

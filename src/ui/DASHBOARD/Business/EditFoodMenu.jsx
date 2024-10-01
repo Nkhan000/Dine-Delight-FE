@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import StyledOptions from "../../StyledOptions";
-import StyledTag from "../../StyledTag";
 import Button from "../../Button";
 import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
 import Spinner from "../../Spinner";
 import Modal from "../../Modal";
 import AddFoodItemForm from "./AddFoodItemForm";
-import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
-import EditMenuBtn from "./EditMenuBtn";
 import { useSearchParams } from "react-router-dom";
+import StyledOptionsDiv from "../../StyledOptionsTwo";
+import { useEffect } from "react";
+import EditFoodMenuItemCard from "./EditFoodMenuItemCard";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -48,87 +48,12 @@ const FoodItemsDiv = styled.div`
   column-gap: 5rem;
 `;
 
-const FoodItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  padding: 1.2rem 0.5rem;
-  border-bottom: 2px solid var(--color-grey-800);
-  border-radius: 1rem;
-
-  &:hover {
-    border-bottom: 3px solid var(--color-grey-400);
-  }
-`;
-
-const ImageAndNameDiv = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-`;
-
-const PriceAndBtnDiv = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const FoodItemNum = styled.span`
   span {
     font-size: 3.6rem;
     font-weight: 600;
     color: var(--color-grey-800);
   }
-`;
-
-const FoodItemImgDiv = styled.div`
-  height: 7rem;
-  width: 7rem;
-  border-radius: 1rem;
-  overflow: hidden;
-
-  img {
-    height: 100%;
-    width: 100%;
-    background-size: cover;
-  }
-`;
-
-const FoodItemTextDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-`;
-const FoodItemTextDiv2 = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-
-  width: 80%;
-`;
-
-const FoodItemName = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-`;
-
-const FoodItemPriceSizeDiv = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-`;
-
-const FoodItemTextSm = styled.span`
-  font-weight: 600;
-  color: var(--color-grey-200);
-  font-size: 1.15rem;
-  text-transform: capitalize;
-`;
-const FoodItemTextBg = styled.span`
-  font-weight: 600;
-  color: var(--color-grey-200);
-  font-size: 2rem;
 `;
 
 const AddNewBtnDiv = styled.div`
@@ -141,18 +66,24 @@ const AddNewBtnDiv = styled.div`
 function EditFoodMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { foodItems, isLoading } = useGetFoodMenu();
-  const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
+
+  useEffect(() => {
+    if (!searchParams.get("item-type")) {
+      const URLParam = new URLSearchParams(searchParams);
+      URLParam.set("item-type", "all");
+      setSearchParams(URLParam);
+    }
+  }, [searchParams, setSearchParams]);
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  function handleDeleteFoodItem(id) {
-    const reqObj = {
-      itemId: id,
-    };
-    console.log(reqObj);
-    removeFoodItem(reqObj);
+  function handleParamChange(e) {
+    const changedVal = e.target.value;
+    const urlParams = new URLSearchParams(searchParams);
+    urlParams.set("item-type", changedVal);
+    setSearchParams(urlParams);
   }
 
   return (
@@ -162,10 +93,15 @@ function EditFoodMenu() {
           <span>Your Food Menu</span>
         </HeadTextDiv>
         <HeadOptionsDiv>
-          <StyledOptions
-            sortby="Type"
-            options={["All", "Veg", "Non-veg"]}
-          ></StyledOptions>
+          <StyledOptionsDiv>
+            <label>Type</label>
+            <select onChange={handleParamChange}>
+              <option value="all">All</option>
+              <option value="veg">Veg</option>
+              <option value="non-veg">Non-veg</option>
+            </select>
+          </StyledOptionsDiv>
+
           <StyledOptions
             sortby="Category"
             options={["momo", "noodles", "pizza", "burgers"]}
@@ -177,60 +113,15 @@ function EditFoodMenu() {
         {foodItems.length === 0 && (
           <FoodItemNum>No food Items To Show</FoodItemNum>
         )}
-        {foodItems.map((item, ind) => (
-          <FoodItem key={item._id}>
-            <ImageAndNameDiv>
-              <FoodItemNum>
-                <span>0{ind + 1}</span>
-              </FoodItemNum>
-              <FoodItemImgDiv>
-                <img src={`./img/${item.image}`} alt="food-item" />
-              </FoodItemImgDiv>
-              <FoodItemTextDiv>
-                <FoodItemName>
-                  <FoodItemTextBg>{item.name}</FoodItemTextBg>
-                </FoodItemName>
-                <StyledTag type={item.type}>{item.type}</StyledTag>
-              </FoodItemTextDiv>
-            </ImageAndNameDiv>
-
-            <PriceAndBtnDiv>
-              <FoodItemTextDiv2>
-                <FoodItemPriceSizeDiv>
-                  <FoodItemTextSm>Category :- {item.category}</FoodItemTextSm>
-                </FoodItemPriceSizeDiv>
-                <FoodItemPriceSizeDiv>
-                  <FoodItemTextSm>
-                    Prices :-{" "}
-                    {Object.entries(item.prices).map(([size, price]) => (
-                      <FoodItemTextSm key={size}>
-                        {size} : ${price}
-                        {", "}
-                      </FoodItemTextSm>
-                    ))}
-                  </FoodItemTextSm>
-                </FoodItemPriceSizeDiv>
-
-                <FoodItemPriceSizeDiv>
-                  <FoodItemTextSm>
-                    Main Ingredients :-{" "}
-                    {item.mainIngredients.map((item, idx) => (
-                      <FoodItemTextSm key={`${item}-${idx}`}>
-                        {item}
-                        {", "}
-                      </FoodItemTextSm>
-                    ))}{" "}
-                  </FoodItemTextSm>
-                </FoodItemPriceSizeDiv>
-              </FoodItemTextDiv2>
-
-              <EditMenuBtn
-                itemId={item._id}
-                handleDeleteFoodItem={handleDeleteFoodItem}
-              />
-            </PriceAndBtnDiv>
-          </FoodItem>
-        ))}
+        {foodItems
+          .filter((item) =>
+            searchParams.get("item-type") == "all"
+              ? item
+              : item.type === searchParams.get("item-type")
+          )
+          .map((item, ind) => (
+            <EditFoodMenuItemCard key={item._id} item={item} ind={ind} />
+          ))}
       </FoodItemsDiv>
       <AddNewBtnDiv>
         <Modal>

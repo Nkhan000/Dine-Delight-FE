@@ -102,23 +102,28 @@ function AddFoodItemForm({ itemId = "" }) {
   }, [currItem, formatPrices, setValue]);
 
   function onSubmit(data) {
-    const { prices } = data;
-    let pricesObj = prices.split(",");
-    console.log(pricesObj);
+    const formData = data;
+
+    let pricesObj = formData.prices.split(",");
     pricesObj.filter((item) => item == "," || item == " " || item == "");
     pricesObj = pricesObj.reduce((acc, curr) => {
       const [key, value] = curr.split(":").map((item) => item.trim());
-      acc[key] = Number(value);
+      acc[key.trim().toLowerCase()] = Number(value);
       return acc;
     }, {});
-    data.prices = pricesObj;
+
+    formData.prices = pricesObj;
+    formData.category = data.category.trim().toLowerCase();
+    formData.mainIngredients = currItem
+      ? data.mainIngredients.map((ing) => ing.trim().toLowerCase())
+      : data.mainIngredients.split(",").map((ing) => ing.trim().toLowerCase());
+
     // will delete later when handeling file uploads
-    data.image = "food-002.jpg";
-    data.quantityPerServing = "10pcs";
-    data.itemId = itemId ? itemId : null;
-    console.log(data);
-    console.log(currItem);
-    currItem ? updateAFoodItem(data) : addANewFoodItem(data);
+    formData.image = "food-002.jpg";
+    formData.quantityPerServing = "10pcs";
+    formData.itemId = itemId ? itemId : null;
+
+    currItem ? updateAFoodItem(formData) : addANewFoodItem(formData);
 
     if (!isAddingANewFoodItem || !isUpdatingAFoodItem) {
       closeModal(); // closes the modal form after submission
