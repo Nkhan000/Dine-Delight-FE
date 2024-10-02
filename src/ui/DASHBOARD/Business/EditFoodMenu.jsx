@@ -65,24 +65,29 @@ const AddNewBtnDiv = styled.div`
 
 function EditFoodMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { foodItems, isLoading } = useGetFoodMenu();
+  const { foodMenu, isLoadingFoodMenu } = useGetFoodMenu();
 
   useEffect(() => {
     if (!searchParams.get("item-type")) {
       const URLParam = new URLSearchParams(searchParams);
       URLParam.set("item-type", "all");
+      URLParam.set("item-category", "all");
       setSearchParams(URLParam);
     }
   }, [searchParams, setSearchParams]);
 
-  if (isLoading) {
+  if (isLoadingFoodMenu) {
     return <Spinner />;
   }
 
-  function handleParamChange(e) {
+  const { foodItems, categories } = foodMenu;
+  function handleParamChange(e, type = "type") {
     const changedVal = e.target.value;
     const urlParams = new URLSearchParams(searchParams);
-    urlParams.set("item-type", changedVal);
+    urlParams.set(
+      `${type == "type" ? "item-type" : "item-category"}`,
+      changedVal
+    );
     setSearchParams(urlParams);
   }
 
@@ -101,11 +106,17 @@ function EditFoodMenu() {
               <option value="non-veg">Non-veg</option>
             </select>
           </StyledOptionsDiv>
-
-          <StyledOptions
-            sortby="Category"
-            options={["momo", "noodles", "pizza", "burgers"]}
-          ></StyledOptions>
+          <StyledOptionsDiv>
+            <label>Category : </label>
+            <select onChange={(e) => handleParamChange(e, "category")}>
+              <option value="all">All</option>
+              {categories.map((cat, idx) => (
+                <option key={`0${idx}`} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </StyledOptionsDiv>
         </HeadOptionsDiv>
       </HeadDiv>
 
@@ -114,11 +125,16 @@ function EditFoodMenu() {
           <FoodItemNum>No food Items To Show</FoodItemNum>
         )}
         {foodItems
-          .filter((item) =>
-            searchParams.get("item-type") == "all"
-              ? item
-              : item.type === searchParams.get("item-type")
-          )
+          .filter((item) => {
+            const typeFilter =
+              searchParams.get("item-type") == "all" ||
+              item.type === searchParams.get("item-type");
+            const categoryFilter =
+              searchParams.get("item-category") == "all" ||
+              item.category === searchParams.get("item-category");
+
+            return typeFilter && categoryFilter;
+          })
           .map((item, ind) => (
             <EditFoodMenuItemCard key={item._id} item={item} ind={ind} />
           ))}

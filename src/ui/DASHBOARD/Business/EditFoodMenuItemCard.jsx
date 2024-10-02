@@ -138,6 +138,7 @@ function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
 
         <EditMenuBtn
           itemId={item._id}
+          itemCategory={item.category}
           handleDeleteFoodItem={handleDeleteFoodItem}
         />
       </PriceAndBtnDiv>

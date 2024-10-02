@@ -1,6 +1,8 @@
 import axios from "axios";
 
 const token = localStorage.getItem("jwt");
+
+/* ------------- FOOD MENU -----------------*/
 export async function apiGetAllFoodItems() {
   const requestUrl = `http://127.0.0.1:3000/api/v1/user/get-food-menu`;
 
@@ -51,6 +53,24 @@ export async function apiUpdateAFoodItem(data) {
     });
 
     console.log(response.data);
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+}
+
+/* -------------------------------------------*/
+
+/* ------------- VENUES MENU -----------------*/
+export async function apiGetAllVenues() {
+  const requestUrl = `http://127.0.0.1/api/v1/reservation/get-all-venues`;
+  try {
+    const response = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
+    return response.data;
   } catch (err) {
     console.log(err);
     throw new Error(err);

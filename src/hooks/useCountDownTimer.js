@@ -55,26 +55,3 @@ export const useCountDownTimer = (
 
   return { timer, startTimer, resetTimer, stopTimer, isRunning };
 };
-
-// useEffect(() => {
-//   let intervalId = null;
-//   if (isCodeSentAgain) {
-//     intervalId = setInterval(() => {
-//       setTimer((prevTime) => {
-//         const { minutes, seconds } = prevTime;
-
-//         // Decrease seconds if seconds are greater than 0
-//         if (seconds > 0) {
-//           return { minutes, seconds: seconds - 1 };
-//         }
-//         // If seconds are 0 but minutes are still greater than 0
-//         else if (seconds === 0 && minutes > 0) {
-//           return { minutes: minutes - 1, seconds: 59 };
-//         }
-//         return { minutes: 0, seconds: 0 };
-//       });
-//     }, 1000);
-//   }
-
-//   return () => clearInterval(intervalId); // Cleanup interval on unmount or change
-// }, [isCodeSentAgain]);

@@ -14,12 +14,13 @@ const BtnsDiv = styled.div`
   margin-left: 1rem;
 `;
 
-function EditMenuBtn({ itemId }) {
+function EditMenuBtn({ itemId, itemCategory }) {
   const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
 
   function handleDeleteFoodItem(id) {
     const reqObj = {
       itemId: id,
+      itemCategory,
     };
     console.log(reqObj);
     removeFoodItem(reqObj);

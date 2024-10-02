@@ -48,7 +48,7 @@ function CheckBeforeConfirm({ type, dataObj, text, handleClick }) {
           onClick={handleClick}
           className="no-outside-click"
         >
-          Continue order
+          Continue
         </Button>
         <Button size="medium" variation="secondary">
           Cancel
