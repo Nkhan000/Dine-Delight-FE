@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import StyledOptions from "../../StyledOptions";
-import Button from "../../Button";
-import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
-import Spinner from "../../Spinner";
-import Modal from "../../Modal";
+import Button from "../../../Button";
+import { useGetFoodMenu } from "../../../../hooks/useGetFoodMenu";
+import Spinner from "../../../Spinner";
+import Modal from "../../../Modal";
 import AddFoodItemForm from "./AddFoodItemForm";
 import { useSearchParams } from "react-router-dom";
-import StyledOptionsDiv from "../../StyledOptionsTwo";
+import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useEffect } from "react";
 import EditFoodMenuItemCard from "./EditFoodMenuItemCard";
 

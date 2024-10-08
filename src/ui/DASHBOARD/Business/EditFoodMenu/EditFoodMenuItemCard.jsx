@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import StyledTag from "../../StyledTag";
-import EditMenuBtn from "./EditMenuBtn";
+import StyledTag from "../../../StyledTag";
+import EditMenuBtn from "../EditMenuBtn";
 
 const FoodItem = styled.div`
   display: flex;

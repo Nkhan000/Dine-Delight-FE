@@ -1,19 +1,17 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
-import Heading from "../../Heading";
-import Button from "../../Button";
+import Heading from "../../../Heading";
+
+import Button from "../../../Button";
 import { useForm } from "react-hook-form";
-import StyledOptionsDiv from "../../StyledOptionsTwo";
+import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useCallback, useContext, useEffect, useState } from "react";
-import useAddNewFoodItem from "../../../hooks/useAddNewFoodItem";
-import Modal from "../../Modal";
-import { ModalContext } from "../../../utils/contexts";
-import SpinnerMini from "../../SpinnerMini";
-import { useGetFoodMenu } from "../../../hooks/useGetFoodMenu";
-import { current } from "@reduxjs/toolkit";
-import Spinner from "../../Spinner";
-import { useUpdateAFoodItem } from "../../../hooks/FoodMenu/useUpdateAFoodItem";
+import useAddNewFoodItem from "../../../../hooks/useAddNewFoodItem";
+import { ModalContext } from "../../../../utils/contexts";
+import SpinnerMini from "../../../SpinnerMini";
+import { useGetFoodMenu } from "../../../../hooks/useGetFoodMenu";
+import { useUpdateAFoodItem } from "../../../../hooks/FoodMenu/useUpdateAFoodItem";
 
 const Container = styled.div`
   width: 55vw;

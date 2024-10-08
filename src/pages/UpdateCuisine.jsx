@@ -3,7 +3,8 @@ import styled from "styled-components";
 import Button from "../ui/Button";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import EditFoodMenu from "../ui/DASHBOARD/Business/EditFoodMenu";
+import EditFoodMenu from "../ui/DASHBOARD/Business/EditFoodMenu/EditFoodMenu";
+import EditVenuesMenu from "../ui/DASHBOARD/Business/EditVenuesMenu/EditVenuesMenu";
 
 const Container = styled.div`
   height: 100vh;
@@ -71,6 +72,7 @@ function UpdateCuisine() {
 
       <EditMenuDiv>
         {searchParams.get("updateType") === "food-menu" && <EditFoodMenu />}
+        {searchParams.get("updateType") === "venues-menu" && <EditVenuesMenu />}
       </EditMenuDiv>
     </Container>
   );

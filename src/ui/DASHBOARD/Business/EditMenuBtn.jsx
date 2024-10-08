@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Button from "../../Button";
 import Modal from "../../Modal";
 import CheckBeforeConfirm from "../../CART/CheckBeforeConfirm";
-import AddFoodItemForm from "./AddFoodItemForm";
+import AddFoodItemForm from "./EditFoodMenu/AddFoodItemForm";
 import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
 
 const BtnsDiv = styled.div`
