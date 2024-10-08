@@ -25,6 +25,7 @@ const OptionsDiv = styled.div`
     font-size: 1.4rem;
     padding: 0.5rem;
     padding-right: 0;
+    text-transform: capitalize;
 
     &:focus,
     &:active {
@@ -34,6 +35,7 @@ const OptionsDiv = styled.div`
     & option {
       color: var(--color-grey-900);
       background-color: var(--color-grey-50);
+      text-transform: capitalize;
     }
   }
 `;

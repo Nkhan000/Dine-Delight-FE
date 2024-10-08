@@ -72,7 +72,8 @@ const FormInput = styled.input`
 
 // eslint-disable-next-line react/prop-types
 function AddFoodItemForm({ itemId = "" }) {
-  const { foodItems, isLoading } = useGetFoodMenu();
+  const { foodMenu, isLoading } = useGetFoodMenu();
+  const { foodItems } = foodMenu;
   const currItem = foodItems.filter((item) => item._id == itemId)[0];
 
   // console.log(currItem ? true : false);
@@ -122,6 +123,8 @@ function AddFoodItemForm({ itemId = "" }) {
     formData.image = "food-002.jpg";
     formData.quantityPerServing = "10pcs";
     formData.itemId = itemId ? itemId : null;
+
+    console.log(formData);
 
     currItem ? updateAFoodItem(formData) : addANewFoodItem(formData);
 

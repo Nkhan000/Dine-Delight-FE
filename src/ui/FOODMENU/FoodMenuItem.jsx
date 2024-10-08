@@ -83,6 +83,7 @@ const TextHead = styled.span`
   color: var(--color-grey-50);
   font-family: "Indie Flowers", cursive;
   font-weight: 600;
+  text-transform: capitalize;
 `;
 
 const IncludesDiv = styled.div`

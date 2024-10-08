@@ -16,7 +16,7 @@ function FoodMenu({
   // console.log(foodMenu.foodItems);
 
   const skipValue = 4;
-  let { cuisineId, foodItems } = foodMenu;
+  let { cuisineId, foodItems, categories } = foodMenu;
   // filtering out items based on thier category
   const searchCategory = searchParams.get("category");
   foodItems = foodItems.filter((item) =>
@@ -44,6 +44,7 @@ function FoodMenu({
         numberOfPages={numberOfPages}
         menuName="menu"
         showPagination={!foodMenuNotAvailable}
+        categories={categories}
       >
         {foodMenuNotAvailable ? (
           <span>Nothing to show</span>
@@ -55,10 +56,8 @@ function FoodMenu({
             )
             .map((item, i) => (
               <FoodMenuItem
-                allowOrdering={onGoingDeliveries < 3}
                 key={`${item.name}-${i}`}
                 data={item}
-                searchParams={searchParams}
                 cuisineAddress={cuisineAddress}
                 cuisineImage={cuisineImage}
                 cuisineName={cuisineName}

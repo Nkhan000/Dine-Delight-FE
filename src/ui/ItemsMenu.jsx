@@ -43,7 +43,13 @@ const PaginationDiv = styled.div`
   display: flex;
   justify-content: center;
 `;
-function ItemsMenu({ numberOfPages, menuName, showPagination, children }) {
+function ItemsMenu({
+  numberOfPages,
+  categories,
+  menuName,
+  showPagination,
+  children,
+}) {
   return (
     <>
       <MenuContainer>
@@ -56,20 +62,12 @@ function ItemsMenu({ numberOfPages, menuName, showPagination, children }) {
               <>
                 <StyledOptions
                   sortby={"For"}
-                  options={["All", "Veg", "Non-veg"]}
+                  options={["all", "veg", "non-veg"]}
                   setToParam={true}
                 />
                 <StyledOptions
                   sortby={"Category"}
-                  options={[
-                    "All",
-                    "Pizza",
-                    "C.Items",
-                    "Momo",
-                    "Noodles",
-                    "Burger",
-                    "Cake",
-                  ]}
+                  options={["all", ...categories]}
                   setToParam={true}
                 />
               </>
