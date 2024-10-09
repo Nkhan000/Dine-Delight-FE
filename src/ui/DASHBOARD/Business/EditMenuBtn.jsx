@@ -14,7 +14,7 @@ const BtnsDiv = styled.div`
   margin-left: 1rem;
 `;
 
-function EditMenuBtn({ itemId, itemCategory }) {
+function EditMenuBtn({ type = "food-menu", itemId, itemCategory }) {
   const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
 
   function handleDeleteFoodItem(id) {
@@ -39,9 +39,21 @@ function EditMenuBtn({ itemId, itemCategory }) {
         <Modal.ModalWindow name="edit-item">
           <AddFoodItemForm itemId={itemId} />
         </Modal.ModalWindow>
+        {type === "venue" && (
+          <>
+            <Modal.Open open="edit-item">
+              <Button size="small" variation="primary">
+                Edit Images
+              </Button>
+            </Modal.Open>
+            <Modal.ModalWindow name="edit-item">
+              <AddFoodItemForm itemId={itemId} />
+            </Modal.ModalWindow>
+          </>
+        )}
 
         <Modal.Open open="delete-item">
-          <Button size="small" variation="secondary">
+          <Button size="small" variation="danger">
             Delete
           </Button>
         </Modal.Open>

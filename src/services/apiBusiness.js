@@ -62,3 +62,17 @@ export async function apiUpdateAFoodItem(data) {
 /* -------------------------------------------*/
 
 /* ------------- VENUES MENU -----------------*/
+export async function apiGetAllVenues() {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/get-all-venues`;
+
+  try {
+    const response = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // console.log(response);
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+}
