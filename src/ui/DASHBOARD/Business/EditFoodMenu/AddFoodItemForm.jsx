@@ -17,7 +17,7 @@ const Container = styled.div`
   width: 55vw;
   height: 65vh;
   padding: 1rem 3rem;
-
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -68,8 +68,43 @@ const FormInput = styled.input`
   }
 `;
 
+const FormPreviewImagesDiv = styled.div`
+  height: 10rem;
+  gap: 2rem;
+  display: flex;
+`;
+
+const ImagePreviewDiv = styled.div`
+  height: auto;
+  overflow: hidden;
+  position: relative;
+`;
+
+const ImagesRemoveBtn = styled.button`
+  position: absolute;
+  top: 0%;
+  right: 0%;
+  background-color: var(--color-red-700);
+  color: var(--color-grey-200);
+  font-weight: 600;
+  font-size: 1.2rem;
+  border: none;
+  height: 1.6rem;
+  width: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ImagePreview = styled.img`
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+`;
+
 // eslint-disable-next-line react/prop-types
 function AddFoodItemForm({ itemId = "" }) {
+  const { register, handleSubmit, setValue } = useForm();
   const { foodMenu, isLoading } = useGetFoodMenu();
   const { foodItems } = foodMenu;
   const currItem = foodItems.filter((item) => item._id == itemId)[0];
@@ -77,11 +112,30 @@ function AddFoodItemForm({ itemId = "" }) {
   // console.log(currItem ? true : false);
 
   const [selectedOption, setSelectedOption] = useState("veg");
-  const { register, handleSubmit, setValue } = useForm();
   const { addANewFoodItem, isAddingANewFoodItem } = useAddNewFoodItem();
   const { updateAFoodItem, isUpdatingAFoodItem } = useUpdateAFoodItem();
 
   const { close: closeModal } = useContext(ModalContext);
+
+  const [selectedImage, setSelectedImage] = useState(
+    currItem ? `http://127.0.0.1:3000/public/${currItem.image}` : null
+  );
+
+  // PREVIEW THE SELECTED IMAGE
+  function handleChangeImage(e) {
+    const selectedFile = e.target.files[0];
+
+    if (selectedFile) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+
+    setValue("image", selectedFile);
+  }
 
   const formatPrices = useCallback(() => {
     return Object.entries(currItem?.prices)
@@ -101,26 +155,42 @@ function AddFoodItemForm({ itemId = "" }) {
   }, [currItem, formatPrices, setValue]);
 
   function onSubmit(data) {
-    const formData = data;
+    const formData = new FormData();
 
-    let pricesObj = formData.prices.split(",");
-    pricesObj.filter((item) => item == "," || item == " " || item == "");
-    pricesObj = pricesObj.reduce((acc, curr) => {
-      const [key, value] = curr.split(":").map((item) => item.trim());
-      acc[key.trim().toLowerCase()] = Number(value);
-      return acc;
-    }, {});
+    let pricesArr = data.prices.includes(",")
+      ? data.prices.split(",").map((item) => item.trim())
+      : [data.prices.trim()];
 
-    formData.prices = pricesObj;
-    formData.category = data.category.trim().toLowerCase();
-    formData.mainIngredients = currItem
+    let pricesObj = {};
+
+    pricesArr.forEach((item) => {
+      const [key, value] = item.split(":").map((part) => part.trim());
+
+      if (key && value) {
+        pricesObj[key] = Number(value);
+      } else {
+        console.error(
+          `Invalid price format for item: "${item}". Expected format: "key : value".`
+        );
+      }
+    });
+
+    formData.append("name", data.name);
+    formData.append("prices", JSON.stringify(pricesObj));
+    formData.append("category", data.category.trim().toLowerCase());
+    formData.append("type", data.type);
+
+    const mainIngredients = currItem
       ? data.mainIngredients.map((ing) => ing.trim().toLowerCase())
       : data.mainIngredients.split(",").map((ing) => ing.trim().toLowerCase());
 
-    // will delete later when handeling file uploads
-    formData.image = "food-002.jpg";
-    formData.quantityPerServing = "10pcs";
-    formData.itemId = itemId ? itemId : null;
+    formData.append("mainIngredients", mainIngredients);
+    formData.append("quantityPerServing", "10pcs");
+    formData.append("itemId", itemId ? itemId : null);
+
+    if (selectedImage) {
+      formData.append("image", data.image);
+    }
 
     console.log(formData);
 
@@ -200,8 +270,28 @@ function AddFoodItemForm({ itemId = "" }) {
 
         <FormInputDiv>
           <FormLabel>Image :</FormLabel>
-          <FormInput type="file" {...register("image")} />
+          <FormInput type="file" onChange={handleChangeImage} />
         </FormInputDiv>
+
+        {selectedImage && (
+          <FormPreviewImagesDiv>
+            <ImagePreviewDiv>
+              <ImagePreview
+                crossOrigin="anonymous"
+                src={`${selectedImage}`}
+                alt={`Selected food item Image`}
+              />
+              <ImagesRemoveBtn
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedImage();
+                }}
+              >
+                X
+              </ImagesRemoveBtn>
+            </ImagePreviewDiv>
+          </FormPreviewImagesDiv>
+        )}
 
         <Button size="medium" variation="primary" type="submit">
           Submit

@@ -9,6 +9,7 @@ export async function apiGetAllFoodItems() {
   try {
     const response = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
     return response.data.foodMenu;
   } catch (err) {

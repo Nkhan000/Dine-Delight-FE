@@ -8,6 +8,7 @@ import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useEffect } from "react";
 import { useGetAllVenues } from "../../../../hooks/VenuesMenu(BS)/useGetAllVenues";
 import EditVenueItemCard from "./EditVenueItemCard";
+import AddVenueItemForm from "./AddVenueItemForm";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -88,7 +89,7 @@ function EditVenuesMenu() {
         ))}
       </VenueItemsDiv>
       <AddNewBtnDiv>
-        {/* <Modal>
+        <Modal>
           <Modal.Open open="add-new-item">
             <Button size="large" variation="primary">
               Add a new Item
@@ -97,7 +98,7 @@ function EditVenuesMenu() {
           <Modal.ModalWindow name="add-new-item">
             <AddVenueItemForm />
           </Modal.ModalWindow>
-        </Modal> */}
+        </Modal>
       </AddNewBtnDiv>
     </Container>
   );

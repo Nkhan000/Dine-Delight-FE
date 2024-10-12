@@ -7,7 +7,7 @@ import Modal from "../../../Modal";
 import AddFoodItemForm from "./AddFoodItemForm";
 import { useSearchParams } from "react-router-dom";
 import StyledOptionsDiv from "../../../StyledOptionsTwo";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EditFoodMenuItemCard from "./EditFoodMenuItemCard";
 
 const Container = styled.div`

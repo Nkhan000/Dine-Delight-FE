@@ -96,7 +96,15 @@ function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
           <span>{ind + 1 < 10 ? `0${ind + 1}` : `${ind + 1}`}</span>
         </FoodItemNum>
         <FoodItemImgDiv>
-          <img src={`./img/${item.image}`} alt="food-item" />
+          <img
+            crossOrigin="anonymous"
+            src={`http://127.0.0.1:3000/public/${item.image}`}
+            alt="food-item"
+          />
+          {/* <img
+            src="http://127.0.0.1:3000/public/img/foodmenu/dummy&pizza-66dd6182db1bc091514f23ab-1728676099821.jpeg"
+            alt="food-item"
+          /> */}
         </FoodItemImgDiv>
         <FoodItemTextDiv>
           <FoodItemName>
