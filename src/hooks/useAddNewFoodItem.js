@@ -8,8 +8,8 @@ export default function useAddNewFoodItem() {
     useMutation({
       mutationFn: (data) => apiAddANewFoodItem(data),
       onSuccess: () => {
+        queryClient.invalidateQueries("foodMenu");
         console.log("Food item added to the menu");
-        queryClient.invalidateQueries("food menu");
       },
       onError: () => {
         console.log("Error adding the food item to the menu");

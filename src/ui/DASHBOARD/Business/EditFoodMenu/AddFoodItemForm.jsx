@@ -181,7 +181,7 @@ function AddFoodItemForm({ itemId = "" }) {
     formData.append("type", data.type);
 
     const mainIngredients = currItem
-      ? data.mainIngredients.map((ing) => ing.trim().toLowerCase())
+      ? data?.mainIngredients?.map((ing) => ing.trim().toLowerCase())
       : data.mainIngredients.split(",").map((ing) => ing.trim().toLowerCase());
 
     formData.append("mainIngredients", mainIngredients);
