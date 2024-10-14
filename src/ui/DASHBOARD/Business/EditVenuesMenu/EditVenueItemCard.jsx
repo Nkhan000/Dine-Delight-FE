@@ -93,16 +93,17 @@ const VenueItemTextBg = styled.span`
   font-size: 2rem;
 `;
 
-function EditVenueItemCard({ item }) {
+function EditVenueItemCard({ item, ind }) {
   return (
     <VenueItem>
       <ImageAndNameDiv>
         <VenueItemNum>
-          <span>01</span>
+          <span>{ind + 1 < 9 ? `0${ind + 1}` : `${ind + 1}`}</span>
         </VenueItemNum>
         <VenueItemImgDiv>
           <img
-            src={`./img/${item.images[0] || "Table-001.jpg"}`}
+            crossOrigin="anonymous"
+            src={`http://127.0.0.1:3000/public/${item.images[0]}`}
             alt="Venue-item"
           />
         </VenueItemImgDiv>
@@ -133,6 +134,7 @@ function EditVenueItemCard({ item }) {
         </VenueItemTextDiv2>
 
         <EditMenuBtn
+          type="venueMenu"
           itemId={item._id}
           itemCategory={item.category}
           // handleDeleteVenueItem={handleDeleteVenueItem}

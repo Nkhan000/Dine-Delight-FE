@@ -6,6 +6,7 @@ import Modal from "../../Modal";
 import CheckBeforeConfirm from "../../CART/CheckBeforeConfirm";
 import AddFoodItemForm from "./EditFoodMenu/AddFoodItemForm";
 import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
+import AddVenueItemForm from "./EditVenuesMenu/AddVenueItemForm";
 
 const BtnsDiv = styled.div`
   display: flex;
@@ -14,7 +15,7 @@ const BtnsDiv = styled.div`
   margin-left: 1rem;
 `;
 
-function EditMenuBtn({ type = "food-menu", itemId, itemCategory }) {
+function EditMenuBtn({ type = "foodMenu", itemId, itemCategory }) {
   const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
 
   function handleDeleteFoodItem(id) {
@@ -37,20 +38,9 @@ function EditMenuBtn({ type = "food-menu", itemId, itemCategory }) {
           </Button>
         </Modal.Open>
         <Modal.ModalWindow name="edit-item">
-          <AddFoodItemForm itemId={itemId} />
+          {type == "foodMenu" && <AddFoodItemForm itemId={itemId} />}
+          {type == "venueMenu" && <AddVenueItemForm itemId={itemId} />}
         </Modal.ModalWindow>
-        {type === "venue" && (
-          <>
-            <Modal.Open open="edit-item">
-              <Button size="small" variation="primary">
-                Edit Images
-              </Button>
-            </Modal.Open>
-            <Modal.ModalWindow name="edit-item">
-              <AddFoodItemForm itemId={itemId} />
-            </Modal.ModalWindow>
-          </>
-        )}
 
         <Modal.Open open="delete-item">
           <Button size="small" variation="danger">

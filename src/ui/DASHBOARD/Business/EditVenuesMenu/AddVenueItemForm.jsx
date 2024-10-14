@@ -6,6 +6,7 @@ import Heading from "../../../Heading";
 import Button from "../../../Button";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useAddANewVenue } from "../../../../hooks/VenuesMenu(BS)/useAddANewVenue";
 
 const Container = styled.div`
   width: 55vw;
@@ -137,43 +138,54 @@ const ImageAddBtnTextSm = styled.span`
 `;
 
 function AddVenueItemForm() {
+  const { addANewVenue, isAddingANewVenue } = useAddANewVenue();
   const { register, handleSubmit, setValue } = useForm();
+  const [fileCount, setFileCount] = useState(0);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImagesToSend, setSelectedImagesToSend] = useState([]);
+
   function onSubmit(data) {
+    const formData = new FormData();
     const aprPartySize = `${data.min}-${data.max}`;
-    const newObj = {
-      ...data,
-      min: undefined,
-      max: undefined,
-      aprPartySize,
-    };
-    console.log(newObj);
+
+    formData.append("name", data.name);
+    formData.append("aprPartySize", aprPartySize);
+    formData.append("pricePerDay", data.pricePerDay);
+    formData.append("goodForOcassions", data.goodForOccassions);
+
+    selectedImagesToSend.map((file) => formData.append("images", file));
+
+    addANewVenue(formData);
   }
 
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files); // Convert FileList to array
-    const imagesArr = [];
-    if (selectedFiles.length > 5) {
+    const imagesArr = []; // To store base64-encoded images for preview
+    const totalFilesSelected = selectedFiles.length; // Number of newly selected files
+
+    // Prevent more than 5 images from being selected
+    if (fileCount + totalFilesSelected > 5) {
       alert("You can only select a maximum of 5 images.");
       return;
     }
+    setSelectedImagesToSend((prev) => [...prev, ...e.target.files]);
 
     selectedFiles.forEach((file) => {
       const reader = new FileReader();
 
       reader.onload = () => {
-        imagesArr.push(reader.result);
+        imagesArr.push(reader.result); // Push base64 string to imagesArr
 
-        if (imagesArr.length >= selectedFiles.length) {
-          setSelectedImages((s) => (s = [...s, ...imagesArr]));
-          setValue("images", [...selectedImages, ...imagesArr]); // Store the selected files array in form state
+        // Once all selected files are read, update the state
+        if (imagesArr.length === totalFilesSelected) {
+          setSelectedImages((prev) => [...prev, ...imagesArr]); // Update preview images
+          setValue("images", [...selectedImages, ...imagesArr]); // Store selected images in form state
+          setFileCount(fileCount + totalFilesSelected);
         }
       };
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Read file as Data URL
     });
-
-    // setFiles(selectedFiles); // Set files in state
   };
 
   return (
@@ -248,7 +260,7 @@ function AddVenueItemForm() {
             id="add-image"
             type="file"
             accept="image/*"
-            multiple="multiple"
+            multiple
             onChange={handleImageChange}
           />
           <FormImageInputAddBtnDiv htmlFor="add-image">
@@ -264,6 +276,9 @@ function AddVenueItemForm() {
                 onClick={(e) => {
                   e.preventDefault();
                   setSelectedImages((s) => s.filter((_, idx) => idx !== index));
+                  // setSelectedImagesToSend((s) =>
+                  //   s.filter((_, idx) => idx !== index)
+                  // );
                 }}
               >
                 X

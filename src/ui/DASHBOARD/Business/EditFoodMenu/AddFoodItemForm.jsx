@@ -149,7 +149,7 @@ function AddFoodItemForm({ itemId = "" }) {
       setValue("type", currItem.type || "");
       setValue("category", currItem.category || "");
       setValue("image", currItem.image || "");
-      setValue("mainIngredients", currItem.mainIngredients || "");
+      setValue("mainIngredients", currItem.mainIngredients.join(",") || "");
       setValue("prices", formatPrices(currItem.prices) || "");
     }
   }, [currItem, formatPrices, setValue]);
@@ -180,9 +180,9 @@ function AddFoodItemForm({ itemId = "" }) {
     formData.append("category", data.category.trim().toLowerCase());
     formData.append("type", data.type);
 
-    const mainIngredients = currItem
-      ? data?.mainIngredients?.map((ing) => ing.trim().toLowerCase())
-      : data.mainIngredients.split(",").map((ing) => ing.trim().toLowerCase());
+    const mainIngredients = data.mainIngredients
+      .split(",")
+      .map((ing) => ing.trim().toLowerCase());
 
     formData.append("mainIngredients", mainIngredients);
     formData.append("quantityPerServing", "10pcs");

@@ -133,13 +133,13 @@ function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
 
           <FoodItemPriceSizeDiv>
             <FoodItemTextSm>
-              Main Ingredients :-{" "}
-              {item.mainIngredients.map((item, idx) => (
-                <FoodItemTextSm key={`${item}-${idx}`}>
-                  {item}
-                  {", "}
+              Main Ingredients :- {console.log(item.mainIngredients)}
+              {item.mainIngredients.map((ing, idx) => (
+                <FoodItemTextSm key={`${ing}-${idx}`}>
+                  {ing}
+                  {item.mainIngredients.length == idx + 1 ? "." : ", "}
                 </FoodItemTextSm>
-              ))}{" "}
+              ))}
             </FoodItemTextSm>
           </FoodItemPriceSizeDiv>
         </FoodItemTextDiv2>

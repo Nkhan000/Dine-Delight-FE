@@ -69,7 +69,7 @@ function EditVenuesMenu() {
   if (isLoading) {
     return <Spinner />;
   }
-  const venues = data.venues.bookingItems;
+  const venues = data.venues.venueItems;
 
   return (
     <Container>
