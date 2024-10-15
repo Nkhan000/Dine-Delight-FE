@@ -15,20 +15,13 @@ const BtnsDiv = styled.div`
   margin-left: 1rem;
 `;
 
-function EditMenuBtn({ type = "foodMenu", itemId, itemCategory }) {
-  const { removeFoodItem, removingFoodItem } = useDeleteFoodItem();
-
-  function handleDeleteFoodItem(id) {
-    const reqObj = {
-      itemId: id,
-      itemCategory,
-    };
-    console.log(reqObj);
-    removeFoodItem(reqObj);
-  }
-  function handleDelete() {
-    handleDeleteFoodItem(itemId);
-  }
+function EditMenuBtn({
+  type = "foodMenu",
+  itemId,
+  handleDeleteAVenue,
+  handleDeleteAFoodItem,
+  isLoading,
+}) {
   return (
     <Modal>
       <BtnsDiv>
@@ -50,7 +43,10 @@ function EditMenuBtn({ type = "foodMenu", itemId, itemCategory }) {
         <Modal.ModalWindow name="delete-item">
           <CheckBeforeConfirm
             text="Are you sure to delete this Item ?"
-            handleClick={handleDelete}
+            handleClick={
+              type == "foodMenu" ? handleDeleteAFoodItem : handleDeleteAVenue
+            }
+            isLoading={isLoading}
           />
         </Modal.ModalWindow>
       </BtnsDiv>

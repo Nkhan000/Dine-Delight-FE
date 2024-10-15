@@ -2,6 +2,9 @@
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Button from "../Button";
+import { useContext } from "react";
+import { ModalContext } from "../../utils/contexts";
+import Spinner from "../Spinner";
 
 const ButtonsDiv = styled.div`
   width: 100%;
@@ -32,7 +35,18 @@ const CheckTextDiv = styled.div`
   }
 `;
 
-function CheckBeforeConfirm({ type, dataObj, text, handleClick }) {
+function CheckBeforeConfirm({ text, handleClick, isLoading = null }) {
+  const { close: closeModal } = useContext(ModalContext);
+
+  function finalHandleClick() {
+    handleClick();
+    if (!isLoading) {
+      closeModal();
+    }
+  }
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <CheckContainer>
       <CheckTextDiv>
@@ -45,7 +59,7 @@ function CheckBeforeConfirm({ type, dataObj, text, handleClick }) {
         <Button
           size="medium"
           variation="primary"
-          onClick={handleClick}
+          onClick={finalHandleClick}
           className="no-outside-click"
         >
           Continue

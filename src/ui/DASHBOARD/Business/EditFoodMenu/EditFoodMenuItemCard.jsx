@@ -3,6 +3,7 @@
 import styled from "styled-components";
 import StyledTag from "../../../StyledTag";
 import EditMenuBtn from "../EditMenuBtn";
+import { useDeleteFoodItem } from "../../../../hooks/FoodMenu/useDeleteFoodItem";
 
 const FoodItem = styled.div`
   display: flex;
@@ -88,7 +89,17 @@ const FoodItemTextBg = styled.span`
   font-size: 2rem;
 `;
 
-function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
+function EditFoodMenuItemCard({ item, ind }) {
+  const { deleteAFoodItem, isDeletingAFoodItem } = useDeleteFoodItem();
+
+  function handleDeleteAFoodItem(id) {
+    const reqObj = {
+      itemId: item._id,
+      itemCategory: item.category,
+    };
+    deleteAFoodItem(reqObj);
+  }
+
   return (
     <FoodItem>
       <ImageAndNameDiv>
@@ -101,10 +112,6 @@ function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
             src={`http://127.0.0.1:3000/public/${item.image}`}
             alt="food-item"
           />
-          {/* <img
-            src="http://127.0.0.1:3000/public/img/foodmenu/dummy&pizza-66dd6182db1bc091514f23ab-1728676099821.jpeg"
-            alt="food-item"
-          /> */}
         </FoodItemImgDiv>
         <FoodItemTextDiv>
           <FoodItemName>
@@ -147,7 +154,9 @@ function EditFoodMenuItemCard({ item, ind, handleDeleteFoodItem }) {
         <EditMenuBtn
           itemId={item._id}
           itemCategory={item.category}
-          handleDeleteFoodItem={handleDeleteFoodItem}
+          handleDeleteAFoodItem={handleDeleteAFoodItem}
+          isLoading={isDeletingAFoodItem}
+          // handleDeleteFoodItem={handleDeleteFoodItem}
         />
       </PriceAndBtnDiv>
     </FoodItem>

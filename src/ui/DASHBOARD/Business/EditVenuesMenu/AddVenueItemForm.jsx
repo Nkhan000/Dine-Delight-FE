@@ -5,8 +5,9 @@ import Heading from "../../../Heading";
 
 import Button from "../../../Button";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAddANewVenue } from "../../../../hooks/VenuesMenu(BS)/useAddANewVenue";
+import { ModalContext } from "../../../../utils/contexts";
 
 const Container = styled.div`
   width: 55vw;
@@ -138,6 +139,7 @@ const ImageAddBtnTextSm = styled.span`
 `;
 
 function AddVenueItemForm() {
+  const { close: closeModal } = useContext(ModalContext);
   const { addANewVenue, isAddingANewVenue } = useAddANewVenue();
   const { register, handleSubmit, setValue } = useForm();
   const [fileCount, setFileCount] = useState(0);
@@ -156,6 +158,10 @@ function AddVenueItemForm() {
     selectedImagesToSend.map((file) => formData.append("images", file));
 
     addANewVenue(formData);
+
+    if (!isAddingANewVenue) {
+      closeModal();
+    }
   }
 
   const handleImageChange = (e) => {

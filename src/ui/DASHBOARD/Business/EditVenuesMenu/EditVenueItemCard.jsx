@@ -4,6 +4,7 @@ import styled from "styled-components";
 import StyledTag from "../../../StyledTag";
 import EditMenuBtn from "../EditMenuBtn";
 import ToggleBtn from "../../../ToggleBtn";
+import { useDeleteAVenue } from "../../../../hooks/VenuesMenu(BS)/useDeleteAVenue";
 
 const VenueItem = styled.div`
   display: flex;
@@ -94,6 +95,17 @@ const VenueItemTextBg = styled.span`
 `;
 
 function EditVenueItemCard({ item, ind }) {
+  const { deleteAVenue, isDeletingAVenue } = useDeleteAVenue();
+
+  function handleDeleteAVenue() {
+    const dataObj = {
+      venueId: item._id,
+      aprPartySize: item.aprPartySize,
+      images: item.images,
+    };
+
+    deleteAVenue(dataObj);
+  }
   return (
     <VenueItem>
       <ImageAndNameDiv>
@@ -135,9 +147,8 @@ function EditVenueItemCard({ item, ind }) {
 
         <EditMenuBtn
           type="venueMenu"
-          itemId={item._id}
-          itemCategory={item.category}
-          // handleDeleteVenueItem={handleDeleteVenueItem}
+          handleDeleteAVenue={handleDeleteAVenue}
+          isLoading={isDeletingAVenue}
         />
       </PriceAndBtnDiv>
     </VenueItem>

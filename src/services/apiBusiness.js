@@ -65,7 +65,7 @@ export async function apiUpdateAFoodItem(data) {
 /* ------------- VENUES MENU -----------------*/
 
 export async function apiAddANewVenue(data) {
-  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/add-a-new-venue`;
+  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/update-venue`;
 
   try {
     const response = await axios.post(requestUrl, data, {
@@ -75,6 +75,21 @@ export async function apiAddANewVenue(data) {
     console.log(response.data);
   } catch (err) {
     console.log("Error adding a new venue. Try Again");
+    console.log(err);
+    throw new Error(err);
+  }
+}
+export async function apiDeleteAVenue(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/update-venue`;
+
+  try {
+    const response = await axios.patch(requestUrl, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
+  } catch (err) {
+    console.log("Error deleting a new venue. Try Again");
     console.log(err);
     throw new Error(err);
   }
