@@ -64,6 +64,22 @@ export async function apiUpdateAFoodItem(data) {
 
 /* ------------- VENUES MENU -----------------*/
 
+export async function apiDeleteSelectedImagesForVenue(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/delete-images`;
+  try {
+    const response = await axios.delete(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+      data: data, // Pass the data in the config object
+    });
+    console.log("sending");
+    console.log(response.data);
+  } catch (err) {
+    console.log("Error deleting images. Try Again");
+    console.log(err);
+    throw new Error(err);
+  }
+}
+
 export async function apiAddANewVenue(data) {
   const requestUrl = `http://127.0.0.1:3000/api/v1/venue/update-venue`;
 
@@ -102,8 +118,7 @@ export async function apiGetAllVenues() {
     const response = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    // console.log(response);
-    return response.data;
+    return response.data.venuesMenu;
   } catch (err) {
     console.log(err);
     throw new Error(err);

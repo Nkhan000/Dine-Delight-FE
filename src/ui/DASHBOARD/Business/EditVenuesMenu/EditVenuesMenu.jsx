@@ -64,12 +64,12 @@ const AddNewBtnDiv = styled.div`
 
 function EditVenuesMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data, isLoading } = useGetAllVenues();
+  const { venuesMenu, isLoadingVenuesMenu } = useGetAllVenues();
 
-  if (isLoading) {
+  if (isLoadingVenuesMenu) {
     return <Spinner />;
   }
-  const venues = data.venues.venueItems;
+  const { venueItems } = venuesMenu;
 
   return (
     <Container>
@@ -81,10 +81,10 @@ function EditVenuesMenu() {
       </HeadDiv>
 
       <VenueItemsDiv>
-        {venues.length === 0 && (
+        {venueItems.length === 0 && (
           <VenueItemNum>Add Venues to update</VenueItemNum>
         )}
-        {venues.map((item, ind) => (
+        {venueItems.map((item, ind) => (
           <EditVenueItemCard key={item._id} item={item} ind={ind} />
         ))}
       </VenueItemsDiv>

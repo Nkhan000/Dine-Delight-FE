@@ -140,7 +140,7 @@ function EditVenueItemCard({ item, ind }) {
 
           <VenueItemPriceSizeDiv>
             <VenueItemTextSm>
-              Good for occassions :- {item.goodForOcassions.join(", ")}
+              Good for occassions :- {item.goodForOccassions.join(", ")}
             </VenueItemTextSm>
           </VenueItemPriceSizeDiv>
         </VenueItemTextDiv2>
@@ -149,6 +149,7 @@ function EditVenueItemCard({ item, ind }) {
           type="venueMenu"
           handleDeleteAVenue={handleDeleteAVenue}
           isLoading={isDeletingAVenue}
+          itemId={item._id}
         />
       </PriceAndBtnDiv>
     </VenueItem>

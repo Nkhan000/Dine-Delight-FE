@@ -2,10 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { apiGetAllVenues } from "../../services/apiBusiness";
 
 export function useGetAllVenues() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["venue-menu"],
+  const { data: venuesMenu, isLoading: isLoadingVenuesMenu } = useQuery({
+    queryKey: ["venues-menu"],
     queryFn: apiGetAllVenues,
   });
 
-  return { data, isLoading };
+  return { venuesMenu, isLoadingVenuesMenu };
 }

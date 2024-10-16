@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { useContext, useEffect, useState } from "react";
 import { useAddANewVenue } from "../../../../hooks/VenuesMenu(BS)/useAddANewVenue";
 import { ModalContext } from "../../../../utils/contexts";
+import { useGetAllVenues } from "../../../../hooks/VenuesMenu(BS)/useGetAllVenues";
+import { useDeleteSelectedImagesForVenue } from "../../../../hooks/VenuesMenu(BS)/useDeleteSelectedImagesForVenue";
 
 const Container = styled.div`
   width: 55vw;
@@ -138,13 +140,47 @@ const ImageAddBtnTextSm = styled.span`
   padding: 1rem;
 `;
 
-function AddVenueItemForm() {
+function AddVenueItemForm({ itemId }) {
+  const { venuesMenu, isLoadingVenuesMenu } = useGetAllVenues();
+  const { deleteSelectedImagesForVenue, isDeleting } =
+    useDeleteSelectedImagesForVenue();
   const { close: closeModal } = useContext(ModalContext);
   const { addANewVenue, isAddingANewVenue } = useAddANewVenue();
   const { register, handleSubmit, setValue } = useForm();
-  const [fileCount, setFileCount] = useState(0);
+
+  let currVenue;
+  if (!isLoadingVenuesMenu) {
+    currVenue = venuesMenu.venueItems.filter((item) => item._id == itemId)[0];
+  }
+
+  // For image preview and send
+  const [serverImages, setServerImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImagesToSend, setSelectedImagesToSend] = useState([]);
+  const [fileCount, setFileCount] = useState(serverImages.length || 0);
+
+  console.log(currVenue);
+  useEffect(() => {
+    if (!currVenue) return;
+    setValue("name", currVenue.name);
+    setValue("min", currVenue.aprPartySize?.split("-")[0] || 0);
+    setValue("max", currVenue.aprPartySize?.split("-")[1] || 0);
+    setValue(
+      "goodForOccassions",
+      currVenue.goodForOccassions?.join(", ") || ""
+    );
+    setValue("pricePerDay", currVenue.pricePerDay || 0);
+    setServerImages(currVenue.images);
+  }, [setValue, currVenue]);
+
+  // funtion to delete images which were already uploaded while updating the item
+  function handleDeleteSelectedImg(img, itemId) {
+    const reqObj = {
+      images: [img],
+      itemId,
+    };
+    deleteSelectedImagesForVenue(reqObj);
+  }
 
   function onSubmit(data) {
     const formData = new FormData();
@@ -153,15 +189,20 @@ function AddVenueItemForm() {
     formData.append("name", data.name);
     formData.append("aprPartySize", aprPartySize);
     formData.append("pricePerDay", data.pricePerDay);
-    formData.append("goodForOcassions", data.goodForOccassions);
+    formData.append("goodForOccassions", data.goodForOccassions);
+    if (currVenue) formData.append("itemId", currVenue._id);
 
     selectedImagesToSend.map((file) => formData.append("images", file));
 
-    addANewVenue(formData);
-
-    if (!isAddingANewVenue) {
-      closeModal();
+    if (!currVenue) {
+      addANewVenue(formData);
     }
+    console.log(data);
+    console.log(selectedImagesToSend);
+
+    // if (!isAddingANewVenue) {
+    //   closeModal();
+    // }
   }
 
   const handleImageChange = (e) => {
@@ -219,6 +260,8 @@ function AddVenueItemForm() {
             <FormLabelTwo htmlFor="min">Set minimum people : </FormLabelTwo>
             <FormInput
               id="min"
+              min={0}
+              max={50}
               type="number"
               placeholder="10 people"
               {...register("min")}
@@ -229,6 +272,8 @@ function AddVenueItemForm() {
             <FormLabelTwo htmlFor="max">Set maximum people : </FormLabelTwo>
             <FormInput
               id="max"
+              min={0}
+              max={2000}
               type="number"
               placeholder="50 people"
               {...register("max")}
@@ -275,22 +320,49 @@ function AddVenueItemForm() {
         </FormInputDiv>
 
         <FormPreviewImagesDiv>
-          {selectedImages.map((image, index) => (
-            <ImagePreviewDiv key={index}>
-              <ImagePreview src={image} alt={`Selected Image ${index}`} />
-              <ImagesRemoveBtn
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedImages((s) => s.filter((_, idx) => idx !== index));
-                  // setSelectedImagesToSend((s) =>
-                  //   s.filter((_, idx) => idx !== index)
-                  // );
-                }}
-              >
-                X
-              </ImagesRemoveBtn>
-            </ImagePreviewDiv>
-          ))}
+          {selectedImages.length > 0 &&
+            selectedImages.map((image, index) => (
+              <ImagePreviewDiv key={index}>
+                <ImagePreview src={image} alt={`Selected Image ${index}`} />
+                <ImagesRemoveBtn
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedImages((s) =>
+                      s.filter((_, idx) => idx !== index)
+                    );
+                    // setSelectedImagesToSend((s) =>
+                    //   s.filter((_, idx) => idx !== index)
+                    // );
+                  }}
+                >
+                  X
+                </ImagesRemoveBtn>
+              </ImagePreviewDiv>
+            ))}
+          {serverImages.length > 0 &&
+            serverImages.map((image, index) => (
+              <ImagePreviewDiv key={index}>
+                <ImagePreview
+                  crossOrigin="anonymous"
+                  src={`http://127.0.0.1:3000/public/${image}`}
+                  alt={`Selected Image ${index}`}
+                />
+                <ImagesRemoveBtn
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleDeleteSelectedImg(image, currVenue._id);
+                    // setSelectedImages((s) =>
+                    //   s.filter((_, idx) => idx !== index)
+                    // );
+                    // setSelectedImagesToSend((s) =>
+                    //   s.filter((_, idx) => idx !== index)
+                    // );
+                  }}
+                >
+                  X
+                </ImagesRemoveBtn>
+              </ImagePreviewDiv>
+            ))}
         </FormPreviewImagesDiv>
 
         <Button size="medium" variation="primary" type="submit">
