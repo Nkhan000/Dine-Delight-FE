@@ -97,6 +97,21 @@ export async function apiAddANewVenue(data) {
 }
 export async function apiDeleteAVenue(data) {
   const requestUrl = `http://127.0.0.1:3000/api/v1/venue/update-venue`;
+  try {
+    const response = await axios.delete(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+      data: data, // The data to send with the DELETE request
+    });
+
+    return response;
+  } catch (err) {
+    console.log("Error deleting a new venue. Try Again", err);
+    throw new Error(err);
+  }
+}
+export async function apiUpdataAVenue(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/venue/update-venue`;
 
   try {
     const response = await axios.patch(requestUrl, data, {
@@ -105,7 +120,7 @@ export async function apiDeleteAVenue(data) {
 
     console.log(response.data);
   } catch (err) {
-    console.log("Error deleting a new venue. Try Again");
+    console.log("Error updating a new venue. Try Again");
     console.log(err);
     throw new Error(err);
   }

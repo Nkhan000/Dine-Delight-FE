@@ -140,7 +140,7 @@ function EditFoodMenuItemCard({ item, ind }) {
 
           <FoodItemPriceSizeDiv>
             <FoodItemTextSm>
-              Main Ingredients :- {console.log(item.mainIngredients)}
+              Main Ingredients :-
               {item.mainIngredients.map((ing, idx) => (
                 <FoodItemTextSm key={`${ing}-${idx}`}>
                   {ing}

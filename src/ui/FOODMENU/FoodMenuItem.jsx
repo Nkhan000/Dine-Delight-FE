@@ -305,7 +305,11 @@ function FoodMenuItem({
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <ImageDiv>
-        <StyledImage src={`./img/${image}`} alt="food-image" />
+        <StyledImage
+          crossOrigin="anonymous"
+          src={`http://127.0.0.1:3000/public/${image}`}
+          alt="food-image"
+        />
       </ImageDiv>
       <TextDiv>
         <TextHeadDivOutter>

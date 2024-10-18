@@ -227,7 +227,11 @@ function VenueBookingModelDiv({
       </GradientHighlight>
       <ModalDivDetails>
         <ImageDivSmall>
-          <StyledImage src={`./img/${images[0]}`} alt="food-image" />
+          <StyledImage
+            crossorigin="anonymous"
+            src={`http://127.0.0.1:3000/public/${images[0]}`}
+            alt="venue-image"
+          />
         </ImageDivSmall>
         <ModalTextDiv>
           <TextHead>{name}</TextHead>

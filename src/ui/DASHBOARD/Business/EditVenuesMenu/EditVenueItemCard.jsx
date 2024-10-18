@@ -123,6 +123,11 @@ function EditVenueItemCard({ item, ind }) {
           <VenueItemName>
             <VenueItemTextBg>{item.name}</VenueItemTextBg>
           </VenueItemName>
+          <VenueItemName>
+            <VenueItemTextSm>
+              Approx. party Size : {item.aprPartySize} people
+            </VenueItemTextSm>
+          </VenueItemName>
           {/* <StyledTag type={item.type}>{item.type}</StyledTag> */}
         </VenueItemTextDiv>
       </ImageAndNameDiv>

@@ -10,6 +10,7 @@ import { useAddANewVenue } from "../../../../hooks/VenuesMenu(BS)/useAddANewVenu
 import { ModalContext } from "../../../../utils/contexts";
 import { useGetAllVenues } from "../../../../hooks/VenuesMenu(BS)/useGetAllVenues";
 import { useDeleteSelectedImagesForVenue } from "../../../../hooks/VenuesMenu(BS)/useDeleteSelectedImagesForVenue";
+import { useUpdateAVenue } from "../../../../hooks/VenuesMenu(BS)/useUpdateAVenue";
 
 const Container = styled.div`
   width: 55vw;
@@ -142,10 +143,12 @@ const ImageAddBtnTextSm = styled.span`
 
 function AddVenueItemForm({ itemId }) {
   const { venuesMenu, isLoadingVenuesMenu } = useGetAllVenues();
+  const { addANewVenue, isAddingANewVenue } = useAddANewVenue();
   const { deleteSelectedImagesForVenue, isDeleting } =
     useDeleteSelectedImagesForVenue();
+  const { updateAVenue, isUpdatingAVenue } = useUpdateAVenue();
+
   const { close: closeModal } = useContext(ModalContext);
-  const { addANewVenue, isAddingANewVenue } = useAddANewVenue();
   const { register, handleSubmit, setValue } = useForm();
 
   let currVenue;
@@ -157,20 +160,21 @@ function AddVenueItemForm({ itemId }) {
   const [serverImages, setServerImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedImagesToSend, setSelectedImagesToSend] = useState([]);
-  const [fileCount, setFileCount] = useState(serverImages.length || 0);
+  const [fileCount, setFileCount] = useState(0);
 
   console.log(currVenue);
   useEffect(() => {
     if (!currVenue) return;
     setValue("name", currVenue.name);
-    setValue("min", currVenue.aprPartySize?.split("-")[0] || 0);
-    setValue("max", currVenue.aprPartySize?.split("-")[1] || 0);
+    setValue("min", currVenue.aprPartySize.split("-")[0] || 0);
+    setValue("max", currVenue.aprPartySize.split("-")[1] || 0);
     setValue(
       "goodForOccassions",
       currVenue.goodForOccassions?.join(", ") || ""
     );
     setValue("pricePerDay", currVenue.pricePerDay || 0);
     setServerImages(currVenue.images);
+    setFileCount(currVenue.images.length);
   }, [setValue, currVenue]);
 
   // funtion to delete images which were already uploaded while updating the item
@@ -196,13 +200,16 @@ function AddVenueItemForm({ itemId }) {
 
     if (!currVenue) {
       addANewVenue(formData);
+    } else {
+      updateAVenue(formData);
     }
     console.log(data);
+    console.log(aprPartySize);
     console.log(selectedImagesToSend);
 
-    // if (!isAddingANewVenue) {
-    //   closeModal();
-    // }
+    if (!isAddingANewVenue || isUpdatingAVenue) {
+      closeModal();
+    }
   }
 
   const handleImageChange = (e) => {

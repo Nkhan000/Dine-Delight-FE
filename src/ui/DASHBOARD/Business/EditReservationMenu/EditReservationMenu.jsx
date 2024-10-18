@@ -6,9 +6,9 @@ import Modal from "../../../Modal";
 import { useSearchParams } from "react-router-dom";
 import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useEffect } from "react";
-import { useGetAllVenues } from "../../../../hooks/VenuesMenu(BS)/useGetAllVenues";
-import EditVenueItemCard from "./EditVenueItemCard";
-import AddVenueItemForm from "./AddVenueItemForm";
+// import { useGetAllReservations } from "../../../../hooks/ReservationsMenu(BS)/useGetAllReservations";
+// import EditReservationItemCard from "./EditReservationItemCard";
+// import AddReservationItemForm from "./AddReservationItemForm";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -21,8 +21,8 @@ const Container = styled.div`
 
 const HeadDiv = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const HeadTextDiv = styled.div`
@@ -39,56 +39,36 @@ const HeadOptionsDiv = styled.div`
   gap: 2rem;
 `;
 
-const VenueItemsDiv = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr;
-  grid-row-gap: 1.4rem;
-  column-gap: 5rem;
-`;
-
-const VenueItemNum = styled.span`
-  font-size: 3.6rem;
+const ReservationItemTextBg = styled.span`
+  font-size: 1.8rem;
   font-weight: 600;
-  color: var(--color-grey-800);
-  /* span {
-  } */
+  color: var(--color-grey-600);
+  width: 100%;
 `;
+const ReservationItemsDiv = styled.div``;
 
-const AddNewBtnDiv = styled.div`
-  margin-top: auto;
+const ItemDiv = styled.div``;
 
-  display: flex;
-  justify-content: flex-end;
-`;
+const ItemHeadDiv = styled.div``;
 
-function EditVenuesMenu() {
+function EditReservationMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { venuesMenu, isLoadingVenuesMenu } = useGetAllVenues();
-
-  if (isLoadingVenuesMenu) {
-    return <Spinner />;
-  }
-  const { venueItems } = venuesMenu;
 
   return (
     <Container>
       <HeadDiv>
         <HeadTextDiv>
-          <span>Your Venues</span>
+          <span>Table Reservations</span>
         </HeadTextDiv>
+        <ReservationItemTextBg>
+          Include the following information and the types of tables available
+          for reservation.
+        </ReservationItemTextBg>
         <HeadOptionsDiv></HeadOptionsDiv>
       </HeadDiv>
 
-      <VenueItemsDiv>
-        {venueItems.length === 0 && (
-          <VenueItemNum>Add Venues to update</VenueItemNum>
-        )}
-        {venueItems.map((item, ind) => (
-          <EditVenueItemCard key={item._id} item={item} ind={ind} />
-        ))}
-      </VenueItemsDiv>
-      <AddNewBtnDiv>
+      <ReservationItemsDiv></ReservationItemsDiv>
+      {/* <AddNewBtnDiv>
         <Modal>
           <Modal.Open open="add-new-item">
             <Button size="large" variation="primary">
@@ -96,12 +76,12 @@ function EditVenuesMenu() {
             </Button>
           </Modal.Open>
           <Modal.ModalWindow name="add-new-item">
-            <AddVenueItemForm />
+            <AddReservationItemForm />
           </Modal.ModalWindow>
         </Modal>
-      </AddNewBtnDiv>
+      </AddNewBtnDiv> */}
     </Container>
   );
 }
 
-export default EditVenuesMenu;
+export default EditReservationMenu;

@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import EditFoodMenu from "../ui/DASHBOARD/Business/EditFoodMenu/EditFoodMenu";
 import EditVenuesMenu from "../ui/DASHBOARD/Business/EditVenuesMenu/EditVenuesMenu";
+import EditReservationMenu from "../ui/DASHBOARD/Business/EditReservationMenu/EditReservationMenu";
 
 const Container = styled.div`
   height: 100vh;
@@ -65,7 +66,7 @@ function UpdateCuisine() {
     <Container>
       <HeadBtnDiv>
         {HeadBtns("food-menu", "Food Menu")}
-        {HeadBtns("reservation-menu", "Reservation Menu")}
+        {HeadBtns("reservations-menu", "Reservation Menu")}
         {HeadBtns("venues-menu", "Venues Menu")}
         {HeadBtns("highlights", "Highlights")}
       </HeadBtnDiv>
@@ -73,6 +74,9 @@ function UpdateCuisine() {
       <EditMenuDiv>
         {searchParams.get("updateType") === "food-menu" && <EditFoodMenu />}
         {searchParams.get("updateType") === "venues-menu" && <EditVenuesMenu />}
+        {searchParams.get("updateType") === "reservations-menu" && (
+          <EditReservationMenu />
+        )}
       </EditMenuDiv>
     </Container>
   );

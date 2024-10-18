@@ -5,46 +5,6 @@ import ItemsMenu from "./ItemsMenu";
 import MenuItem from "./MenuItem";
 import VenueMenuItem from "./VenueMenuItem";
 
-// const fakeData = [
-//   {
-//     id: 1,
-//     type: "venue",
-//     image: "Table-001",
-//     name: "Banquet Hall 1",
-//     goodForOccassions: ["Birthdays", "engagements", "Ceremony"],
-//     price: 5.99,
-//     partySize: "150-200 people",
-//   },
-//   {
-//     id: 2,
-//     type: "venue",
-//     name: "Birthday celebration hall",
-//     image: "Table-002",
-//     vegan: false,
-//     goodForOccassions: ["Birthdays", "engagements", "Ceremony"],
-//     price: 5.99,
-//     partySize: "150-200 people",
-//   },
-//   {
-//     id: 3,
-//     type: "venue",
-//     name: "Ball room",
-//     image: "Table-003",
-//     goodForOccassions: ["Birthdays", "engagements", "Ceremony"],
-//     price: 5.99,
-//     partySize: "150-200 people",
-//   },
-//   {
-//     id: 4,
-//     type: "venue",
-//     image: "Table-004",
-//     name: "Big gathering table",
-//     goodForOccassions: ["Birthdays", "engagements", "Ceremony"],
-//     price: 5.99,
-//     partySize: "150-200 people",
-//   },
-// ];
-
 function VenueMenu({
   venueMenu,
   searchParams,
@@ -55,12 +15,12 @@ function VenueMenu({
   const skipValue = 4;
   const currentPageNumber = searchParams.get("page");
 
-  const bookingItems = venueMenu?.bookingItems || [];
+  const venueItems = venueMenu?.venueItems || [];
   const cuisineId = venueMenu?.cuisineId;
-  const isBookingMenuAvailable = bookingItems.length === 0;
+  const isBookingMenuAvailable = venueItems.length === 0;
 
   console.log("bookings item", venueMenu);
-  const numberOfPages = Math.ceil(bookingItems.length / skipValue);
+  const numberOfPages = Math.ceil(venueItems.length / skipValue);
   return (
     <ItemsMenu
       showPagination={!isBookingMenuAvailable}
@@ -71,7 +31,7 @@ function VenueMenu({
       {isBookingMenuAvailable ? (
         <span>Nothing to show</span>
       ) : (
-        bookingItems
+        venueItems
           .slice(
             (currentPageNumber - 1) * skipValue,
             currentPageNumber * skipValue

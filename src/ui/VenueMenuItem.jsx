@@ -154,7 +154,11 @@ function VenueMenuItem({
   return (
     <Container>
       <ImageDiv>
-        <StyledImage src={`./img/${images[0]}`} alt="food-image" />
+        <StyledImage
+          crossOrigin="anonymous"
+          src={`http://127.0.0.1:3000/public/${images[0]}`}
+          alt="venue-item"
+        />
       </ImageDiv>
       <TextDiv>
         <TextHeadDivOutter>
@@ -184,12 +188,7 @@ function VenueMenuItem({
             {user ? (
               <Modal>
                 <Modal.Open name="open-venue-booking-model">
-                  <Button
-                    size="medium"
-                    variation="primary"
-                    hover="no"
-                    // type="submit"
-                  >
+                  <Button size="medium" variation="primary" hover="no">
                     Available For Booking
                   </Button>
                 </Modal.Open>
