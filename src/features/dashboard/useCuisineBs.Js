@@ -1,20 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { useQuery } from "@tanstack/react-query";
 import { useGetUser } from "../authentication/useGetUser";
-import { getACuisinePrivate } from "../../services/apiCuisines";
+import { getACuisineBS } from "../../services/apiCuisines";
 
 export function useCusineBs() {
-  // const { user, isLoading } = useGetUser();
-  // const user = data.user;
-  // const cuisineId = !isLoading && user.cuisineId;
   const {
-    isLoading: loadingCuisineData,
+    isLoading: isLoadingCuisineData,
     data: cuisineData,
     error,
   } = useQuery({
     queryKey: ["cusineBS"],
-    queryFn: () => getACuisinePrivate(),
+    queryFn: () => getACuisineBS(),
   });
 
-  return { loadingCuisineData, cuisineData, error };
+  return { isLoadingCuisineData, cuisineData, error };
 }

@@ -2,6 +2,8 @@
 import axios from "axios";
 import { PAGE_LIMIT } from "../utils/constants";
 
+const token = localStorage.getItem("jwt");
+
 export async function getCusines(page, currentFilter) {
   let requestUrl;
   if (!currentFilter) return;
@@ -11,28 +13,11 @@ export async function getCusines(page, currentFilter) {
   } else {
     requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/service/${currentFilter}?page=${page}&limit=${PAGE_LIMIT}`;
   }
-  console.log(requestUrl);
   try {
-    const response = await axios.get(requestUrl, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
-    });
+    const response = await axios.get(requestUrl);
     return response.data;
   } catch (err) {
     console.log("ERROR FROM FETCH ", err);
-  }
-}
-
-export async function getACuisinePrivate() {
-  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/businessProfile`;
-  const token = localStorage.getItem("jwt");
-  try {
-    const response = await axios.get(requestUrl, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(response.data);
-    // return response.data;
-  } catch (err) {
-    console.log("error fetchin cusine", err);
   }
 }
 
@@ -45,5 +30,18 @@ export async function getCuisineSingle(id) {
     return response.data.cuisineData.cuisine;
   } catch (err) {
     console.log("error fetching cuisine data. Try again", err);
+  }
+}
+
+// GET CUISINES DETAILS FOR CUISINE OWNER
+export async function getACuisineBS() {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/businessProfile`;
+  try {
+    const response = await axios.get(requestUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response.data.data;
+  } catch (err) {
+    console.log("error fetchin cusine", err);
   }
 }

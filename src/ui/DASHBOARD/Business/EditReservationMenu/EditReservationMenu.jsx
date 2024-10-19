@@ -6,6 +6,8 @@ import Modal from "../../../Modal";
 import { useSearchParams } from "react-router-dom";
 import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useEffect } from "react";
+import { useCusineBs } from "../../../../features/dashboard/useCuisineBs";
+import ToggleBtn from "../../../ToggleBtn";
 // import { useGetAllReservations } from "../../../../hooks/ReservationsMenu(BS)/useGetAllReservations";
 // import EditReservationItemCard from "./EditReservationItemCard";
 // import AddReservationItemForm from "./AddReservationItemForm";
@@ -47,12 +49,79 @@ const ReservationItemTextBg = styled.span`
 `;
 const ReservationItemsDiv = styled.div``;
 
-const ItemDiv = styled.div``;
+const ItemDiv = styled.div`
+  margin-bottom: 2rem;
 
-const ItemHeadDiv = styled.div``;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const ItemHeadDiv = styled.div`
+  font-size: 1.8rem;
+  color: var(--color-grey-200);
+  font-weight: 600;
+`;
+
+const ItemTextDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+`;
+const ItemTextBg = styled.div`
+  font-size: 1.8rem;
+  color: var(--color-grey-200);
+  font-weight: 600;
+`;
+
+const ItemTextSm = styled.span`
+  font-size: 1.5rem;
+  color: var(--color-grey-500);
+  font-weight: 400;
+  font-style: italic;
+`;
+const ItemOptionsDiv = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const ItemOption = styled.div`
+  font-size: 1.6rem;
+  border: 2px solid var(--color-grey-500);
+  color: var(--color-grey-200);
+  border-radius: 1rem;
+  padding: 0.8rem;
+  transition: all 0.3s ease-in;
+  text-transform: capitalize;
+
+  &:hover {
+    transform: translateY(-0.5rem);
+    border: 2px solid var(--color-orange-100);
+    cursor: pointer;
+  }
+`;
+
+const AddMoreDiv = styled.div``;
 
 function EditReservationMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { cuisineData, isLoadingCuisineData } = useCusineBs();
+
+  function handleAddPartySize() {}
+
+  function handleAddTableType() {}
+
+  function handleAddTimeSlots() {}
+
+  if (isLoadingCuisineData) {
+    return <Spinner />;
+  }
+  const {
+    reservationPartySizeOptions,
+    availableTableReservationTime,
+    tableTypeOptions,
+  } = cuisineData;
 
   return (
     <Container>
@@ -67,7 +136,72 @@ function EditReservationMenu() {
         <HeadOptionsDiv></HeadOptionsDiv>
       </HeadDiv>
 
-      <ReservationItemsDiv></ReservationItemsDiv>
+      <ReservationItemsDiv>
+        <ItemDiv>
+          <ItemHeadDiv>Receive Reservations :</ItemHeadDiv>
+          <ItemTextDiv>
+            <ToggleBtn itemId="isReserving" />
+            <ItemTextSm>
+              Stop receiving reservations until turned back on
+            </ItemTextSm>
+          </ItemTextDiv>
+        </ItemDiv>
+        <ItemDiv>
+          <ItemHeadDiv>Party Size :</ItemHeadDiv>
+
+          <ItemOptionsDiv>
+            {reservationPartySizeOptions?.length === 0 ? (
+              <ItemOption>Add Party Sizes</ItemOption>
+            ) : (
+              reservationPartySizeOptions?.map((item, idx) => (
+                <ItemOption value={item} key={idx}>
+                  {item} people
+                </ItemOption>
+              ))
+            )}
+            <Button size="small" variation="primary">
+              +
+            </Button>
+          </ItemOptionsDiv>
+          <AddMoreDiv></AddMoreDiv>
+        </ItemDiv>
+        <ItemDiv>
+          <ItemHeadDiv>Available Time Slots :</ItemHeadDiv>
+          <ItemOptionsDiv>
+            {availableTableReservationTime.length === 0 ? (
+              <ItemOption>Add Time Slots</ItemOption>
+            ) : (
+              availableTableReservationTime?.map((item, idx) => (
+                <ItemOption value={item} key={idx}>
+                  {item} hours
+                </ItemOption>
+              ))
+            )}
+            <Button size="small" variation="primary">
+              +
+            </Button>
+          </ItemOptionsDiv>
+          <AddMoreDiv></AddMoreDiv>
+        </ItemDiv>
+        <ItemDiv>
+          <ItemHeadDiv>Types of Table available</ItemHeadDiv>
+          <ItemOptionsDiv>
+            {tableTypeOptions.length === 0 ? (
+              <ItemOption>Add Options for Available Types</ItemOption>
+            ) : (
+              tableTypeOptions.map((item, idx) => (
+                <ItemOption value={item} key={idx}>
+                  {item}
+                </ItemOption>
+              ))
+            )}
+            <Button size="small" variation="primary">
+              +
+            </Button>
+          </ItemOptionsDiv>
+          <AddMoreDiv></AddMoreDiv>
+        </ItemDiv>
+      </ReservationItemsDiv>
       {/* <AddNewBtnDiv>
         <Modal>
           <Modal.Open open="add-new-item">
