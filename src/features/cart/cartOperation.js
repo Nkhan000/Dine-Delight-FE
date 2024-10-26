@@ -2,9 +2,13 @@
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
+
+//
+import storage from "redux-persist/lib/storage"; // defaults to local storage for web
+
+// importing slices
 import cartReducer from "./cartSlice";
 import venueBookingReducer from "./venueBookingSlice";
-import storage from "redux-persist/lib/storage"; // defaults to local storage for web
 import remainingOrderReducer from "./remainingOrderSlice";
 import reservationSlice from "./reservationSlice";
 

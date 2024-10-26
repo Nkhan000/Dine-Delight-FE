@@ -192,8 +192,6 @@ function AddFoodItemForm({ itemId = "" }) {
       formData.append("image", data.image);
     }
 
-    console.log(formData);
-
     currItem ? updateAFoodItem(formData) : addANewFoodItem(formData);
 
     if (!isAddingANewFoodItem || !isUpdatingAFoodItem) {

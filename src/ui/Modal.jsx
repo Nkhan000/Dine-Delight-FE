@@ -16,10 +16,6 @@ import { ModalContext } from "../utils/contexts";
 
 const StyledModal = styled.div`
   position: relative;
-  /* position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); */
   ${(props) =>
     props.bg === "light"
       ? css`

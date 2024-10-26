@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import styled from "styled-components";
 import Button from "../../../Button";
@@ -8,6 +9,7 @@ import StyledOptionsDiv from "../../../StyledOptionsTwo";
 import { useEffect } from "react";
 import { useCusineBs } from "../../../../features/dashboard/useCuisineBs";
 import ToggleBtn from "../../../ToggleBtn";
+import AddNewItemForm from "./AddNewItemForm";
 // import { useGetAllReservations } from "../../../../hooks/ReservationsMenu(BS)/useGetAllReservations";
 // import EditReservationItemCard from "./EditReservationItemCard";
 // import AddReservationItemForm from "./AddReservationItemForm";
@@ -104,6 +106,19 @@ const ItemOption = styled.div`
 
 const AddMoreDiv = styled.div``;
 
+function ButtonModel({ type, children }) {
+  return (
+    <Modal>
+      <Modal.Open open={type}>
+        <Button size="small" variation="primary">
+          +
+        </Button>
+      </Modal.Open>
+      <Modal.ModalWindow name={type}>{children}</Modal.ModalWindow>
+    </Modal>
+  );
+}
+
 function EditReservationMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { cuisineData, isLoadingCuisineData } = useCusineBs();
@@ -119,7 +134,7 @@ function EditReservationMenu() {
   }
   const {
     reservationPartySizeOptions,
-    availableTableReservationTime,
+    availableTableReservationTimeSlots,
     tableTypeOptions,
   } = cuisineData;
 
@@ -159,27 +174,32 @@ function EditReservationMenu() {
                 </ItemOption>
               ))
             )}
-            <Button size="small" variation="primary">
+
+            <ButtonModel type="partySize">
+              <AddNewItemForm type="partySize" />
+            </ButtonModel>
+
+            {/* <Button size="small" variation="primary">
               +
-            </Button>
+            </Button> */}
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
         </ItemDiv>
         <ItemDiv>
           <ItemHeadDiv>Available Time Slots :</ItemHeadDiv>
           <ItemOptionsDiv>
-            {availableTableReservationTime.length === 0 ? (
+            {availableTableReservationTimeSlots.length === 0 ? (
               <ItemOption>Add Time Slots</ItemOption>
             ) : (
-              availableTableReservationTime?.map((item, idx) => (
+              availableTableReservationTimeSlots.map((item, idx) => (
                 <ItemOption value={item} key={idx}>
                   {item} hours
                 </ItemOption>
               ))
             )}
-            <Button size="small" variation="primary">
-              +
-            </Button>
+            <ButtonModel type="timeSlot">
+              <AddNewItemForm type="timeSlot" />
+            </ButtonModel>
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
         </ItemDiv>
@@ -195,9 +215,9 @@ function EditReservationMenu() {
                 </ItemOption>
               ))
             )}
-            <Button size="small" variation="primary">
-              +
-            </Button>
+            <ButtonModel type="tableType">
+              <AddNewItemForm type="tableType" />
+            </ButtonModel>
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
         </ItemDiv>

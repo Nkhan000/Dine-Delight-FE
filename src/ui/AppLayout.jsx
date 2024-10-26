@@ -6,10 +6,11 @@ import Footer from "./Footer";
 import { Provider } from "react-redux";
 import { store, persistor } from "../features/cart/cartOperation";
 import { PersistGate } from "redux-persist/integration/react";
+import Spinner from "./Spinner";
 
 function PersistGateComponent() {
   return (
-    <PersistGate loading={<div>LOADING...</div>} persistor={persistor}>
+    <PersistGate loading={<Spinner />} persistor={persistor}>
       <Header />
       <Outlet />
       <Footer />
