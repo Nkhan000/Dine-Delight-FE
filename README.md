@@ -62,12 +62,13 @@ Here's a high-level overview of the folder structure:
 
 ```
 src/
-├── components/         # Reusable UI components
-├── features/           # Redux features and slices
-├── contexts/           # Context API files
-├── pages/              # Application pages (Home, Booking, Reservations, etc.)
-├── services/           # API services and utilities
-└── styles/             # Global and theme styles using styled-components
+├── ui/         # Reusable UI components
+├── features/   # Redux features and slices and hooks for authentication, cart, dashboard, delivery, settings and user
+├── util/       # important helper functions and global contexts
+├── hooks/      # general reuseable custom hooks
+├── pages/      # Application pages (Home, Booking, Reservations, etc.)
+├── services/   # API services and utilities
+└── styles/     # Global and theme styles using styled-components
 ```
 
 ## Contributing
