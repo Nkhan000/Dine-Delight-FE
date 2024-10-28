@@ -216,7 +216,7 @@ function ReservationWindowVerificationCode({ reservationObj }) {
             </GradientHighlight>
           </HeadTextDiv>
           <VerificationText>
-            Please enter the code sent to {"email"} for verification.
+            Please enter the code sent to email for verification.
           </VerificationText>
 
           <VerificationInputDiv>

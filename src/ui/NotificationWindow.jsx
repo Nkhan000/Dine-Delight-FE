@@ -10,9 +10,10 @@ import Button from "./Button";
 // import CartBeforeConfirm from "./CartBeforeConfirm";
 import CartBeforeConfirm from "./CART/CartBeforeConfirm";
 import { useContext, useRef, useState } from "react";
-import { NotificationContext } from "../utils/contexts";
+import { MenusContext, NotificationContext } from "../utils/contexts";
 import NotificationItem from "./NotificationItem";
 import { useSelector } from "react-redux";
+import { createPortal } from "react-dom";
 
 const Container = styled.div`
   height: 100vh;
@@ -111,8 +112,6 @@ const CartContentDiv = styled.div`
 `;
 
 // CREATE A CONTEXT
-// const NotificationContext = createContext();
-// NotificationContext
 
 function Notification({ children }) {
   const [openNotification, setOpenNotification] = useState("");
@@ -138,14 +137,22 @@ function Open({ children, openname }) {
 }
 function NotificationWindow({ children, name }) {
   const { openNotification, close } = useContext(NotificationContext);
+  const { close: closeMenu } = useContext(MenusContext);
   const cartTotal = useSelector((state) => state.cartTotal);
   const ref = useRef();
 
-  if (openNotification === name)
+  if (openNotification === name) {
     return (
       <Container ref={ref}>
         <CloseBtnDiv>
-          <Button size="large" variation="link" onClick={close}>
+          <Button
+            size="large"
+            variation="link"
+            onClick={() => {
+              close();
+              closeMenu();
+            }}
+          >
             x
           </Button>
         </CloseBtnDiv>
@@ -153,11 +160,11 @@ function NotificationWindow({ children, name }) {
           <GradientHighlight>
             <span>{name}</span>
           </GradientHighlight>
-          <GradientIcon iconHeight={2.5}>
+          <GradientIcon iconheight={2.5}>
             <FaCartShopping />
           </GradientIcon>
         </HeadingDiv>
-        {/* <CartContentDiv addpadding={name === "cart"}> */}
+
         <CartContentDiv>
           {name === "cart" && <CartBeforeConfirm size="small" />}
 
@@ -195,34 +202,9 @@ function NotificationWindow({ children, name }) {
         {children}
       </Container>
     );
-  return null;
+  }
 }
 Notification.Open = Open;
 Notification.NotificationWindow = NotificationWindow;
 
 export default Notification;
-
-// return (
-//   <Container ref={ref} isVisible={isVisible}>
-//     <HeadingDiv>
-//       <GradientHighlight>
-//         <span>Cart</span>
-//       </GradientHighlight>
-//       <GradientIcon iconHeight={2.5}>
-//         <FaCartShopping />
-//       </GradientIcon>
-//     </HeadingDiv>
-//     <CartContentDiv>
-//       <CartBeforeConfirm size="small" />
-//     </CartContentDiv>
-//     <ConfirmDiv>
-//       <Button size="large" variation="primary">
-//         Confirm & Checkout{" "}
-//       </Button>
-//       <Button size="large" variation="secondary">
-//         Cancel
-//       </Button>
-//     </ConfirmDiv>
-//   </Container>
-// );
-// }

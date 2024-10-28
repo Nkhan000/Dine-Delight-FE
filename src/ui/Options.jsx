@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
 import { useOutsideClick } from "../hooks/useOutsideClick";
-import { Link } from "react-router-dom";
 import { MenusContext, NotificationContext } from "../utils/contexts";
 
 const Menu = styled.div`
@@ -26,10 +25,6 @@ const StyledToggle = styled.button`
   &:focus {
     outline: none;
   }
-
-  /* &:hover {
-    background-color: var(--color-grey-100);
-  } */
 
   & svg {
     width: 2.4rem;
@@ -59,35 +54,9 @@ const StyledList = styled.ul`
   top: ${(props) => props.position.y}px;
 `;
 
-const StyledButton = styled.button`
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 1.2rem 2.4rem;
-  font-size: 1.4rem;
-  transition: all 0.2s;
-
-  display: flex;
-  align-items: center;
-  gap: 1.6rem;
-
-  &:hover {
-    background-color: var(--color-grey-50);
-  }
-
-  & svg {
-    width: 1.6rem;
-    height: 1.6rem;
-    color: var(--color-grey-400);
-    transition: all 0.3s;
-  }
-`;
-
 // const MenusContext = createContext();
 // MenusContext
 function Options({ children }) {
-  // const { openNotification } = useContext(NotificationContext);
   const [openId, setOpenId] = useState("");
   const [position, setPosition] = useState(null);
   const close = () => setOpenId("");
@@ -120,11 +89,11 @@ function Toggle({ id, showToggleBtn, children }) {
   );
 }
 function List({ id, children }) {
+  const { openNotification } = useContext(NotificationContext);
   const { openId, position, close } = useContext(MenusContext);
   const ref = useOutsideClick(close);
 
-  // MAKE HEADER FIXED ON SCROLL THAN USING THIS METHOD
-  if (openId !== id) return null;
+  if (openNotification === "" && openId !== id) return null;
 
   return createPortal(
     <StyledList position={position} ref={ref}>
@@ -141,7 +110,9 @@ function Button({ children, addClickFunc = true, onClickFunc }) {
     close();
   }
   return addClickFunc ? (
-    <li onClick={handleClick}>{children}</li>
+    <li onClick={handleClick} className="no-outside-click">
+      {children}
+    </li>
   ) : (
     <li>{children}</li>
   );

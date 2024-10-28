@@ -6,18 +6,20 @@ import { useEffect } from "react";
 import EditFoodMenu from "../ui/DASHBOARD/Business/EditFoodMenu/EditFoodMenu";
 import EditVenuesMenu from "../ui/DASHBOARD/Business/EditVenuesMenu/EditVenuesMenu";
 import EditReservationMenu from "../ui/DASHBOARD/Business/EditReservationMenu/EditReservationMenu";
+import EditHighlights from "../ui/DASHBOARD/Business/EditHiglights/Higlights";
 
 const Container = styled.div`
-  height: 100vh;
+  /* height: 100vh; */
   background-color: var(--color-grey-900);
-  padding: 6rem 10rem;
   overflow: hidden;
+  padding: 4rem 4rem;
   display: flex;
   flex-direction: column;
   gap: 3rem;
 `;
 
 const HeadBtnDiv = styled.div`
+  padding: 1rem 10rem;
   display: flex;
   align-items: center;
   gap: 1.2rem;
@@ -25,10 +27,11 @@ const HeadBtnDiv = styled.div`
 
 const EditMenuDiv = styled.div`
   width: 100%;
-  height: 80vh;
+  padding: 1rem 4rem;
+  /* height: 80vh; */
   border: 1px solid var(--color-grey-800);
   border-radius: 3rem;
-  overflow-y: scroll;
+  /* overflow-y: visible; */
 `;
 
 function UpdateCuisine() {
@@ -77,6 +80,7 @@ function UpdateCuisine() {
         {searchParams.get("updateType") === "reservations-menu" && (
           <EditReservationMenu />
         )}
+        {searchParams.get("updateType") === "highlights" && <EditHighlights />}
       </EditMenuDiv>
     </Container>
   );
