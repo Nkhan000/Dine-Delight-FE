@@ -73,3 +73,49 @@ export async function getAllReservationOfUser() {
     throw err;
   }
 }
+
+// ------------------ BUSINESS-END API ----------------------- //
+
+export async function apiAddNewPartySize(data) {
+  const requestURL = `http://127.0.0.1:3000/api/v1/reservations/add-party-size`;
+  try {
+    const response = await axios.post(requestURL, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
+    // return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+export async function apiAddTableType(data) {
+  const requestURL = `http://127.0.0.1:3000/api/v1/reservations/add-table-type`;
+  try {
+    const response = await axios.post(requestURL, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
+    // return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+export async function apiAddTimeSlot(data) {
+  const requestURL = `http://127.0.0.1:3000/api/v1/reservations/add-time-slot`;
+  try {
+    const response = await axios.post(requestURL, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    console.log(response.data);
+    // return response.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}

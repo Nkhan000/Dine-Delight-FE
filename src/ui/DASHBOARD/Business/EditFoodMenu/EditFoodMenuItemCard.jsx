@@ -3,7 +3,7 @@
 import styled from "styled-components";
 import StyledTag from "../../../StyledTag";
 import EditMenuBtn from "../EditMenuBtn";
-import { useDeleteFoodItem } from "../../../../hooks/FoodMenu/useDeleteFoodItem";
+import { useDeleteFoodItem } from "../../../../hooks/FoodMenu(BS)/useDeleteFoodItem";
 
 const FoodItem = styled.div`
   display: flex;

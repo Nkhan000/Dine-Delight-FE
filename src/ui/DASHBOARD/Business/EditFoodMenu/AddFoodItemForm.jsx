@@ -11,7 +11,7 @@ import useAddNewFoodItem from "../../../../hooks/useAddNewFoodItem";
 import { ModalContext } from "../../../../utils/contexts";
 import SpinnerMini from "../../../SpinnerMini";
 import { useGetFoodMenu } from "../../../../hooks/useGetFoodMenu";
-import { useUpdateAFoodItem } from "../../../../hooks/FoodMenu/useUpdateAFoodItem";
+import { useUpdateAFoodItem } from "../../../../hooks/FoodMenu(BS)/useUpdateAFoodItem";
 
 const Container = styled.div`
   width: 55vw;

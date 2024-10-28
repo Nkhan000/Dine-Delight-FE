@@ -4,6 +4,8 @@
 import styled from "styled-components";
 import Button from "../../../Button";
 import { useForm } from "react-hook-form";
+import { useContext } from "react";
+import { ModalContext } from "../../../../utils/contexts";
 
 const Container = styled.div`
   width: 35rem;
@@ -32,19 +34,22 @@ const InputDiv = styled.div`
   display: flex;
   align-items: center;
   gap: 2rem;
+  color: var(--color-grey-100);
 `;
 const StyledInput = styled.input`
   font-size: 1.5rem;
   width: 25rem;
-  padding: 0.5rem;
+  padding: 1rem;
   border: 1px solid;
   outline: none;
   border-radius: 0.5rem;
   background-color: transparent;
 `;
 
-function AddNewItemForm({ type }) {
+function AddNewItemForm({ type, submitFunction, isLoading }) {
   const { register, handleSubmit } = useForm();
+  const { close } = useContext(ModalContext);
+
   const text =
     type === "partySize"
       ? "Add new party size :"
@@ -56,6 +61,10 @@ function AddNewItemForm({ type }) {
     const reqObj = { ...data };
     reqObj.typeOfOp = "add";
     console.log(reqObj);
+    submitFunction(reqObj);
+    if (!isLoading) {
+      close();
+    }
   }
 
   return (

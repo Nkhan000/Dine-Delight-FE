@@ -9,7 +9,7 @@ export function useCusineBs() {
     data: cuisineData,
     error,
   } = useQuery({
-    queryKey: ["cusineBS"],
+    queryKey: ["cuisineBS"],
     queryFn: () => getACuisineBS(),
   });
 

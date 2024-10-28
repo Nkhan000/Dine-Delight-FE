@@ -5,7 +5,7 @@ import Button from "../../Button";
 import Modal from "../../Modal";
 import CheckBeforeConfirm from "../../CART/CheckBeforeConfirm";
 import AddFoodItemForm from "./EditFoodMenu/AddFoodItemForm";
-import { useDeleteFoodItem } from "../../../hooks/FoodMenu/useDeleteFoodItem";
+import { useDeleteFoodItem } from "../../../hooks/FoodMenu(BS)/useDeleteFoodItem";
 import AddVenueItemForm from "./EditVenuesMenu/AddVenueItemForm";
 
 const BtnsDiv = styled.div`

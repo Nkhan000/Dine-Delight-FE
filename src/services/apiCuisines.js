@@ -40,6 +40,7 @@ export async function getACuisineBS() {
     const response = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${token}` },
     });
+
     return response.data.data;
   } catch (err) {
     console.log("error fetchin cusine", err);

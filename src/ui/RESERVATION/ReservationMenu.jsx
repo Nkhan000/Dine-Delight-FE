@@ -220,7 +220,7 @@ function ReservationMenu({ cuisineId }) {
   const {
     name: cuisineName,
     logoImage: cuisineImage,
-    availableTableReservationTime: availableTime,
+    availableTableReservationTimeSlots: availableTime,
     address: cuisineAddress,
     tableTypeOptions,
     tableReservationPrice,

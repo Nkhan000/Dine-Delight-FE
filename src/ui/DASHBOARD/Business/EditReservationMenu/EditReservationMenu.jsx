@@ -10,6 +10,9 @@ import { useEffect } from "react";
 import { useCusineBs } from "../../../../features/dashboard/useCuisineBs";
 import ToggleBtn from "../../../ToggleBtn";
 import AddNewItemForm from "./AddNewItemForm";
+import { useAddOrRemovePartySize } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemovePartySize";
+import { useAddOrRemoveTableType } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemoveTableType";
+import { useAddOrRemoveTimeSlot } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemoveTimeSlot";
 // import { useGetAllReservations } from "../../../../hooks/ReservationsMenu(BS)/useGetAllReservations";
 // import EditReservationItemCard from "./EditReservationItemCard";
 // import AddReservationItemForm from "./AddReservationItemForm";
@@ -97,11 +100,39 @@ const ItemOption = styled.div`
   transition: all 0.3s ease-in;
   text-transform: capitalize;
 
+  position: relative;
+
   &:hover {
     transform: translateY(-0.5rem);
     border: 2px solid var(--color-orange-100);
     cursor: pointer;
+
+    & > button {
+      visibility: visible;
+    }
   }
+`;
+
+const BtnRemoveDiv = styled.button`
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  color: var(color-grey-100);
+  font-weight: 600;
+  background-color: var(--color-red-700);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  span {
+    font-size: 1.6rem;
+  }
+
+  visibility: hidden;
+
+  position: absolute;
+  top: -20%;
+  right: -5%;
 `;
 
 const AddMoreDiv = styled.div``;
@@ -122,13 +153,43 @@ function ButtonModel({ type, children }) {
 function EditReservationMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { cuisineData, isLoadingCuisineData } = useCusineBs();
+  const { addPartySize, isAddingPartySize } = useAddOrRemovePartySize();
+  const { addOrRemoveTableType, isAddingOrRemovingTableType } =
+    useAddOrRemoveTableType();
+  const { addOrRemoveTimeSlot, isAddingOrRremovingTimeSlot } =
+    useAddOrRemoveTimeSlot();
 
-  function handleAddPartySize() {}
+  // PARTY SIZE
+  function handleAddPartySize(data) {
+    addPartySize(data);
+  }
+  function handleRemovePartySize(val) {
+    const reqObj = { partySize: val, typeOfOp: "remove" };
+    addPartySize(reqObj);
+  }
+  //
 
-  function handleAddTableType() {}
+  // TABLE TYPE
+  function handleAddTableType(data) {
+    addOrRemoveTableType(data);
+  }
+  function handleRemoveTableType(val) {
+    const reqObj = { tableType: val, typeOfOp: "remove" };
+    addOrRemoveTableType(reqObj);
+  }
+  //
 
-  function handleAddTimeSlots() {}
-
+  // TIME SLOT
+  function handleAddTimeSlots(data) {
+    console.log(data);
+    addOrRemoveTimeSlot(data);
+  }
+  function handleRemoveTimeSlots(val) {
+    console.log(val);
+    const reqObj = { timeSlot: val, typeOfOp: "remove" };
+    addOrRemoveTimeSlot(reqObj);
+  }
+  //
   if (isLoadingCuisineData) {
     return <Spinner />;
   }
@@ -171,17 +232,20 @@ function EditReservationMenu() {
               reservationPartySizeOptions?.map((item, idx) => (
                 <ItemOption value={item} key={idx}>
                   {item} people
+                  <BtnRemoveDiv onClick={() => handleRemovePartySize(item)}>
+                    <span>-</span>
+                  </BtnRemoveDiv>
                 </ItemOption>
               ))
             )}
 
             <ButtonModel type="partySize">
-              <AddNewItemForm type="partySize" />
+              <AddNewItemForm
+                submitFunction={handleAddPartySize}
+                isLoading={isAddingPartySize}
+                type="partySize"
+              />
             </ButtonModel>
-
-            {/* <Button size="small" variation="primary">
-              +
-            </Button> */}
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
         </ItemDiv>
@@ -194,11 +258,18 @@ function EditReservationMenu() {
               availableTableReservationTimeSlots.map((item, idx) => (
                 <ItemOption value={item} key={idx}>
                   {item} hours
+                  <BtnRemoveDiv onClick={() => handleRemoveTimeSlots(item)}>
+                    <span>-</span>
+                  </BtnRemoveDiv>
                 </ItemOption>
               ))
             )}
             <ButtonModel type="timeSlot">
-              <AddNewItemForm type="timeSlot" />
+              <AddNewItemForm
+                submitFunction={handleAddTimeSlots}
+                isLoading={isAddingOrRremovingTimeSlot}
+                type="timeSlot"
+              />
             </ButtonModel>
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
@@ -212,30 +283,40 @@ function EditReservationMenu() {
               tableTypeOptions.map((item, idx) => (
                 <ItemOption value={item} key={idx}>
                   {item}
+                  <BtnRemoveDiv onClick={() => handleRemoveTableType(item)}>
+                    <span>-</span>
+                  </BtnRemoveDiv>
                 </ItemOption>
               ))
             )}
             <ButtonModel type="tableType">
-              <AddNewItemForm type="tableType" />
+              <AddNewItemForm
+                submitFunction={handleAddTableType}
+                isLoading={isAddingOrRemovingTableType}
+                type="tableType"
+              />
             </ButtonModel>
           </ItemOptionsDiv>
           <AddMoreDiv></AddMoreDiv>
         </ItemDiv>
       </ReservationItemsDiv>
-      {/* <AddNewBtnDiv>
-        <Modal>
-          <Modal.Open open="add-new-item">
-            <Button size="large" variation="primary">
-              Add a new Item
-            </Button>
-          </Modal.Open>
-          <Modal.ModalWindow name="add-new-item">
-            <AddReservationItemForm />
-          </Modal.ModalWindow>
-        </Modal>
-      </AddNewBtnDiv> */}
     </Container>
   );
 }
 
 export default EditReservationMenu;
+
+{
+  /* <AddNewBtnDiv>
+  <Modal>
+    <Modal.Open open="add-new-item">
+      <Button size="large" variation="primary">
+        Add a new Item
+      </Button>
+    </Modal.Open>
+    <Modal.ModalWindow name="add-new-item">
+      <AddReservationItemForm />
+    </Modal.ModalWindow>
+  </Modal>
+</AddNewBtnDiv> */
+}
