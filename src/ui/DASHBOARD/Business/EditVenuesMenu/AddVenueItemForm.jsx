@@ -203,9 +203,6 @@ function AddVenueItemForm({ itemId }) {
     } else {
       updateAVenue(formData);
     }
-    console.log(data);
-    console.log(aprPartySize);
-    console.log(selectedImagesToSend);
 
     if (!isAddingANewVenue || isUpdatingAVenue) {
       closeModal();
@@ -337,9 +334,7 @@ function AddVenueItemForm({ itemId }) {
                     setSelectedImages((s) =>
                       s.filter((_, idx) => idx !== index)
                     );
-                    // setSelectedImagesToSend((s) =>
-                    //   s.filter((_, idx) => idx !== index)
-                    // );
+                    
                   }}
                 >
                   X

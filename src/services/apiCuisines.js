@@ -46,3 +46,32 @@ export async function getACuisineBS() {
     console.log("error fetchin cusine", err);
   }
 }
+
+// --------------------- HIGHLIGHTS --------------------- //
+export async function apiAddHighlights(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/highlights`;
+
+  try {
+    const response = await axios.post(requestUrl, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response.data);
+    console.log("added higlights successfully");
+  } catch (err) {
+    console.log(err);
+  }
+}
+export async function apiRemoveHighlights(data) {
+  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/highlights`;
+
+  try {
+    const response = await axios.patch(requestUrl, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(response.data);
+  } catch (err) {
+    console.log(err);
+  }
+}

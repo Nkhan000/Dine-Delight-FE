@@ -12,6 +12,7 @@ import AddNewItemForm from "./AddNewItemForm";
 import { useAddOrRemovePartySize } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemovePartySize";
 import { useAddOrRemoveTableType } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemoveTableType";
 import { useAddOrRemoveTimeSlot } from "../../../../hooks/ReservationMenu(BS)/useAddOrRemoveTimeSlot";
+import { useEffect } from "react";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -185,6 +186,14 @@ function EditReservationMenu() {
     const reqObj = { timeSlot: val, typeOfOp: "remove" };
     addOrRemoveTimeSlot(reqObj);
   }
+
+  useEffect(() => {
+    const URLParam = new URLSearchParams(searchParams);
+    URLParam.delete("item-type");
+    URLParam.delete("item-category");
+    setSearchParams(URLParam);
+  }, [searchParams, setSearchParams]);
+
   //
   if (isLoadingCuisineData) {
     return <Spinner />;

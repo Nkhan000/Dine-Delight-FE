@@ -1,11 +1,12 @@
 /* eslint-disable no-unused-vars */
 import axios from "axios";
+const token = localStorage.getItem("jwt");
 
 export async function apiCreateDelivery(orderObj) {
   const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/delivery/new`;
   try {
     const request = await axios.post(requestUrl, orderObj, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     console.log(await request.response);
   } catch (err) {
@@ -14,15 +15,15 @@ export async function apiCreateDelivery(orderObj) {
 }
 
 export async function apiGetADeliveryData() {
-  const token = localStorage.getItem("jwt");
   const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/delivery/get-one`;
   try {
-    const response = await axios(requestUrl, {
+    const response = await axios.get(requestUrl, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return await response.data.data.delivery;
     // return response.data;
   } catch (err) {
     console.log(err);
+    throw new Error(err);
   }
 }

@@ -68,11 +68,13 @@ function EditFoodMenu() {
 
   useEffect(() => {
     const URLParam = new URLSearchParams(searchParams);
+
     if (!searchParams.get("item-type")) {
       URLParam.set("item-type", "all");
       URLParam.set("item-category", "all");
-      setSearchParams(URLParam);
     }
+
+    setSearchParams(URLParam);
   }, [searchParams, setSearchParams]);
 
   if (isLoadingFoodMenu) {

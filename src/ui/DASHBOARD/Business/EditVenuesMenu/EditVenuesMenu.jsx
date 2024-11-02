@@ -66,6 +66,13 @@ function EditVenuesMenu() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { venuesMenu, isLoadingVenuesMenu } = useGetAllVenues();
 
+  useEffect(() => {
+    const URLParam = new URLSearchParams(searchParams);
+    URLParam.delete("item-type");
+    URLParam.delete("item-category");
+    setSearchParams(URLParam);
+  }, [searchParams, setSearchParams]);
+
   if (isLoadingVenuesMenu) {
     return <Spinner />;
   }

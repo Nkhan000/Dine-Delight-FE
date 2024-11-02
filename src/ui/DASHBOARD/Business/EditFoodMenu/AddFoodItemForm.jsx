@@ -149,7 +149,7 @@ function AddFoodItemForm({ itemId = "" }) {
       setValue("type", currItem.type || "");
       setValue("category", currItem.category || "");
       setValue("image", currItem.image || "");
-      setValue("mainIngredients", currItem.mainIngredients.join(",") || "");
+      setValue("mainIngredients", currItem.mainIngredients.join(", ") || "");
       setValue("prices", formatPrices(currItem.prices) || "");
     }
   }, [currItem, formatPrices, setValue]);
@@ -177,6 +177,7 @@ function AddFoodItemForm({ itemId = "" }) {
 
     formData.append("name", data.name);
     formData.append("prices", JSON.stringify(pricesObj));
+    // formData.append("prices", pricesObj);
     formData.append("category", data.category.trim().toLowerCase());
     formData.append("type", data.type);
 
@@ -191,7 +192,7 @@ function AddFoodItemForm({ itemId = "" }) {
     if (selectedImage) {
       formData.append("image", data.image);
     }
-
+    console.log(data);
     currItem ? updateAFoodItem(formData) : addANewFoodItem(formData);
 
     if (!isAddingANewFoodItem || !isUpdatingAFoodItem) {
