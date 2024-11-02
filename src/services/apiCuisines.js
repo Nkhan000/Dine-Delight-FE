@@ -64,7 +64,7 @@ export async function apiAddHighlights(data) {
   }
 }
 export async function apiRemoveHighlights(data) {
-  const requestUrl = `http://127.0.0.1:3000/api/v1/cuisines/highlights`;
+  const requestUrl = `http://127.0.0.1:3000/api/v1/highlights`;
 
   try {
     const response = await axios.patch(requestUrl, data, {

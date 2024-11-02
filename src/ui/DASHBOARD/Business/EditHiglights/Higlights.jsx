@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "../../../Modal";
 import AddHighlightForm from "./AddHighlightForm";
+import { useRemoveHighlights } from "../../../../hooks/Highlights/useRemoveHighlights";
 
 const Container = styled.div`
   padding: 2rem 4rem;
@@ -171,6 +172,7 @@ function EditHighlights() {
   const { cuisineData, isLoadingCuisineData } = useCusineBs();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currImage, setCurrImage] = useState(1);
+  const { removeHighlights, isRemovingHighlights } = useRemoveHighlights();
 
   // SET IMAGE-NUMBER PARAMS TO 1 ON PAGE LOAD
   useEffect(() => {
@@ -216,6 +218,16 @@ function EditHighlights() {
     }
   }
 
+  function handleRemoveImage(img) {
+    const images = [];
+    images.push(img);
+    const reqObj = {
+      images,
+    };
+
+    removeHighlights(reqObj);
+  }
+
   return (
     <Container>
       <HeadDiv>
@@ -247,7 +259,9 @@ function EditHighlights() {
                 crossOrigin="anonymous"
                 src={`http://127.0.0.1:3000/public/${img}`}
               />
-              <RemoveImageBtn>-</RemoveImageBtn>
+              <RemoveImageBtn onClick={() => handleRemoveImage(img)}>
+                -
+              </RemoveImageBtn>
             </ImageDiv>
           ))}
         </ImagesContainer>
@@ -255,9 +269,15 @@ function EditHighlights() {
           <SliderImageDiv>
             <StyledImg
               crossOrigin="anonymous"
-              src={`http://127.0.0.1:3000/public/${
+              src={
                 highlightImages[Number(searchParams.get("image-number")) - 1]
-              }`}
+                  ? `http://127.0.0.1:3000/public/${
+                      highlightImages[
+                        Number(searchParams.get("image-number")) - 1
+                      ]
+                    }`
+                  : "./img/logo-svg.svg"
+              }
             />{" "}
           </SliderImageDiv>
 
